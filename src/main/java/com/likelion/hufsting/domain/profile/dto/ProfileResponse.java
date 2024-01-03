@@ -1,6 +1,6 @@
-package com.likelion.hufsting.profile.dto;
+package com.likelion.hufsting.domain.profile.dto;
 
-import com.likelion.hufsting.profile.domain.Profile;
+import com.likelion.hufsting.domain.profile.domain.Profile;
 import lombok.Getter;
 
 @Getter

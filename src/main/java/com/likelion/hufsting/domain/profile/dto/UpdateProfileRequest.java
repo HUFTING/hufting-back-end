@@ -1,4 +1,4 @@
-package com.likelion.hufsting.profile.dto;
+package com.likelion.hufsting.domain.profile.dto;
 
 
 import lombok.AllArgsConstructor;

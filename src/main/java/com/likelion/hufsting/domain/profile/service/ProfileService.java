@@ -1,10 +1,10 @@
-package com.likelion.hufsting.profile.service;
+package com.likelion.hufsting.domain.profile.service;
 
 
-import com.likelion.hufsting.profile.domain.Profile;
-import com.likelion.hufsting.profile.dto.AddProfileRequest;
-import com.likelion.hufsting.profile.dto.UpdateProfileRequest;
-import com.likelion.hufsting.profile.repository.ProfileRepository;
+import com.likelion.hufsting.domain.profile.domain.Profile;
+import com.likelion.hufsting.domain.profile.repository.ProfileRepository;
+import com.likelion.hufsting.domain.profile.dto.AddProfileRequest;
+import com.likelion.hufsting.domain.profile.dto.UpdateProfileRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
