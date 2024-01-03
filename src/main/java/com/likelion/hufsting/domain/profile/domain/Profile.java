@@ -1,4 +1,4 @@
-package com.likelion.hufsting.profile.domain;
+package com.likelion.hufsting.domain.profile.domain;
 
 
 import jakarta.persistence.Column;
