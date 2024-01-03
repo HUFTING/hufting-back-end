@@ -1,11 +1,11 @@
-package com.likelion.hufsting.profile.controller;
+package com.likelion.hufsting.domain.profile.controller;
 
 
-import com.likelion.hufsting.profile.domain.Profile;
-import com.likelion.hufsting.profile.dto.AddProfileRequest;
-import com.likelion.hufsting.profile.dto.ProfileResponse;
-import com.likelion.hufsting.profile.dto.UpdateProfileRequest;
-import com.likelion.hufsting.profile.service.ProfileService;
+import com.likelion.hufsting.domain.profile.domain.Profile;
+import com.likelion.hufsting.domain.profile.dto.AddProfileRequest;
+import com.likelion.hufsting.domain.profile.dto.ProfileResponse;
+import com.likelion.hufsting.domain.profile.dto.UpdateProfileRequest;
+import com.likelion.hufsting.domain.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
