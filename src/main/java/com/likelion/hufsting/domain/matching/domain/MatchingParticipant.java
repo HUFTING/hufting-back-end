@@ -1,6 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.User;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,5 +16,5 @@ public class MatchingParticipant {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PART_Id")
-    private User participant;
+    private Member participant;
 }

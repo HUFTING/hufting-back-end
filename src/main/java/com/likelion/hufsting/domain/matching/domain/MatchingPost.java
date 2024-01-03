@@ -1,6 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.User;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -21,7 +21,7 @@ public class MatchingPost {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "AUTHOR_ID")
-    private User author; // 작성자
+    private Member author; // 작성자
 
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED

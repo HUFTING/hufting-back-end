@@ -1,6 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.User;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,7 +16,7 @@ public class MatchingRequest {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PART_ID")
-    private User participant;
+    private Member participant;
 
     @Enumerated(EnumType.STRING)
     private MatchingAcceptance matchingAcceptance; // ACCEPTED, REJECTED

@@ -1,6 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.User;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -18,5 +18,5 @@ public class MatchingHost {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "HOST_Id")
-    private User host;
+    private Member host;
 }
