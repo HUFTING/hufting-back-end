@@ -21,8 +21,8 @@ public class MatchingPostRepository {
         return em.find(MatchingPost.class, id);
     }
 
-    /*
     public List<MatchingPost> findAll(){
+        return em.createQuery("select mp from MatchingPost mp", MatchingPost.class)
+                .getResultList();
     }
-    */
 }
