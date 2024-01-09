@@ -20,6 +20,9 @@ public class MatchingPostService {
         return matchingPostRepository.findAll();
     }
     // 훕팅 글 상세 조회
+    public MatchingPost findByIdMatchingPost(Long matchingPostId){
+        return matchingPostRepository.findById(matchingPostId);
+    }
     // 훕팅 글 등록
     @Transactional
     public Long saveMatchingPost(MatchingPost matchingPost){
