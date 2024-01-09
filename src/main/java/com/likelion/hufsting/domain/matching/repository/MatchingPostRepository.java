@@ -12,9 +12,8 @@ public class MatchingPostRepository {
     @PersistenceContext
     private EntityManager em; // entityManager
 
-    public Long save(MatchingPost matchingPost){
+    public void save(MatchingPost matchingPost){
         em.persist(matchingPost);
-        return matchingPost.getId();
     }
 
     public MatchingPost findById(Long id){
