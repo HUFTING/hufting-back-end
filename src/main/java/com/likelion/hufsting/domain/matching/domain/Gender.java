@@ -9,11 +9,10 @@ public enum Gender {
     MALE("남"),
     FEMALE("여");
 
-    private final String value;
-
     Gender(String value){
         this.value = value;
     }
+    private final String value;
 
     // 역직렬화 함수(Deserializer Function)
     @JsonCreator
