@@ -4,14 +4,21 @@ import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "HUFSTING_POSTS")
 public class MatchingPost {
+    protected MatchingPost(){}
     public MatchingPost(String title, String content, Gender gender,
                         int desiredNumPeople, String openTalkLink,
-                        Member author, MatchingStatus matchingStatus) {
+                        Member author, MatchingStatus matchingStatus
+                        ) {
         this.title = title;
         this.content = content;
         this.gender = gender;
@@ -35,10 +42,16 @@ public class MatchingPost {
 
     private String openTalkLink; // 오픈톡 링크
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "AUTHOR_ID")
     private Member author; // 작성자
 
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

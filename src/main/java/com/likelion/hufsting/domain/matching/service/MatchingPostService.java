@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -14,6 +16,9 @@ public class MatchingPostService {
     private final MatchingPostRepository matchingPostRepository;
 
     // 훕팅 글 전체 조회
+    public List<MatchingPost> findAllMatchingPost(){
+        return matchingPostRepository.findAll();
+    }
     // 훕팅 글 상세 조회
     // 훕팅 글 등록
     @Transactional
