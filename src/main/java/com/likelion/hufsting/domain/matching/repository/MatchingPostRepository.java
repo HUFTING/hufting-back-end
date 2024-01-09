@@ -12,10 +12,6 @@ public class MatchingPostRepository {
     @PersistenceContext
     private EntityManager em; // entityManager
 
-    public void save(MatchingPost matchingPost){
-        em.persist(matchingPost);
-    }
-
     public MatchingPost findById(Long id){
         return em.find(MatchingPost.class, id);
     }
@@ -23,5 +19,14 @@ public class MatchingPostRepository {
     public List<MatchingPost> findAll(){
         return em.createQuery("select mp from MatchingPost mp", MatchingPost.class)
                 .getResultList();
+    }
+
+    public void save(MatchingPost matchingPost){
+        em.persist(matchingPost);
+    }
+
+    public void delete(Long matchingPostId){
+        MatchingPost deleteMatchingPost = em.find(MatchingPost.class, matchingPostId);
+        em.remove(deleteMatchingPost);
     }
 }

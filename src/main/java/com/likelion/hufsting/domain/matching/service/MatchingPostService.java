@@ -31,4 +31,9 @@ public class MatchingPostService {
     }
     // 훕팅 글 수정
     // 훕팅 글 삭제
+    @Transactional
+    public Long removeMatchingPost(Long matchingPostId){
+        matchingPostRepository.delete(matchingPostId);
+        return matchingPostId;
+    }
 }

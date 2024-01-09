@@ -6,12 +6,16 @@ import com.likelion.hufsting.domain.matching.dto.*;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
 import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
@@ -32,7 +36,7 @@ public class MatchingPostApiController {
     }
 
     @PostMapping("/api/v1/matchingposts")
-    public CreateMatchingPostResponse postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
+    public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
         Member author = new Member();
         MatchingPost matchingPost = new MatchingPost(
                 dto.getTitle(),
@@ -44,7 +48,8 @@ public class MatchingPostApiController {
                 MatchingStatus.WAITING
         );
         Long newMatchingPost = matchingPostService.saveMatchingPost(matchingPost);
-        return new CreateMatchingPostResponse(newMatchingPost);
+        CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPost);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
@@ -59,5 +64,12 @@ public class MatchingPostApiController {
                 findMatchingPost.getOpenTalkLink(),
                 findMatchingPost.getMatchingStatus()
         );
+    }
+
+    @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
+    public ResponseEntity<Void> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+        log.info("Request to delete matching post: {}", matchingPostId);
+        matchingPostService.removeMatchingPost(matchingPostId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
