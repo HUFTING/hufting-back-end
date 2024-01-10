@@ -1,6 +1,7 @@
 package com.likelion.hufsting.domain.matching.service;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
+import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,15 @@ public class MatchingPostService {
         return matchingPost.getId();
     }
     // 훕팅 글 수정
+    @Transactional
+    public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData updateMatchingPostData){
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId);
+        matchingPost.matchingPostUpdate(updateMatchingPostData); // 변경 감지(Dirty checking)
+        return matchingPostId;
+    }
     // 훕팅 글 삭제
     @Transactional
-    public Long removeMatchingPost(Long matchingPostId){
+    public void removeMatchingPost(Long matchingPostId){
         matchingPostRepository.delete(matchingPostId);
-        return matchingPostId;
     }
 }
