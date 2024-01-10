@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class MatchingPostsData {
+public class FindMatchingPostsData {
     private String title;
     private Gender gender;
     private int desiredNumPeople;

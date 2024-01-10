@@ -1,5 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
+import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -54,4 +55,12 @@ public class MatchingPost {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public void matchingPostUpdate(UpdateMatchingPostData dto){
+        if(dto.getTitle() != null) this.title = dto.getTitle();
+        if(dto.getContent() != null) this.content = dto.getContent();
+        if(dto.getGender() != null) this.gender = dto.getGender();
+        if(dto.getParticipants() != null) this.desiredNumPeople = dto.getDesiredNumPeople();
+        if(dto.getOpenTalkLink() != null) this.openTalkLink = dto.getOpenTalkLink();
+    }
 }

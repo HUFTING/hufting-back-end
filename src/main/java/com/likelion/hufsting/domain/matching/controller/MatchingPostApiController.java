@@ -21,10 +21,10 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
-    public FindMatchingPostsResponse<MatchingPostsData> getMatchingPosts(){
+    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
-        List<MatchingPostsData> matchingPosts = findMatchingPosts.stream()
-                .map(matchingPost -> new MatchingPostsData(
+        List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
+                .map(matchingPost -> new FindMatchingPostsData(
                         matchingPost.getTitle(),
                         matchingPost.getGender(),
                         matchingPost.getDesiredNumPeople(),
@@ -32,7 +32,7 @@ public class MatchingPostApiController {
                         matchingPost.getCreatedAt()
                 ))
                 .collect(Collectors.toList());
-        return new FindMatchingPostsResponse<MatchingPostsData>(matchingPosts.size(), matchingPosts);
+        return new FindMatchingPostsResponse<FindMatchingPostsData>(matchingPosts.size(), matchingPosts);
     }
 
     @PostMapping("/api/v1/matchingposts")
@@ -47,8 +47,8 @@ public class MatchingPostApiController {
                 author, // 임시 사용자
                 MatchingStatus.WAITING
         );
-        Long newMatchingPost = matchingPostService.saveMatchingPost(matchingPost);
-        CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPost);
+        Long newMatchingPostId = matchingPostService.saveMatchingPost(matchingPost);
+        CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPostId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -63,6 +63,16 @@ public class MatchingPostApiController {
                 "원**", // 임시 사용자
                 findMatchingPost.getOpenTalkLink(),
                 findMatchingPost.getMatchingStatus()
+        );
+    }
+
+    @PatchMapping("/api/v1/matchingposts/{matchingpostid}")
+    public Long patchMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
+                                           @RequestBody UpdateMatchingPostRequest dto){
+        log.info("Request to update matching post: {}", matchingPostId);
+        return matchingPostService.updateMatchingPost(
+                matchingPostId,
+                UpdateMatchingPostData.toUpdateMatchingPostData(dto)
         );
     }
 
