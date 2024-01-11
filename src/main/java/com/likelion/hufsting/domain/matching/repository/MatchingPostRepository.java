@@ -3,14 +3,15 @@ package com.likelion.hufsting.domain.matching.repository;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class MatchingPostRepository {
-    @PersistenceContext
-    private EntityManager em; // entityManager
+    private final EntityManager em; // entityManager
 
     public MatchingPost findById(Long id){
         return em.find(MatchingPost.class, id);

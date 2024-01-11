@@ -10,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,12 +45,15 @@ public class MatchingPost {
 
     private String openTalkLink; // 오픈톡 링크
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
     @JoinColumn(name = "AUTHOR_ID")
     private Member author; // 작성자
 
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
+
+    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<MatchingHost> matchingHosts = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -62,5 +67,15 @@ public class MatchingPost {
         if(dto.getGender() != null) this.gender = dto.getGender();
         if(dto.getParticipants() != null) this.desiredNumPeople = dto.getDesiredNumPeople();
         if(dto.getOpenTalkLink() != null) this.openTalkLink = dto.getOpenTalkLink();
+    }
+
+    // MatchingHost Add Function
+    public void addHost(List<MatchingHost> hosts){
+        this.matchingHosts.addAll(hosts);
+    }
+
+    // MatchingHost Remove Function
+    public void removeHost(List<MatchingHost> hosts){
+
     }
 }
