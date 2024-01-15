@@ -12,24 +12,13 @@ import org.springframework.cglib.core.Local;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Table(name = "HUFSTING_POSTS")
 public class MatchingPost {
     protected MatchingPost(){}
-    public MatchingPost(String title, String content, Gender gender,
-                        int desiredNumPeople, String openTalkLink,
-                        Member author, MatchingStatus matchingStatus
-                        ) {
-        this.title = title;
-        this.content = content;
-        this.gender = gender;
-        this.desiredNumPeople = desiredNumPeople;
-        this.openTalkLink = openTalkLink;
-        this.author = author;
-        this.matchingStatus = matchingStatus;
-    }
 
     @Id @GeneratedValue
     @Column(name = "POST_ID")
@@ -61,6 +50,32 @@ public class MatchingPost {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MatchingPost that = (MatchingPost) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    public MatchingPost(String title, String content, Gender gender,
+                        int desiredNumPeople, String openTalkLink,
+                        Member author, MatchingStatus matchingStatus
+    ) {
+        this.title = title;
+        this.content = content;
+        this.gender = gender;
+        this.desiredNumPeople = desiredNumPeople;
+        this.openTalkLink = openTalkLink;
+        this.author = author;
+        this.matchingStatus = matchingStatus;
+    }
+
     public void matchingPostUpdate(UpdateMatchingPostData dto){
         if(dto.getTitle() != null) this.title = dto.getTitle();
         if(dto.getContent() != null) this.content = dto.getContent();
@@ -74,8 +89,15 @@ public class MatchingPost {
         this.matchingHosts.addAll(hosts);
     }
 
-    // MatchingHost Remove Function
-    public void removeHost(List<MatchingHost> hosts){
-
+    // MatchingHost Update Function
+    public void updateHost(List<MatchingHost> hosts){
+        // add new host
+        for(MatchingHost host : hosts){
+            if(!matchingHosts.contains(host)){
+                matchingHosts.add(host);
+            }
+        }
+        // remove not in hosts
+        matchingHosts.removeIf(matchingHost -> !hosts.contains(matchingHost));
     }
 }
