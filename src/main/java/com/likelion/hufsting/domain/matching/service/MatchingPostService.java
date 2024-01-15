@@ -44,12 +44,9 @@ public class MatchingPostService {
                 MatchingStatus.WAITING
         );
         // 호스트 조회 및 생성
-        List<MatchingHost> matchingHosts = new ArrayList<>();
+        List<MatchingHost> matchingHosts = createMatchingHostsById(matchingPost, dto.getParticipants());
         matchingHosts.add(new MatchingHost(matchingPost, author)); // 작성자 추가
-        for(int hostId : dto.getParticipants()){
-            Member findHost = new Member(); // 임시 사용자 생성
-            matchingHosts.add(new MatchingHost(matchingPost, findHost));
-        }
+
         // 매칭 글에 참가자(* 호스트) 추가
         matchingPost.addHost(matchingHosts);
         // 매칭글 영속화
@@ -58,14 +55,27 @@ public class MatchingPostService {
     }
     // 훕팅 글 수정
     @Transactional
-    public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData updateMatchingPostData){
+    public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId);
-        matchingPost.matchingPostUpdate(updateMatchingPostData); // 변경 감지(Dirty checking)
+        matchingPost.updateMatchingPost(dto); // 변경 감지(Dirty checking)
+
+        // 호스트 조회 및 수정
+        matchingPost.updateHost(createMatchingHostsById(matchingPost, dto.getParticipants()));
         return matchingPostId;
     }
     // 훕팅 글 삭제
     @Transactional
     public void removeMatchingPost(Long matchingPostId){
         matchingPostRepository.delete(matchingPostId);
+    }
+
+    // 사용자 정의 메서드
+    private List<MatchingHost> createMatchingHostsById(MatchingPost matchingPost, List<Long> hostIds){
+        List<MatchingHost> matchingHosts = new ArrayList<>();
+        for(Long hostId : hostIds){
+            Member findHost = new Member(); // 임시 사용자 생성
+            matchingHosts.add(new MatchingHost(matchingPost, findHost));
+        }
+        return matchingHosts;
     }
 }

@@ -76,12 +76,12 @@ public class MatchingPost {
         this.matchingStatus = matchingStatus;
     }
 
-    public void matchingPostUpdate(UpdateMatchingPostData dto){
-        if(dto.getTitle() != null) this.title = dto.getTitle();
-        if(dto.getContent() != null) this.content = dto.getContent();
-        if(dto.getGender() != null) this.gender = dto.getGender();
-        if(dto.getParticipants() != null) this.desiredNumPeople = dto.getDesiredNumPeople();
-        if(dto.getOpenTalkLink() != null) this.openTalkLink = dto.getOpenTalkLink();
+    public void updateMatchingPost(UpdateMatchingPostData dto){
+         this.title = dto.getTitle();
+         this.content = dto.getContent();
+         this.gender = dto.getGender();
+         this.desiredNumPeople = dto.getDesiredNumPeople();
+         this.openTalkLink = dto.getOpenTalkLink();
     }
 
     // MatchingHost Add Function
