@@ -1,11 +1,14 @@
 package com.likelion.hufsting.domain.matching.repository;
 
+import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository

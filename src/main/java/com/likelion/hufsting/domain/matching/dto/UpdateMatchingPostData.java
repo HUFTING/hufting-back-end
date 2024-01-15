@@ -12,7 +12,7 @@ public class UpdateMatchingPostData {
     private Gender gender;
     private int desiredNumPeople;
     private String openTalkLink;
-    private List<Integer> participants;
+    private List<Long> participants;
 
     // Controller-Service 간 DTO 변환 함수
     public static UpdateMatchingPostData toUpdateMatchingPostData(UpdateMatchingPostRequest dto){

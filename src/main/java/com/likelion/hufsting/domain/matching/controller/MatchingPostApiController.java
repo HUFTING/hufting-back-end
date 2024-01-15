@@ -59,8 +59,8 @@ public class MatchingPostApiController {
         );
     }
 
-    @PatchMapping("/api/v1/matchingposts/{matchingpostid}")
-    public Long patchMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
+    @PutMapping("/api/v1/matchingposts/{matchingpostid}")
+    public Long putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
                                            @RequestBody UpdateMatchingPostRequest dto){
         log.info("Request to update matching post: {}", matchingPostId);
         return matchingPostService.updateMatchingPost(

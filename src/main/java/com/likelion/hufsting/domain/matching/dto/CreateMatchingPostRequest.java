@@ -18,5 +18,5 @@ public class CreateMatchingPostRequest {
     // 오픈 채팅 링크
     private String openTalkLink;
     // 참여자 ID
-    private List<Integer> participants;
+    private List<Long> participants;
 }
