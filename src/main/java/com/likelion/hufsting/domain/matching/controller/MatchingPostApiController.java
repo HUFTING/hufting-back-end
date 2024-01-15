@@ -37,17 +37,10 @@ public class MatchingPostApiController {
 
     @PostMapping("/api/v1/matchingposts")
     public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
-        Member author = new Member();
-        MatchingPost matchingPost = new MatchingPost(
-                dto.getTitle(),
-                dto.getContent(),
-                dto.getGender(),
-                dto.getDesiredNumPeople(),
-                dto.getOpenTalkLink(),
-                author, // 임시 사용자
-                MatchingStatus.WAITING
-        );
-        Long newMatchingPostId = matchingPostService.saveMatchingPost(matchingPost);
+        // Converting DTO
+        System.out.println(dto.getParticipants());
+        CreateMatchingPostData convertedDto = CreateMatchingPostData.toCreateMatchingPostData(dto);
+        Long newMatchingPostId = matchingPostService.saveMatchingPost(convertedDto);
         CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPostId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

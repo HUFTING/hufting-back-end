@@ -1,13 +1,18 @@
 package com.likelion.hufsting.domain.matching.service;
 
+import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
+import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
+import com.likelion.hufsting.domain.matching.dto.CreateMatchingPostData;
 import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
+import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,7 +31,27 @@ public class MatchingPostService {
     }
     // 훕팅 글 등록
     @Transactional
-    public Long saveMatchingPost(MatchingPost matchingPost){
+    public Long saveMatchingPost(CreateMatchingPostData dto){
+        // MatchingPost 생성
+        Member author = new Member(); // 임시 작성자
+        MatchingPost matchingPost = new MatchingPost(
+                dto.getTitle(),
+                dto.getContent(),
+                dto.getGender(),
+                dto.getDesiredNumPeople(),
+                dto.getOpenTalkLink(),
+                author, // 임시 사용자
+                MatchingStatus.WAITING
+        );
+        // 호스트 조회 및 생성
+        List<MatchingHost> matchingHosts = new ArrayList<>();
+        for(int hostId : dto.getParticipants()){
+            Member findHost = new Member(); // 임시 사용자 생성
+            matchingHosts.add(new MatchingHost(matchingPost, findHost));
+        }
+        // 매칭 글에 참가자(* 호스트) 추가
+        matchingPost.addHost(matchingHosts);
+        // 매칭글 영속화
         matchingPostRepository.save(matchingPost);
         return matchingPost.getId();
     }
