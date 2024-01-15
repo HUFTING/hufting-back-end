@@ -45,6 +45,7 @@ public class MatchingPostService {
         );
         // 호스트 조회 및 생성
         List<MatchingHost> matchingHosts = new ArrayList<>();
+        matchingHosts.add(new MatchingHost(matchingPost, author)); // 작성자 추가
         for(int hostId : dto.getParticipants()){
             Member findHost = new Member(); // 임시 사용자 생성
             matchingHosts.add(new MatchingHost(matchingPost, findHost));
