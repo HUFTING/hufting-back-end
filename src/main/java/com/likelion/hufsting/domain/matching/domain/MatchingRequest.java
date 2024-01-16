@@ -2,8 +2,10 @@ package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
+@Builder
 @Table(name = "HUFSTING_REQ")
 public class MatchingRequest {
     @Id @GeneratedValue

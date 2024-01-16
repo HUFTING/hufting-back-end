@@ -22,6 +22,7 @@ public class MatchingPostApiController {
 
     @GetMapping("/api/v1/matchingposts")
     public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
+        log.info("Request to get matching posts");
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
         List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
                 .map(matchingPost -> new FindMatchingPostsData(
@@ -37,6 +38,7 @@ public class MatchingPostApiController {
 
     @PostMapping("/api/v1/matchingposts")
     public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
+        log.info("Request to post matching post");
         // Converting DTO
         System.out.println(dto.getParticipants());
         CreateMatchingPostData convertedDto = CreateMatchingPostData.toCreateMatchingPostData(dto);
@@ -47,6 +49,7 @@ public class MatchingPostApiController {
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
     public FindMatchingPostResponse getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+        log.info("Request to get matching post: {}", matchingPostId);
         MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
         return new FindMatchingPostResponse(
                 findMatchingPost.getTitle(),
@@ -60,13 +63,15 @@ public class MatchingPostApiController {
     }
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
-    public Long putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
+    public ResponseEntity<UpdateMatchingPostResponse> putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
                                            @RequestBody UpdateMatchingPostRequest dto){
         log.info("Request to update matching post: {}", matchingPostId);
-        return matchingPostService.updateMatchingPost(
+        Long updateMatchingPostId = matchingPostService.updateMatchingPost(
                 matchingPostId,
                 UpdateMatchingPostData.toUpdateMatchingPostData(dto)
         );
+        UpdateMatchingPostResponse response = new UpdateMatchingPostResponse(updateMatchingPostId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
