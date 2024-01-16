@@ -2,8 +2,10 @@ package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "HUFSTING_PARTICIPANTS")
 public class MatchingParticipant {
     @Id @GeneratedValue
@@ -15,6 +17,13 @@ public class MatchingParticipant {
     private MatchingRequest matchingRequest;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PART_Id")
+    @JoinColumn(name = "PARTICIPANT_Id")
     private Member participant;
+
+    // Generator
+    protected MatchingParticipant(){}
+    public MatchingParticipant(MatchingRequest matchingRequest, Member participant){
+        this.matchingRequest = matchingRequest;
+        this.participant = participant;
+    }
 }

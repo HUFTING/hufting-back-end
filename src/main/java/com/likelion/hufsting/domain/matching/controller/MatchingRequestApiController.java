@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +22,15 @@ public class MatchingRequestApiController {
         CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
         matchingRequestService.createMatchingRequests(convertedDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    // 매칭 취소
+    @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
+    public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+        try{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
