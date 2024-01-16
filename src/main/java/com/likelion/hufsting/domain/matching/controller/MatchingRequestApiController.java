@@ -1,7 +1,6 @@
 package com.likelion.hufsting.domain.matching.controller;
 
-import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqData;
-import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqRequest;
+import com.likelion.hufsting.domain.matching.dto.*;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +16,35 @@ public class MatchingRequestApiController {
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
-    public ResponseEntity<Void> postMatchingRequest(@RequestBody CreateMatchingReqRequest dto){
+    public ResponseEntity<CreateMatchingReqResponse> postMatchingRequest(@RequestBody CreateMatchingReqRequest dto){
         log.info("Request to post matching request");
         CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
-        matchingRequestService.createMatchingRequests(convertedDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        CreateMatchingReqResponse response = matchingRequestService.createMatchingRequests(convertedDto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // 매칭 취소
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
     public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
         try{
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            matchingRequestService.removeMatchingRequest(matchingRequestId);
+            return new ResponseEntity<>(matchingRequestId, HttpStatus.NO_CONTENT);
         }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // 매칭 수정
+    @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
+    public ResponseEntity<Long> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
+                                   @RequestBody UpdateMatchingReqRequest dto){
+        try{
+            Long updatedMatchingRequestId = matchingRequestService.updateMatchingRequest(
+                    matchingRequestId,
+                    UpdateMatchingReqData.toUpdateMatchingReqData(dto)
+            );
+            return new ResponseEntity<>(updatedMatchingRequestId, HttpStatus.OK);
+        }catch(IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

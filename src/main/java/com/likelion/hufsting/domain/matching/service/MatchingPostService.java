@@ -8,7 +8,6 @@ import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +26,8 @@ public class MatchingPostService {
     }
     // 훕팅 글 상세 조회
     public MatchingPost findByIdMatchingPost(Long matchingPostId){
-        return matchingPostRepository.findById(matchingPostId);
+        return matchingPostRepository.findById(matchingPostId)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
     }
     // 훕팅 글 등록
     @Transactional
@@ -56,17 +56,20 @@ public class MatchingPostService {
     // 훕팅 글 수정
     @Transactional
     public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto){
-        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId);
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
         matchingPost.updateMatchingPost(dto); // 변경 감지(Dirty checking)
 
-        // 호스트 조회 및 수정
+        // 호스트 수정
         matchingPost.updateHost(createMatchingHostsById(matchingPost, dto.getParticipants()));
         return matchingPostId;
     }
     // 훕팅 글 삭제
     @Transactional
     public void removeMatchingPost(Long matchingPostId){
-        matchingPostRepository.delete(matchingPostId);
+        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
+                        .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        matchingPostRepository.delete(matchingPost);
     }
 
     // 사용자 정의 메서드
