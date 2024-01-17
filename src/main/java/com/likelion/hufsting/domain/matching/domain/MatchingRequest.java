@@ -30,7 +30,8 @@ public class MatchingRequest {
     private Member representative;
 
     @OneToMany(mappedBy = "matchingRequest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MatchingParticipant> participants;
+    @Builder.Default
+    private List<MatchingParticipant> participants = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
