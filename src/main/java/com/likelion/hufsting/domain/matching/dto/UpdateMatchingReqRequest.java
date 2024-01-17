@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class UpdateMatchingReqRequest {
-    private List<Long> participantsIds;
+    private List<Long> participantIds;
 }

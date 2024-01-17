@@ -2,21 +2,26 @@ package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Builder
+@Getter @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "HUFSTING_REQ")
 public class MatchingRequest {
     @Id @GeneratedValue
     @Column(name = "MATCHING_REQ_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 영속성 전이 제거 필요
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
@@ -44,8 +49,8 @@ public class MatchingRequest {
     private MatchingAcceptance matchingAcceptance; // ACCEPTED, REJECTED, WAITING
 
     // MatchingRequest add participants
-    public void addParticipant(List<MatchingParticipant> participants){
-        this.participants.addAll(participants);
+    public void addParticipant(List<MatchingParticipant> reqParticipants){
+        participants.addAll(reqParticipants);
     }
 
     // MatchingRequest update participants

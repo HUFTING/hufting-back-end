@@ -8,6 +8,7 @@ import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +31,12 @@ public class MatchingRequestService {
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .matchingPost(matchingPost)
                 .representative(representative)
+                .participants(new ArrayList<>())
                 .matchingAcceptance(MatchingAcceptance.WAITING)
                 .build();
         // Member 리스트 가져오기
-        newMatchingRequest.addParticipant(createMatchingParticipantsById(newMatchingRequest, dto.getParticipantIds()));
+        List<MatchingParticipant> matchingParticipants = createMatchingParticipantsById(newMatchingRequest, dto.getParticipantIds());
+        newMatchingRequest.addParticipant(matchingParticipants);
         matchingRequestRepository.save(newMatchingRequest);
         return new CreateMatchingReqResponse(dto.getParticipantIds());
     }
@@ -61,11 +64,11 @@ public class MatchingRequestService {
 
     // 사용자 정의 메서드
     // create MatchingRequests List By MemberId
-    public static List<MatchingParticipant> createMatchingParticipantsById(MatchingRequest matchingRequest,List<Long> participantIds){
+    private List<MatchingParticipant> createMatchingParticipantsById(MatchingRequest matchingRequest,List<Long> participantIds){
         List<MatchingParticipant> matchingParticipants = new ArrayList<>();
         for(Long participantId : participantIds){
-            Member findHost = new Member(); // 임시 사용자 생성
-            matchingParticipants.add(new MatchingParticipant(matchingRequest, findHost));
+            Member findParticipant = new Member(); // 임시 사용자 생성
+            matchingParticipants.add(new MatchingParticipant(matchingRequest, findParticipant));
         }
         return matchingParticipants;
     }

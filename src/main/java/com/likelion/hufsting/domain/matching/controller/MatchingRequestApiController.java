@@ -26,6 +26,7 @@ public class MatchingRequestApiController {
     // 매칭 취소
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
     public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+        log.info("Request to delete matching request {}", matchingRequestId);
         try{
             matchingRequestService.removeMatchingRequest(matchingRequestId);
             return new ResponseEntity<>(matchingRequestId, HttpStatus.NO_CONTENT);
@@ -38,6 +39,7 @@ public class MatchingRequestApiController {
     @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
     public ResponseEntity<Long> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
                                    @RequestBody UpdateMatchingReqRequest dto){
+        log.info("Request to put matching request {}", matchingRequestId);
         try{
             Long updatedMatchingRequestId = matchingRequestService.updateMatchingRequest(
                     matchingRequestId,

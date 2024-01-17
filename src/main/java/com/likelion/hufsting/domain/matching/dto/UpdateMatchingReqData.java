@@ -10,7 +10,7 @@ public class UpdateMatchingReqData {
 
     public static UpdateMatchingReqData toUpdateMatchingReqData(UpdateMatchingReqRequest dto){
         UpdateMatchingReqData updateMatchingReqData = new UpdateMatchingReqData();
-        updateMatchingReqData.setIds(dto.getParticipantsIds());
+        updateMatchingReqData.setIds(dto.getParticipantIds());
         return updateMatchingReqData;
     }
 }

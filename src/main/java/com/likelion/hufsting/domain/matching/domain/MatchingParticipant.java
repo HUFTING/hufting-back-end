@@ -12,12 +12,12 @@ public class MatchingParticipant {
     @Column(name = "MATCHING_PART_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REQ_ID")
     private MatchingRequest matchingRequest;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARTICIPANT_Id")
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARTICIPANT_ID")
     private Member participant;
 
     // Generator

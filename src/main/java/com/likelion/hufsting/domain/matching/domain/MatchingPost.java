@@ -18,8 +18,6 @@ import java.util.Objects;
 @Getter
 @Table(name = "HUFSTING_POSTS")
 public class MatchingPost {
-    protected MatchingPost(){}
-
     @Id @GeneratedValue
     @Column(name = "POST_ID")
     private Long id; // PK
@@ -62,6 +60,8 @@ public class MatchingPost {
     public int hashCode() {
         return Objects.hash(getId());
     }
+
+    protected MatchingPost(){}
 
     public MatchingPost(String title, String content, Gender gender,
                         int desiredNumPeople, String openTalkLink,
