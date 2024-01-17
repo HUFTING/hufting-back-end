@@ -37,15 +37,15 @@ public class MatchingRequestApiController {
 
     // 매칭 수정
     @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<Long> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
+    public ResponseEntity<UpdateMatchingReqResponse> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
                                    @RequestBody UpdateMatchingReqRequest dto){
         log.info("Request to put matching request {}", matchingRequestId);
         try{
-            Long updatedMatchingRequestId = matchingRequestService.updateMatchingRequest(
+            UpdateMatchingReqResponse response = matchingRequestService.updateMatchingRequest(
                     matchingRequestId,
                     UpdateMatchingReqData.toUpdateMatchingReqData(dto)
             );
-            return new ResponseEntity<>(updatedMatchingRequestId, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

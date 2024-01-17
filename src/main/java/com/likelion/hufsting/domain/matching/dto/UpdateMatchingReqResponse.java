@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class CreateMatchingReqResponse {
+public class UpdateMatchingReqResponse {
     private final Long matchingRequestId;
     private final List<Long> participantIds;
 }

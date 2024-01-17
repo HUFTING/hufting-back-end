@@ -4,6 +4,7 @@ import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqData;
 import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqResponse;
 import com.likelion.hufsting.domain.matching.dto.UpdateMatchingReqData;
+import com.likelion.hufsting.domain.matching.dto.UpdateMatchingReqResponse;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.hufsting.domain.profile.domain.Member;
@@ -31,14 +32,17 @@ public class MatchingRequestService {
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .matchingPost(matchingPost)
                 .representative(representative)
-                .participants(new ArrayList<>())
                 .matchingAcceptance(MatchingAcceptance.WAITING)
                 .build();
         // Member 리스트 가져오기
         List<MatchingParticipant> matchingParticipants = createMatchingParticipantsById(newMatchingRequest, dto.getParticipantIds());
         newMatchingRequest.addParticipant(matchingParticipants);
         matchingRequestRepository.save(newMatchingRequest);
-        return new CreateMatchingReqResponse(dto.getParticipantIds());
+
+        // return value generation
+        Long createdMatchingRequestId = newMatchingRequest.getId();
+        List<Long> createdMatchingRequestParticipants = dto.getParticipantIds();
+        return new CreateMatchingReqResponse(createdMatchingRequestId, createdMatchingRequestParticipants);
     }
 
     // 매칭 신청 취소
@@ -51,15 +55,16 @@ public class MatchingRequestService {
 
     // 매칭 신청 수정
     @Transactional
-    public Long updateMatchingRequest(Long matchingRequestId, UpdateMatchingReqData dto){
+    public UpdateMatchingReqResponse updateMatchingRequest(Long matchingRequestId, UpdateMatchingReqData dto){
         // matchingRequest 조회
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
         // 매칭 신청 수정
         matchingRequest.updateParticipant(
-                createMatchingParticipantsById(matchingRequest, dto.getIds())
+                createMatchingParticipantsById(matchingRequest, dto.getParticipantIds())
         );
-        return matchingRequestId;
+
+        return new UpdateMatchingReqResponse(matchingRequestId, dto.getParticipantIds());
     }
 
     // 사용자 정의 메서드

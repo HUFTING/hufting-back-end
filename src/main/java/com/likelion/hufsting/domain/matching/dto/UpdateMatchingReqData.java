@@ -6,11 +6,11 @@ import java.util.List;
 
 @Data
 public class UpdateMatchingReqData {
-    private List<Long> ids;
+    private List<Long> participantIds;
 
     public static UpdateMatchingReqData toUpdateMatchingReqData(UpdateMatchingReqRequest dto){
         UpdateMatchingReqData updateMatchingReqData = new UpdateMatchingReqData();
-        updateMatchingReqData.setIds(dto.getParticipantIds());
+        updateMatchingReqData.setParticipantIds(dto.getParticipantIds());
         return updateMatchingReqData;
     }
 }

@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CreateMatchingPostResponse {
-    private final Long id;
+    private final Long matchingPostId;
 }
