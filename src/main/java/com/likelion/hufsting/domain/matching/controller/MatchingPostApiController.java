@@ -48,36 +48,49 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
-    public FindMatchingPostResponse getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<FindMatchingPostResponse> getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
         log.info("Request to get matching post: {}", matchingPostId);
-        MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
-        return new FindMatchingPostResponse(
-                findMatchingPost.getTitle(),
-                findMatchingPost.getContent(),
-                findMatchingPost.getGender(),
-                findMatchingPost.getDesiredNumPeople(),
-                "원**", // 임시 사용자
-                findMatchingPost.getOpenTalkLink(),
-                findMatchingPost.getMatchingStatus()
-        );
+        try {
+            MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
+            FindMatchingPostResponse response = new FindMatchingPostResponse(
+                    findMatchingPost.getTitle(),
+                    findMatchingPost.getContent(),
+                    findMatchingPost.getGender(),
+                    findMatchingPost.getDesiredNumPeople(),
+                    "원**", // 임시 사용자
+                    findMatchingPost.getOpenTalkLink(),
+                    findMatchingPost.getMatchingStatus()
+            );
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
     public ResponseEntity<UpdateMatchingPostResponse> putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
                                            @RequestBody UpdateMatchingPostRequest dto){
         log.info("Request to update matching post: {}", matchingPostId);
-        Long updateMatchingPostId = matchingPostService.updateMatchingPost(
-                matchingPostId,
-                UpdateMatchingPostData.toUpdateMatchingPostData(dto)
-        );
-        UpdateMatchingPostResponse response = new UpdateMatchingPostResponse(updateMatchingPostId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            Long updateMatchingPostId = matchingPostService.updateMatchingPost(
+                    matchingPostId,
+                    UpdateMatchingPostData.toUpdateMatchingPostData(dto)
+            );
+            UpdateMatchingPostResponse response = new UpdateMatchingPostResponse(updateMatchingPostId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
     public ResponseEntity<Void> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
         log.info("Request to delete matching post: {}", matchingPostId);
-        matchingPostService.removeMatchingPost(matchingPostId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            matchingPostService.removeMatchingPost(matchingPostId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

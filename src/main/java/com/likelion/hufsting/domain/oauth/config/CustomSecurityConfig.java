@@ -100,12 +100,9 @@ public class CustomSecurityConfig {
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// <- 세션을 사용하지 않음
-
-
         http.logout()
                 .logoutSuccessUrl("/files/apiLogin.html");
-
-
+        http.authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
 
