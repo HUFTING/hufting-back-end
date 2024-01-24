@@ -1,7 +1,7 @@
 package com.likelion.hufsting.domain.oauth.service;
 
 
-import com.likelion.hufsting.domain.oauth.domain.APIUser;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import com.likelion.hufsting.domain.oauth.dto.APIAddUserDTO;
 import com.likelion.hufsting.domain.oauth.repository.APIUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ public class APIUserService {
     public String save(APIAddUserDTO dto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        return apiUserRepository.save(APIUser.builder()
-                .mid(dto.getMid())
-                .mpw(encoder.encode(dto.getMpw()))
-                .build()).getMid();
+        return apiUserRepository.save(Member.builder()
+                .id(dto.getMid())
+                .pw(encoder.encode(dto.getMpw()))
+                .build()).getId();
     }
 
-    public APIUser findByMid(String email) {
-        return apiUserRepository.findByMid(email)
+    public Member findByMid(String email) {
+        return apiUserRepository.findById(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 }

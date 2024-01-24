@@ -6,7 +6,7 @@ import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
 import com.likelion.hufsting.domain.matching.dto.CreateMatchingPostData;
 import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
-import com.likelion.hufsting.domain.profile.domain.Member;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
