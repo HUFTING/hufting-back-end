@@ -1,6 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.Member;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

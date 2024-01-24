@@ -1,13 +1,11 @@
 package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.matching.dto.UpdateMatchingPostData;
-import com.likelion.hufsting.domain.profile.domain.Member;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

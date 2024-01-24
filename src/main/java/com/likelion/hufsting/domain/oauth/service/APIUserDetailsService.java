@@ -1,7 +1,7 @@
 package com.likelion.hufsting.domain.oauth.service;
 
 
-import com.likelion.hufsting.domain.oauth.domain.APIUser;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import com.likelion.hufsting.domain.oauth.dto.APIUserDTO;
 import com.likelion.hufsting.domain.oauth.repository.APIUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +26,14 @@ public class APIUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<APIUser> result = apiUserRepository.findById(username);
+        Optional<Member> result = apiUserRepository.findById(username);
 
-        APIUser apiUser = result.orElseThrow(() -> new UsernameNotFoundException("Cannot find mid")); // username에 해당하는 사용자가 있으면 유저 정보 반환 아니면 예외처리
+        Member member = result.orElseThrow(() -> new UsernameNotFoundException("Cannot find mid")); // username에 해당하는 사용자가 있으면 유저 정보 반환 아니면 예외처리
 
 
         APIUserDTO dto = new APIUserDTO(
-                apiUser.getMid(),
-                apiUser.getMpw(),
+                member.getId(),
+                member.getPw(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
 

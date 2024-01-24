@@ -1,7 +1,7 @@
 package com.likelion.hufsting.domain.oauth.controller;
 
 
-import com.likelion.hufsting.domain.oauth.domain.APIUser;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 
 import com.likelion.hufsting.domain.oauth.dto.APIAuthCodeDTO;
 import com.likelion.hufsting.domain.oauth.repository.APIUserRepository;
@@ -15,6 +15,7 @@ import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -48,18 +49,24 @@ public class allowURIController {
         Map<String ,String> userInfo;
         // code값으 DTO를 거치지 않으면 JSON형태의 문자열로 들어오게 된다.
         userInfo = apiLoginService.socialLogin(deCode, registrationId);
-
+//        System.out.println("code 출력" + code.getCode());
+//        System.out.println("================");
         // 회원가입된 소셜계정인지 확인
         String id = userInfo.get("email");
-
-        System.out.println(id);
-        Optional<APIUser> user = apiUserRepository.findByMid(id);
+        String[] s = id.split("@");
+        System.out.println(s[1]);
+        if(!s[1].equals("hufs.ac.kr")) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("학교 이메일 hufs.ac.kr 이메일로 로그인해주세요");
+        }
+        Optional<Member> user = apiUserRepository.findById(id);
 
         if (!user.isPresent()) { //유저가 존재하는 않는 경우
             String rawPassword = "비밀번호";
             String encodePassword = passwordEncoder.encode(rawPassword);
-            APIUser apiUser = new APIUser(id,encodePassword);
-            apiUserRepository.save(apiUser);
+            Member member = new Member(id,encodePassword);
+            apiUserRepository.save(member);
         }
         String accessToken = jwtUtil.generateToken(Map.of("mid", id), 1);
         String refreshToken = jwtUtil.generateToken(Map.of("mid", id),30);
@@ -74,9 +81,12 @@ public class allowURIController {
 
 
         String jsonStr = gson.toJson(keyMap);
+        System.out.println(jsonStr);
 
         return ResponseEntity.ok(jsonStr);
     }
+
+
 }
 
 
