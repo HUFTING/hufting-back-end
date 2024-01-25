@@ -23,6 +23,7 @@ public class MatchingRequestApiController {
             FindMyMatchingReqResponse response = matchingRequestService.getMyMatchingRequest();
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
     }

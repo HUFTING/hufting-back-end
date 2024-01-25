@@ -70,9 +70,11 @@ public class MatchingRequestService {
     public FindMyMatchingReqResponse getMyMatchingRequest(){
         Member participant = new Member(); // 임시 인증 유저
         List<MatchingRequest> findMyMatchingRequests = matchingRequestQueryRepository.findByParticipant(participant);
+        System.out.println(findMyMatchingRequests.size());
         List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
                 FindMyMatchingReqData::toFindMatchingReqData
         ).toList();
+        //System.out.println(convertedMyMatchingRequests.size());
         return FindMyMatchingReqResponse.builder()
                 .data(convertedMyMatchingRequests)
                 .build();

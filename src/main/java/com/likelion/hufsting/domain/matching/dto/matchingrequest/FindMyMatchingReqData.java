@@ -15,8 +15,8 @@ public class FindMyMatchingReqData {
     // 매칭 신청 관련
     private MatchingAcceptance matchingAcceptance; // 매칭 신청 상태 : 수락/거부
     // 매칭 신청자 관련
-    private String representativeId; // 대표자 ID
-    private String representativeName; // 대표자 이름
+    private Long representativeId; // 대표자 ID
+    //private String representativeName; // 대표자 이름
 
     // convert to FindMatchingReqData
     public static FindMyMatchingReqData toFindMatchingReqData(MatchingRequest dto){
@@ -25,7 +25,7 @@ public class FindMyMatchingReqData {
         findMatchingReqData.setMatchingPostTitle(dto.getMatchingPost().getTitle());
         findMatchingReqData.setMatchingAcceptance(dto.getMatchingAcceptance());
         findMatchingReqData.setRepresentativeId(dto.getRepresentative().getId());
-        findMatchingReqData.setRepresentativeName(dto.getRepresentative().getProfile().getName());
+        //findMatchingReqData.setRepresentativeName(dto.getRepresentative().getProfile().getName());
         return findMatchingReqData;
     }
 }
