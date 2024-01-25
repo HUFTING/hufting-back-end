@@ -8,6 +8,6 @@ import lombok.Setter;
 
 public class APIAddUserDTO {
 
-    private String mid;
+    private String mEmail;
     private String mpw;
 }

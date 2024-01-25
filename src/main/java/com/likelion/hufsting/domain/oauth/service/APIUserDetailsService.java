@@ -32,7 +32,7 @@ public class APIUserDetailsService implements UserDetailsService {
 
 
         APIUserDTO dto = new APIUserDTO(
-                member.getId(),
+                member.getEmail(),
                 member.getPw(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
 

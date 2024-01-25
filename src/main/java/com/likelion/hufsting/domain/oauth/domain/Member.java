@@ -1,13 +1,8 @@
 package com.likelion.hufsting.domain.oauth.domain;
 
 import com.likelion.hufsting.domain.profile.domain.Profile;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 @Entity
 @Getter
@@ -17,15 +12,16 @@ import jakarta.persistence.Id;
 @ToString
 
 public class Member {
+    @Id @GeneratedValue
+    private Long id;
 
-    @Id
     @Column(name = "MEMBER_ID")
-    private String id;
+    private String email;
 
     @Column(name="MEMBER_PW")
     private String pw;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "PROFILE_ID")
     private Profile profile;
 
@@ -42,7 +38,7 @@ public class Member {
 
     @Builder
     public Member(String email, String password) {
-        this.id = email;
+        this.email = email;
         this.pw = password;
     }
 

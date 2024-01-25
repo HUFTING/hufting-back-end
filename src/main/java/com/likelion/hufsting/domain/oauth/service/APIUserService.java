@@ -18,9 +18,9 @@ public class APIUserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         return apiUserRepository.save(Member.builder()
-                .id(dto.getMid())
+                .email(dto.getMEmail())
                 .pw(encoder.encode(dto.getMpw()))
-                .build()).getId();
+                .build()).getEmail();
     }
 
     public Member findByMid(String email) {
