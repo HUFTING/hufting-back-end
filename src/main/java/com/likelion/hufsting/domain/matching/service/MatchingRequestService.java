@@ -4,8 +4,13 @@ import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
+<<<<<<< HEAD
 import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 import com.likelion.hufsting.domain.profile.domain.Member;
+=======
+
+import com.likelion.hufsting.domain.oauth.domain.Member;
+>>>>>>> 0de48523c59378480dcb254ec3e742f00f6f9b27
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

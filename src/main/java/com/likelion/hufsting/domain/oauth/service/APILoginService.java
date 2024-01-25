@@ -28,7 +28,6 @@ public class APILoginService {
     public Map<String, String> socialLogin(String code, String registrationId) {
         String accessToken = getAccessToken(code, registrationId);
         JsonNode userResourceNode = getUserResource(accessToken, registrationId);
-        System.out.println("userResourceNode = " + userResourceNode);
 
         Map<String, String> userDetails = new HashMap<>();
 
