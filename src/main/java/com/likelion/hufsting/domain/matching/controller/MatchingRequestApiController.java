@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MatchingRequestApiController {
     private final MatchingRequestService matchingRequestService;
-    private final MatchingRequestQueryRepository matchingRequestQueryRepository;
 
     // 내 매칭 신청 조회
     @GetMapping("/api/v1/my-matchingrequests")
-    public ResponseEntity<Void> getMyMatchingRequests(){
+    public ResponseEntity<FindMyMatchingReqResponse> getMyMatchingRequests(){
         try {
             log.info("Request to get my matchingrequests");
-
+            FindMyMatchingReqResponse response = matchingRequestService.getMyMatchingRequest();
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }

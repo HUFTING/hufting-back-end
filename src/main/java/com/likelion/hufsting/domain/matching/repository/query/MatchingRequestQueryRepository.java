@@ -2,7 +2,6 @@ package com.likelion.hufsting.domain.matching.repository.query;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
 import com.likelion.hufsting.domain.oauth.domain.Member;
-import com.likelion.hufsting.domain.profile.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ public class MatchingRequestQueryRepository {
                 + " join fetch mr.representative mrr"
                 + " join mr.participants mrp"
                 + " join mrp.participant mrpp"
+                + " join mrpp.profile mrppp"
                 + " where mrpp.id = :participantId";
         TypedQuery<MatchingRequest> query = em.createQuery(jpql, MatchingRequest.class);
         query.setParameter("participantId", participantId);
