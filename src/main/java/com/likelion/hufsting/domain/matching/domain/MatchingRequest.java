@@ -33,6 +33,9 @@ public class MatchingRequest {
     @Builder.Default
     private List<MatchingParticipant> participants = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private MatchingAcceptance matchingAcceptance; // ACCEPTED, REJECTED, WAITING
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,9 +48,6 @@ public class MatchingRequest {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    @Enumerated(EnumType.STRING)
-    private MatchingAcceptance matchingAcceptance; // ACCEPTED, REJECTED, WAITING
 
     // MatchingRequest add participants
     public void addParticipant(List<MatchingParticipant> reqParticipants){

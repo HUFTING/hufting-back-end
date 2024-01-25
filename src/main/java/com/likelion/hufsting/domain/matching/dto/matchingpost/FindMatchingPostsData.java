@@ -1,4 +1,4 @@
-package com.likelion.hufsting.domain.matching.dto;
+package com.likelion.hufsting.domain.matching.dto.matchingpost;
 
 import com.likelion.hufsting.domain.matching.domain.Gender;
 import lombok.AllArgsConstructor;

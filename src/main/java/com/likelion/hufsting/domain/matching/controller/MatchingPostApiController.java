@@ -1,10 +1,8 @@
 package com.likelion.hufsting.domain.matching.controller;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
-import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
-import com.likelion.hufsting.domain.matching.dto.*;
+import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
-import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

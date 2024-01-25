@@ -1,4 +1,4 @@
-package com.likelion.hufsting.domain.matching.dto;
+package com.likelion.hufsting.domain.matching.dto.matchingrequest;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

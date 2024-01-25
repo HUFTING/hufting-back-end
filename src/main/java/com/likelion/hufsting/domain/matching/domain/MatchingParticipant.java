@@ -16,7 +16,7 @@ public class MatchingParticipant {
     @JoinColumn(name = "REQ_ID")
     private MatchingRequest matchingRequest;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PARTICIPANT_ID")
     private Member participant;
 

@@ -1,15 +1,12 @@
 package com.likelion.hufsting.domain.matching.service;
 
 import com.likelion.hufsting.domain.matching.domain.*;
-import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqData;
-import com.likelion.hufsting.domain.matching.dto.CreateMatchingReqResponse;
-import com.likelion.hufsting.domain.matching.dto.UpdateMatchingReqData;
-import com.likelion.hufsting.domain.matching.dto.UpdateMatchingReqResponse;
+import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
+import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 import com.likelion.hufsting.domain.profile.domain.Member;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +19,7 @@ import java.util.List;
 public class MatchingRequestService {
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingPostRepository matchingPostRepository;
+    private final MatchingRequestQueryRepository matchingRequestQueryRepository;
 
     // 매칭 신청 생성
     @Transactional
@@ -65,6 +63,14 @@ public class MatchingRequestService {
         );
 
         return new UpdateMatchingReqResponse(matchingRequestId, dto.getParticipantIds());
+    }
+
+    public FindMyMatchingReqResponse getMyMatchingRequest(){
+        Member participant = new Member(); // 임시 인증 유저
+        List<MatchingRequest> findMyMatchingRequests = matchingRequestQueryRepository.findByParticipant(participant);
+        List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
+                findMyMatchingRequest ->
+        ).toList();
     }
 
     // 사용자 정의 메서드

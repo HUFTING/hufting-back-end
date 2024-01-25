@@ -1,6 +1,7 @@
 package com.likelion.hufsting.domain.matching.controller;
 
-import com.likelion.hufsting.domain.matching.dto.*;
+import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
+import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MatchingRequestApiController {
     private final MatchingRequestService matchingRequestService;
+    private final MatchingRequestQueryRepository matchingRequestQueryRepository;
+
+    // 내 매칭 신청 조회
+    @GetMapping("/api/v1/my-matchingrequests")
+    public ResponseEntity<Void> getMyMatchingRequests(){
+        try {
+            log.info("Request to get my matchingrequests");
+
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+    }
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
