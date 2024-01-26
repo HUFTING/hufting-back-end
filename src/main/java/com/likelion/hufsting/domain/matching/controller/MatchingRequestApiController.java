@@ -64,4 +64,17 @@ public class MatchingRequestApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // 매칭 수락
+    @PatchMapping("/api/v1/matchingrequests/{matchingrequestId}/accept")
+    public ResponseEntity<AcceptMatchingRequestResponse> acceptMatchingRequest(@PathVariable("matchingrequestId") Long matchingRequestId){
+        try{
+            log.info("Request to accept matching request {}", matchingRequestId);
+            AcceptMatchingRequestResponse response = matchingRequestService.acceptMatchingRequest(matchingRequestId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    // 매칭 거부
 }

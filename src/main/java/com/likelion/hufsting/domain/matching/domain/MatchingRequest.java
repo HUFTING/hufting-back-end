@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.coyote.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +65,15 @@ public class MatchingRequest {
         }
         // remove participant not in participants
         participants.removeIf(participant -> !reqParticipants.contains(participant));
+    }
+
+    // accept matchingRequest
+    public void acceptMatchingRequest(){
+        matchingAcceptance = MatchingAcceptance.ACCEPTED;
+    }
+
+    // reject matchingRequest
+    public void rejectMatchingRequest(){
+        matchingAcceptance = MatchingAcceptance.REJECTED;
     }
 }
