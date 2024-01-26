@@ -88,6 +88,7 @@ public class MatchingRequestService {
         MatchingPost findMatchingPost = findMatchingRequest.getMatchingPost();
         // 매칭글 상태 변경
         findMatchingPost.updateMatchingStatus();
+        // 매칭 요청 상태 변경
         findMatchingPost.getMatchingRequests()
                 .forEach(matchingRequest -> {
                     if(matchingRequest.getId().equals(matchingRequestId)){
@@ -97,6 +98,17 @@ public class MatchingRequestService {
                     }
                 });
         return AcceptMatchingRequestResponse.builder()
+                .matchingRequestId(matchingRequestId)
+                .build();
+    }
+
+    @Transactional
+    public RejectMatchingRequestResponse rejectMatchingRequest(Long matchingRequestId){
+        MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
+                .orElseThrow(IllegalAccessError::new);
+        // 매칭 요청 상태 변경
+        findMatchingRequest.rejectMatchingRequest();
+        return RejectMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
                 .build();
     }
