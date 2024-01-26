@@ -14,13 +14,15 @@ import java.util.List;
 public class MatchingPostQueryRepository {
     private final EntityManager em;
 
-    public List<MatchingPost> findByAuthor(Member author){
-        Long authorId = 1L;
+    public List<MatchingPost> findByAuthor(Member host){
+        Long hostId = 1L;
         String jpql = "select distinct mp from MatchingPost mp" +
-                " join fetch mp.author mpa" +
-                " where mpa.id = :authorId";
+                " join fetch mp.matchingRequests mpmr" +
+                " join mp.matchingHosts mpmh" +
+                " join mpmh.host mpmhh" +
+                " where mpmhh.id = :hostId";
         TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
-                .setParameter("authorId", authorId);
+                .setParameter("hostId", hostId);
         return query.getResultList();
     }
 }

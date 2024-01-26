@@ -74,7 +74,6 @@ public class MatchingRequestService {
         List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
                 FindMyMatchingReqData::toFindMatchingReqData
         ).toList();
-        //System.out.println(convertedMyMatchingRequests.size());
         return FindMyMatchingReqResponse.builder()
                 .data(convertedMyMatchingRequests)
                 .build();
@@ -102,6 +101,7 @@ public class MatchingRequestService {
                 .build();
     }
 
+    // 매칭 거부
     @Transactional
     public RejectMatchingRequestResponse rejectMatchingRequest(Long matchingRequestId){
         MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)

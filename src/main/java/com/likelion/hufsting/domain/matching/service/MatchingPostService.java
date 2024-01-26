@@ -79,7 +79,6 @@ public class MatchingPostService {
     // 내 매칭글 조회
     public FindMyMatchingPostResponse findMyMatchingPost(Member author){
         List<MatchingPost> findMyMatchingPosts = matchingPostQueryRepository.findByAuthor(author);
-        System.out.println(findMyMatchingPosts.size());
         List<FindMyMatchingPostData> findMyMatchingPostDatas = findMyMatchingPosts.stream()
                 .map(FindMyMatchingPostData::toFindMyMatchingPostData)
                 .toList();

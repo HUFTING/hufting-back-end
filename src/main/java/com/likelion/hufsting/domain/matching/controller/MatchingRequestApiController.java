@@ -77,7 +77,7 @@ public class MatchingRequestApiController {
         }
     }
     // 매칭 거부
-    @PatchMapping("/api/v1/matchingreqeusts/{matchingrequestid")
+    @PatchMapping("/api/v1/matchingreqeusts/{matchingrequestid}/reject")
     public ResponseEntity<RejectMatchingRequestResponse> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
         try{
             log.info("Request to reject matching request {}", matchingRequestId);
