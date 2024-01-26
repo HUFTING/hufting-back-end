@@ -101,4 +101,12 @@ public class MatchingPost {
         // remove not in hosts
         matchingHosts.removeIf(matchingHost -> !hosts.contains(matchingHost));
     }
+
+    public void updateMatchingStatus(){
+        if(this.matchingStatus.equals(MatchingStatus.WAITING)){
+            this.matchingStatus = MatchingStatus.COMPLETED;
+        }else{
+            this.matchingStatus = MatchingStatus.WAITING;
+        }
+    }
 }

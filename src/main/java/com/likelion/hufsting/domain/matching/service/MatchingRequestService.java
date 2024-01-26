@@ -8,6 +8,7 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 
 import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,6 +77,27 @@ public class MatchingRequestService {
         //System.out.println(convertedMyMatchingRequests.size());
         return FindMyMatchingReqResponse.builder()
                 .data(convertedMyMatchingRequests)
+                .build();
+    }
+
+    // 매칭 수락
+    @Transactional
+    public AcceptMatchingRequestResponse acceptMatchingRequest(Long matchingRequestId){
+        MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
+                .orElseThrow(IllegalArgumentException::new);
+        MatchingPost findMatchingPost = findMatchingRequest.getMatchingPost();
+        // 매칭글 상태 변경
+        findMatchingPost.updateMatchingStatus();
+        findMatchingPost.getMatchingRequests()
+                .forEach(matchingRequest -> {
+                    if(matchingRequest.getId().equals(matchingRequestId)){
+                        matchingRequest.acceptMatchingRequest();
+                    }else{
+                        matchingRequest.rejectMatchingRequest();
+                    }
+                });
+        return AcceptMatchingRequestResponse.builder()
+                .matchingRequestId(matchingRequestId)
                 .build();
     }
 
