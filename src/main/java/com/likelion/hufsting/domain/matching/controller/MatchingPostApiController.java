@@ -3,6 +3,7 @@ package com.likelion.hufsting.domain.matching.controller;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
+import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,18 @@ public class MatchingPostApiController {
                 ))
                 .collect(Collectors.toList());
         return new FindMatchingPostsResponse<FindMatchingPostsData>(matchingPosts.size(), matchingPosts);
+    }
+
+    @GetMapping("/api/v1/my-matchingposts")
+    public ResponseEntity<FindMyMatchingPostResponse> getMyMatchingPost(){
+        try {
+            log.info("Request to get my matching posts");
+            Member author = new Member(); // 임시 인증 유저
+            FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPost(author);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
     }
 
     @PostMapping("/api/v1/matchingposts")
