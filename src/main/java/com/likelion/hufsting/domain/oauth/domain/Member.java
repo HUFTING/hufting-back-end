@@ -12,7 +12,7 @@ import lombok.*;
 @ToString
 
 public class Member {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "MEMBER_ID")
@@ -24,7 +24,6 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "PROFILE_ID")
     private Profile profile;
-
 
 
     public void changePw(String mpw) {

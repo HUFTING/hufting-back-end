@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +22,9 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
-    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
+    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(Authentication authentication){
         log.info("Request to get matching posts");
+        System.out.println(authentication.getPrincipal().toString());
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
         List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
                 .map(matchingPost -> new FindMatchingPostsData(

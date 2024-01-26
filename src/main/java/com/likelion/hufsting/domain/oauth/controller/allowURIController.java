@@ -52,24 +52,24 @@ public class allowURIController {
 //        System.out.println("code 출력" + code.getCode());
 //        System.out.println("================");
         // 회원가입된 소셜계정인지 확인
-        String id = userInfo.get("email");
-        String[] s = id.split("@");
+        String email = userInfo.get("email");
+        String[] s = email.split("@");
         System.out.println(s[1]);
         if(!s[1].equals("hufs.ac.kr")) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("학교 이메일 hufs.ac.kr 이메일로 로그인해주세요");
         }
-        Optional<Member> user = apiUserRepository.findById(id);
+        Optional<Member> user = apiUserRepository.findByEmail(email);
 
         if (!user.isPresent()) { //유저가 존재하는 않는 경우
             String rawPassword = "비밀번호";
             String encodePassword = passwordEncoder.encode(rawPassword);
-            Member member = new Member(id,encodePassword);
+            Member member = new Member(email,encodePassword);
             apiUserRepository.save(member);
         }
-        String accessToken = jwtUtil.generateToken(Map.of("mid", id), 1);
-        String refreshToken = jwtUtil.generateToken(Map.of("mid", id),30);
+        String accessToken = jwtUtil.generateToken(Map.of("mid", email), 1);
+        String refreshToken = jwtUtil.generateToken(Map.of("mid", email),30);
 
         Gson gson = new Gson();
 
