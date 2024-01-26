@@ -20,7 +20,7 @@ public class MatchingRequestApiController {
     public ResponseEntity<FindMyMatchingReqResponse> getMyMatchingRequests(){
         try {
             log.info("Request to get my matchingrequests");
-            FindMyMatchingReqResponse response = matchingRequestService.getMyMatchingRequest();
+            FindMyMatchingReqResponse response = matchingRequestService.findMyMatchingRequest();
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());

@@ -40,6 +40,9 @@ public class MatchingPost {
     @OneToMany(mappedBy = "matchingPost", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MatchingHost> matchingHosts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
+    private List<MatchingRequest> matchingRequests = new ArrayList<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

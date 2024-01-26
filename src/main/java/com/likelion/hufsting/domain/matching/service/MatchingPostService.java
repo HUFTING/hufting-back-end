@@ -4,8 +4,11 @@ import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.CreateMatchingPostData;
+import com.likelion.hufsting.domain.matching.dto.matchingpost.FindMyMatchingPostData;
+import com.likelion.hufsting.domain.matching.dto.matchingpost.FindMyMatchingPostResponse;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
+import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MatchingPostService {
     private final MatchingPostRepository matchingPostRepository;
+    private final MatchingPostQueryRepository matchingPostQueryRepository;
 
     // 훕팅 글 전체 조회
     public List<MatchingPost> findAllMatchingPost(){
@@ -70,6 +74,18 @@ public class MatchingPostService {
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
         matchingPostRepository.delete(matchingPost);
+    }
+
+    // 내 매칭글 조회
+    public FindMyMatchingPostResponse findMyMatchingPost(Member author){
+        List<MatchingPost> findMyMatchingPosts = matchingPostQueryRepository.findByAuthor(author);
+        System.out.println(findMyMatchingPosts.size());
+        List<FindMyMatchingPostData> findMyMatchingPostDatas = findMyMatchingPosts.stream()
+                .map(FindMyMatchingPostData::toFindMyMatchingPostData)
+                .toList();
+        return FindMyMatchingPostResponse.builder()
+                .data(findMyMatchingPostDatas)
+                .build();
     }
 
     // 사용자 정의 메서드

@@ -67,10 +67,9 @@ public class MatchingRequestService {
     }
 
     // 내 매칭 신청 현황 확인
-    public FindMyMatchingReqResponse getMyMatchingRequest(){
+    public FindMyMatchingReqResponse findMyMatchingRequest(){
         Member participant = new Member(); // 임시 인증 유저
         List<MatchingRequest> findMyMatchingRequests = matchingRequestQueryRepository.findByParticipant(participant);
-        System.out.println(findMyMatchingRequests.size());
         List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
                 FindMyMatchingReqData::toFindMatchingReqData
         ).toList();
