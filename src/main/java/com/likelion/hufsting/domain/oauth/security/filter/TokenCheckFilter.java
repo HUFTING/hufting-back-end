@@ -31,12 +31,15 @@ public class TokenCheckFilter extends OncePerRequestFilter {
         // "/api/"로 시작하는 모든 경로의 호출에 사용
         if (!path.startsWith("/api/")) {
             filterChain.doFilter(request, response);
+            System.out.println("여기 들어옴 1 !!!!!!!!!!!!!!!!!!!!!");
             return;
         }
 
 
         try{
+            System.out.println("호출 2!!!!!!!!!!!!");
             validateAccessToken(request);
+            System.out.println("호출 3!!!!!!!!!!!!");
             filterChain.doFilter(request,response);
         }catch (AccessTokenException accessTokenException){
             filterChain.doFilter(request,response); // 임시 테스트
