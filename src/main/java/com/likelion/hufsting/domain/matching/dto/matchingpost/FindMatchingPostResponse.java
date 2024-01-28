@@ -10,7 +10,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FindMatchingPostResponse {
     private String title;
-    private String content;
     private Gender gender;
     private int desiredNumPeople;
     private String authorName;
