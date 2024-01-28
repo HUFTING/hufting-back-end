@@ -68,6 +68,15 @@ public class MatchingRequestService {
         // matchingRequest 조회
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+        // matchingPost 조회
+        MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
+        // 유효성 검사
+        MatchingReqMethodValidator.validateParticipantsField(
+                dto.getParticipantIds(),
+                1L,
+                matchingPost.getMatchingHosts().size()
+        );
         // 매칭 신청 수정
         matchingRequest.updateParticipant(
                 createMatchingParticipantsById(matchingRequest, dto.getParticipantIds())
