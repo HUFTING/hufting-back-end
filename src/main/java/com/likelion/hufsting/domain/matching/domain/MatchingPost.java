@@ -21,7 +21,6 @@ public class MatchingPost {
     private Long id; // PK
 
     private String title; // 제목
-    private String content; // 내용
 
     @Enumerated(EnumType.STRING)
     private Gender gender; // 성별, MALE, FEMALE
@@ -69,7 +68,6 @@ public class MatchingPost {
                         Member author, MatchingStatus matchingStatus
     ) {
         this.title = title;
-        this.content = content;
         this.gender = gender;
         this.desiredNumPeople = desiredNumPeople;
         this.openTalkLink = openTalkLink;
@@ -79,7 +77,6 @@ public class MatchingPost {
 
     public void updateMatchingPost(UpdateMatchingPostData dto){
          this.title = dto.getTitle();
-         this.content = dto.getContent();
          this.gender = dto.getGender();
          this.desiredNumPeople = dto.getDesiredNumPeople();
          this.openTalkLink = dto.getOpenTalkLink();

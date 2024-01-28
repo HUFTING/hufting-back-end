@@ -4,6 +4,7 @@ import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
 import com.likelion.hufsting.domain.oauth.domain.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,8 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
-    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(Authentication authentication){
+    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
         log.info("Request to get matching posts");
-        System.out.println(authentication.getPrincipal().toString());
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
         List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
                 .map(matchingPost -> new FindMatchingPostsData(
@@ -51,7 +51,7 @@ public class MatchingPostApiController {
     }
 
     @PostMapping("/api/v1/matchingposts")
-    public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
+    public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody @Valid CreateMatchingPostRequest dto){
         log.info("Request to post matching post");
         // Converting DTO
         System.out.println(dto.getParticipants());
@@ -68,7 +68,6 @@ public class MatchingPostApiController {
             MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
             FindMatchingPostResponse response = new FindMatchingPostResponse(
                     findMatchingPost.getTitle(),
-                    findMatchingPost.getContent(),
                     findMatchingPost.getGender(),
                     findMatchingPost.getDesiredNumPeople(),
                     "원**", // 임시 사용자

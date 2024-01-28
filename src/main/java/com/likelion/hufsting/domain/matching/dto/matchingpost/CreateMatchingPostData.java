@@ -18,7 +18,6 @@ public class CreateMatchingPostData {
     public static CreateMatchingPostData toCreateMatchingPostData(CreateMatchingPostRequest dto){
         CreateMatchingPostData createMatchingPostData = new CreateMatchingPostData();
         createMatchingPostData.setTitle(dto.getTitle());
-        createMatchingPostData.setContent(dto.getContent());
         createMatchingPostData.setGender(dto.getGender());
         createMatchingPostData.setParticipants(dto.getParticipants());
         createMatchingPostData.setDesiredNumPeople(dto.getDesiredNumPeople());

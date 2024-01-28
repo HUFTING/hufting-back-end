@@ -16,7 +16,7 @@ public enum Gender {
 
     // 역직렬화 함수(Deserializer Function)
     @JsonCreator
-    public Gender deserializerGender(String value){
+    public static Gender deserializerGender(String value){
         for(Gender gender : Gender.values()){
             if(gender.getValue().equals(value)) {
                 return gender;
