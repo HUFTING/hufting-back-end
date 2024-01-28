@@ -3,6 +3,7 @@ package com.likelion.hufsting.domain.matching.controller;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.exception.MatchingReqParticipantException;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
+import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
 import com.likelion.hufsting.global.dto.ResponseDto;
 import com.likelion.hufsting.global.dto.ErrorResponse;
 import jakarta.validation.Valid;
@@ -59,7 +60,8 @@ public class MatchingRequestApiController {
 
     // 매칭 취소
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid")
+                                                          @PathIdFormat Long matchingRequestId){
         log.info("Request to delete matching request {}", matchingRequestId);
         try{
             matchingRequestService.removeMatchingRequest(matchingRequestId);
@@ -73,15 +75,23 @@ public class MatchingRequestApiController {
     @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
     public ResponseEntity<ResponseDto> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
                                    @RequestBody UpdateMatchingReqRequest dto){
-        log.info("Request to put matching request {}", matchingRequestId);
         try{
+            log.info("Request to put matching request {}", matchingRequestId);
             UpdateMatchingReqResponse response = matchingRequestService.updateMatchingRequest(
                     matchingRequestId,
                     UpdateMatchingReqData.toUpdateMatchingReqData(dto)
             );
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
+            log.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingReqParticipantException e){
+            log.info(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    PARTICIPANTS_VALID_ERR_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 

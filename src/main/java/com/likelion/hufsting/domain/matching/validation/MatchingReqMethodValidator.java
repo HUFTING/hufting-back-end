@@ -11,8 +11,6 @@ public class MatchingReqMethodValidator {
 
     public static void validateParticipantsField(List<Long> participantIds, Long representativeId, int hostCounts){
         if(!isParticipantsAndHostsCountEqual(participantIds, hostCounts)){
-            System.out.println(participantIds.size());
-            System.out.println(hostCounts);
             throw new MatchingReqParticipantException(PARTICIPANT_AND_HOST_NUM_EQUAL_ERR_MSG);
         }else if(!isParticipantDuplication(participantIds)){
             throw new MatchingReqParticipantException(PARTICIPANT_DUPLICATION_ERR_MSG);
