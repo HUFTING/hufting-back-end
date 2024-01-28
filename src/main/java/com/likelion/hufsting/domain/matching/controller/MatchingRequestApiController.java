@@ -1,6 +1,7 @@
 package com.likelion.hufsting.domain.matching.controller;
 
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
+import com.likelion.hufsting.domain.matching.exception.MatchingAcceptanceException;
 import com.likelion.hufsting.domain.matching.exception.MatchingReqParticipantException;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class MatchingRequestApiController {
     // constant
     private final String PARTICIPANTS_VALID_ERR_KEY = "participants";
+    private final String ACCEPTANCE_VALID_ERR_KEY = "matchingAcceptance";
     // service
     private final MatchingRequestService matchingRequestService;
     // 내 매칭 신청 조회
@@ -60,14 +62,22 @@ public class MatchingRequestApiController {
 
     // 매칭 취소
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<Long> deleteMatchingRequest(@PathVariable("matchingrequestid")
+    public ResponseEntity<ResponseDto> deleteMatchingRequest(@PathVariable("matchingrequestid")
                                                           @PathIdFormat Long matchingRequestId){
         log.info("Request to delete matching request {}", matchingRequestId);
         try{
             matchingRequestService.removeMatchingRequest(matchingRequestId);
-            return new ResponseEntity<>(matchingRequestId, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingAcceptanceException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    ACCEPTANCE_VALID_ERR_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
