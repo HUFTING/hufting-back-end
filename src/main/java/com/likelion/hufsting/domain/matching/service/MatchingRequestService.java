@@ -59,6 +59,7 @@ public class MatchingRequestService {
     public void removeMatchingRequest(Long matchingRequestId){
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+        MatchingReqMethodValidator.validateCanBeDeleted(matchingRequest.getMatchingAcceptance());
         matchingRequestRepository.delete(matchingRequest);
     }
 
