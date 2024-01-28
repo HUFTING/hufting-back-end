@@ -6,6 +6,7 @@ import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 
+import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -27,8 +28,16 @@ public class MatchingRequestService {
     @Transactional
     public CreateMatchingReqResponse createMatchingRequests(CreateMatchingReqData dto){
         Member representative = new Member(); // 임시 대표 신청자
+        // get matchingPost
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
+        // validation
+        MatchingReqMethodValidator.validateParticipantsField(
+                dto.getParticipantIds(),
+                1L,
+                matchingPost.getMatchingHosts().size()
+        );
+        // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .matchingPost(matchingPost)
                 .representative(representative)

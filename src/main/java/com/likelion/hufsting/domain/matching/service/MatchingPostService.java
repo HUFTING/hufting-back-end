@@ -49,7 +49,6 @@ public class MatchingPostService {
         );
         // 호스트 조회 및 생성
         List<MatchingHost> matchingHosts = createMatchingHostsById(matchingPost, dto.getParticipants());
-        matchingHosts.add(new MatchingHost(matchingPost, author)); // 작성자 추가
 
         // 매칭 글에 참가자(* 호스트) 추가
         matchingPost.addHost(matchingHosts);
