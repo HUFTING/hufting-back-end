@@ -1,10 +1,11 @@
 package com.likelion.hufsting.domain.matching.dto.matchingrequest;
 
+import com.likelion.hufsting.global.dto.ResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class AcceptMatchingRequestResponse {
+public class AcceptMatchingRequestResponse implements ResponseDto {
     private Long matchingRequestId;
 }

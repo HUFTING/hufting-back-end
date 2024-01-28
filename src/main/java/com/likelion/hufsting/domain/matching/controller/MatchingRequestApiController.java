@@ -1,8 +1,10 @@
 package com.likelion.hufsting.domain.matching.controller;
 
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
-import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
+import com.likelion.hufsting.domain.matching.exception.MatchingReqParticipantException;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
+import com.likelion.hufsting.global.dto.ResponseDto;
+import com.likelion.hufsting.global.dto.ErrorResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @Slf4j
 public class MatchingRequestApiController {
+    // constant
+    private final String PARTICIPANTS_VALID_ERR_KEY = "participants";
+    // service
     private final MatchingRequestService matchingRequestService;
-
     // 내 매칭 신청 조회
     @GetMapping("/api/v1/my-matchingrequests")
-    public ResponseEntity<FindMyMatchingReqResponse> getMyMatchingRequests(){
+    public ResponseEntity<ResponseDto> getMyMatchingRequests(){
         try {
             log.info("Request to get my matchingrequests");
             FindMyMatchingReqResponse response = matchingRequestService.findMyMatchingRequest();
@@ -33,7 +37,7 @@ public class MatchingRequestApiController {
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
-    public ResponseEntity<CreateMatchingReqResponse> postMatchingRequest(@RequestBody
+    public ResponseEntity<ResponseDto> postMatchingRequest(@RequestBody
                                                                              @Valid CreateMatchingReqRequest dto){
         try {
             log.info("Request to post matching request");
@@ -43,6 +47,13 @@ public class MatchingRequestApiController {
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingReqParticipantException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    PARTICIPANTS_VALID_ERR_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -60,7 +71,7 @@ public class MatchingRequestApiController {
 
     // 매칭 수정
     @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<UpdateMatchingReqResponse> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
+    public ResponseEntity<ResponseDto> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
                                    @RequestBody UpdateMatchingReqRequest dto){
         log.info("Request to put matching request {}", matchingRequestId);
         try{
@@ -76,7 +87,7 @@ public class MatchingRequestApiController {
 
     // 매칭 수락
     @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/accept")
-    public ResponseEntity<AcceptMatchingRequestResponse> acceptMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> acceptMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
         try{
             log.info("Request to accept matching request {}", matchingRequestId);
             AcceptMatchingRequestResponse response = matchingRequestService.acceptMatchingRequest(matchingRequestId);
@@ -87,7 +98,7 @@ public class MatchingRequestApiController {
     }
     // 매칭 거부
     @PatchMapping("/api/v1/matchingreqeusts/{matchingrequestid}/reject")
-    public ResponseEntity<RejectMatchingRequestResponse> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
         try{
             log.info("Request to reject matching request {}", matchingRequestId);
             RejectMatchingRequestResponse response = matchingRequestService.rejectMatchingRequest(matchingRequestId);
