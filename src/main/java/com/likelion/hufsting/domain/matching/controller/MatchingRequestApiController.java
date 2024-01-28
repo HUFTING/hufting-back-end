@@ -3,14 +3,17 @@ package com.likelion.hufsting.domain.matching.controller;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @Slf4j
 public class MatchingRequestApiController {
     private final MatchingRequestService matchingRequestService;
@@ -30,11 +33,17 @@ public class MatchingRequestApiController {
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
-    public ResponseEntity<CreateMatchingReqResponse> postMatchingRequest(@RequestBody CreateMatchingReqRequest dto){
-        log.info("Request to post matching request");
-        CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
-        CreateMatchingReqResponse response = matchingRequestService.createMatchingRequests(convertedDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<CreateMatchingReqResponse> postMatchingRequest(@RequestBody
+                                                                             @Valid CreateMatchingReqRequest dto){
+        try {
+            log.info("Request to post matching request");
+            CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
+            CreateMatchingReqResponse response = matchingRequestService.createMatchingRequests(convertedDto);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // 매칭 취소
