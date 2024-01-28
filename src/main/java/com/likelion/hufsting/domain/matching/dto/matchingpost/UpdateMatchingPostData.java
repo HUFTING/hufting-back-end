@@ -8,7 +8,6 @@ import java.util.List;
 @Data
 public class UpdateMatchingPostData {
     private String title;
-    private String content;
     private Gender gender;
     private int desiredNumPeople;
     private String openTalkLink;
@@ -18,7 +17,6 @@ public class UpdateMatchingPostData {
     public static UpdateMatchingPostData toUpdateMatchingPostData(UpdateMatchingPostRequest dto){
         UpdateMatchingPostData updateMatchingPostData = new UpdateMatchingPostData();
         updateMatchingPostData.setTitle(dto.getTitle());
-        updateMatchingPostData.setContent(dto.getContent());
         updateMatchingPostData.setGender(dto.getGender());
         updateMatchingPostData.setParticipants(dto.getParticipants());
         updateMatchingPostData.setDesiredNumPeople(dto.getDesiredNumPeople());
