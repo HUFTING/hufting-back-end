@@ -3,13 +3,16 @@ package com.likelion.hufsting.domain.matching.controller;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
+import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
 import com.likelion.hufsting.domain.oauth.domain.Member;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Validated
 @Slf4j
 @RequiredArgsConstructor
 public class MatchingPostApiController {
@@ -62,7 +66,8 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<FindMatchingPostResponse> getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<FindMatchingPostResponse> getMatchingPost(@PathVariable("matchingpostid")
+                                                                        @PathIdFormat Long matchingPostId){
         log.info("Request to get matching post: {}", matchingPostId);
         try {
             MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
@@ -81,8 +86,9 @@ public class MatchingPostApiController {
     }
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<UpdateMatchingPostResponse> putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
-                                           @RequestBody UpdateMatchingPostRequest dto){
+    public ResponseEntity<UpdateMatchingPostResponse> putMatchingPost(@PathVariable("matchingpostid")
+                                                                          @PathIdFormat Long matchingPostId,
+                                           @RequestBody @Valid UpdateMatchingPostRequest dto){
         log.info("Request to update matching post: {}", matchingPostId);
         try {
             Long updateMatchingPostId = matchingPostService.updateMatchingPost(
@@ -97,7 +103,8 @@ public class MatchingPostApiController {
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<Void> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<Void> deleteMatchingPost(@PathVariable("matchingpostid")
+                                                       @PathIdFormat Long matchingPostId){
         log.info("Request to delete matching post: {}", matchingPostId);
         try {
             matchingPostService.removeMatchingPost(matchingPostId);
