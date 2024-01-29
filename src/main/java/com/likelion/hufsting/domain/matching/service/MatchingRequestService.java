@@ -20,9 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingRequestService {
+    // Repositories
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
+    // Validators
+    private final MatchingReqMethodValidator matchingReqMethodValidator;
 
     // 매칭 신청 생성
     @Transactional
@@ -31,11 +34,15 @@ public class MatchingRequestService {
         // get matchingPost
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
-        // validation
-        MatchingReqMethodValidator.validateParticipantsField(
+        // validation-1 : DTO
+        matchingReqMethodValidator.validateParticipantsField(
                 dto.getParticipantIds(),
                 1L,
                 matchingPost.getMatchingHosts().size()
+        );
+        // validation-2 : MatchingPost
+        matchingReqMethodValidator.validateMatchingPostStatus(
+                matchingPost.getMatchingStatus()
         );
         // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
@@ -59,7 +66,7 @@ public class MatchingRequestService {
     public void removeMatchingRequest(Long matchingRequestId){
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
-        MatchingReqMethodValidator.validateCanBeDeleted(matchingRequest.getMatchingAcceptance());
+        matchingReqMethodValidator.validateCanBeDeleted(matchingRequest.getMatchingAcceptance());
         matchingRequestRepository.delete(matchingRequest);
     }
 
@@ -72,11 +79,15 @@ public class MatchingRequestService {
         // matchingPost 조회
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
-        // 유효성 검사
-        MatchingReqMethodValidator.validateParticipantsField(
+        // validation-1 : DTO
+        matchingReqMethodValidator.validateParticipantsField(
                 dto.getParticipantIds(),
                 1L,
                 matchingPost.getMatchingHosts().size()
+        );
+        // validation-2 : MatchingRequest
+        matchingReqMethodValidator.validateCanBeModified(
+                matchingRequest.getMatchingAcceptance()
         );
         // 매칭 신청 수정
         matchingRequest.updateParticipant(
