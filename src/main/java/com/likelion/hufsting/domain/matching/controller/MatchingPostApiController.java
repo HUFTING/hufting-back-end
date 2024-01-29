@@ -2,9 +2,13 @@ package com.likelion.hufsting.domain.matching.controller;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
+import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
 import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.profile.exception.ProfileException;
+import com.likelion.hufsting.global.dto.ErrorResponse;
+import com.likelion.hufsting.global.dto.ResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class MatchingPostApiController {
+    private final String PROFILE_ERR_MSG_KEY = "profile";
+    private final String MATCHING_POST_ERR_MSG_KEY = "matchingPost";
+    // service
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
@@ -43,7 +50,7 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/my-matchingposts")
-    public ResponseEntity<FindMyMatchingPostResponse> getMyMatchingPost(){
+    public ResponseEntity<ResponseDto> getMyMatchingPost(){
         try {
             log.info("Request to get my matching posts");
             Member author = new Member(); // 임시 인증 유저
@@ -55,18 +62,37 @@ public class MatchingPostApiController {
     }
 
     @PostMapping("/api/v1/matchingposts")
-    public ResponseEntity<CreateMatchingPostResponse> postMatchingPost(@RequestBody @Valid CreateMatchingPostRequest dto){
-        log.info("Request to post matching post");
-        // Converting DTO
-        System.out.println(dto.getParticipants());
-        CreateMatchingPostData convertedDto = CreateMatchingPostData.toCreateMatchingPostData(dto);
-        Long newMatchingPostId = matchingPostService.saveMatchingPost(convertedDto);
-        CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPostId);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<ResponseDto> postMatchingPost(@RequestBody @Valid CreateMatchingPostRequest dto){
+        try {
+            log.info("Request to post matching post");
+            // Converting DTO
+            System.out.println(dto.getParticipants());
+            CreateMatchingPostData convertedDto = CreateMatchingPostData.toCreateMatchingPostData(dto);
+            Long newMatchingPostId = matchingPostService.saveMatchingPost(convertedDto);
+            CreateMatchingPostResponse response = new CreateMatchingPostResponse(newMatchingPostId);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingPostException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_POST_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (ProfileException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    PROFILE_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<FindMatchingPostResponse> getMatchingPost(@PathVariable("matchingpostid")
+    public ResponseEntity<ResponseDto> getMatchingPost(@PathVariable("matchingpostid")
                                                                         @PathIdFormat Long matchingPostId){
         log.info("Request to get matching post: {}", matchingPostId);
         try {
@@ -86,7 +112,7 @@ public class MatchingPostApiController {
     }
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<UpdateMatchingPostResponse> putMatchingPost(@PathVariable("matchingpostid")
+    public ResponseEntity<ResponseDto> putMatchingPost(@PathVariable("matchingpostid")
                                                                           @PathIdFormat Long matchingPostId,
                                            @RequestBody @Valid UpdateMatchingPostRequest dto){
         log.info("Request to update matching post: {}", matchingPostId);
@@ -99,11 +125,25 @@ public class MatchingPostApiController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingPostException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_POST_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (ProfileException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    PROFILE_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<Void> deleteMatchingPost(@PathVariable("matchingpostid")
+    public ResponseEntity<ResponseDto> deleteMatchingPost(@PathVariable("matchingpostid")
                                                        @PathIdFormat Long matchingPostId){
         log.info("Request to delete matching post: {}", matchingPostId);
         try {
@@ -111,6 +151,13 @@ public class MatchingPostApiController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingPostException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_POST_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 }
