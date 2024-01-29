@@ -9,7 +9,10 @@ import com.likelion.hufsting.domain.matching.dto.matchingpost.FindMyMatchingPost
 import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
+import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.oauth.repository.APIUserRepository;
+import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +24,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingPostService {
+    // repositories
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
+    private final APIUserRepository apiUserRepository;
+    // validators
+    private final ProfileMethodValidator profileMethodValidator;
+    private final MatchingPostMethodValidator matchingPostMethodValidator;
 
     // 훕팅 글 전체 조회
     public List<MatchingPost> findAllMatchingPost(){
@@ -47,6 +55,15 @@ public class MatchingPostService {
                 author, // 임시 사용자
                 MatchingStatus.WAITING
         );
+        // 멤버 ID를 통해 Member 조회
+        List<Member> findParticipants = dto.getParticipants().stream().map(
+                (participantId) -> {
+                    return apiUserRepository.findById(participantId)
+                            .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
+                }
+        ).toList();
+        // validation : Member
+        profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
         // 호스트 조회 및 생성
         List<MatchingHost> matchingHosts = createMatchingHostsById(matchingPost, dto.getParticipants());
 
@@ -61,6 +78,18 @@ public class MatchingPostService {
     public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // 멤버 ID를 통해 Member 조회
+        List<Member> findParticipants = dto.getParticipants().stream().map(
+                (participantId) -> {
+                    return apiUserRepository.findById(participantId)
+                            .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
+                }
+        ).toList();
+        // validation-1 : GENDER
+        profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
+        // validation-2 : matchingPost
+        matchingPostMethodValidator.validateMatchingPostStatus(matchingPost.getMatchingStatus());
+
         matchingPost.updateMatchingPost(dto); // 변경 감지(Dirty checking)
 
         // 호스트 수정
@@ -72,6 +101,9 @@ public class MatchingPostService {
     public void removeMatchingPost(Long matchingPostId){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // validation: matchingPost
+        matchingPostMethodValidator.validateMatchingPostStatus(matchingPost.getMatchingStatus());
+        // delete operation
         matchingPostRepository.delete(matchingPost);
     }
 

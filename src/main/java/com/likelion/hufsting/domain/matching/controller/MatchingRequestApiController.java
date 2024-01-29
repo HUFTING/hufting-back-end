@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MatchingRequestApiController {
     // constant
-    private final String MATCHING_REQ_ERR_MSG = "matchingRequest";
-    private final String MATCHING_POST_ERR_MSG = "matchingPost";
+    private final String MATCHING_REQ_ERR_MSG_KEY = "matchingRequest";
+    private final String MATCHING_POST_ERR_MSG_KEY = "matchingPost";
     // service
     private final MatchingRequestService matchingRequestService;
     // 내 매칭 신청 조회
@@ -52,14 +52,14 @@ public class MatchingRequestApiController {
         }catch (MatchingReqException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_REQ_ERR_MSG,
+                    MATCHING_REQ_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }catch (MatchingPostException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_POST_ERR_MSG,
+                    MATCHING_POST_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -80,7 +80,7 @@ public class MatchingRequestApiController {
         }catch (MatchingPostException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_POST_ERR_MSG,
+                    MATCHING_POST_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -105,7 +105,7 @@ public class MatchingRequestApiController {
         }catch (MatchingReqException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_REQ_ERR_MSG,
+                    MATCHING_REQ_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -114,7 +114,8 @@ public class MatchingRequestApiController {
 
     // 매칭 수락
     @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/accept")
-    public ResponseEntity<ResponseDto> acceptMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> acceptMatchingRequest(
+            @PathVariable("matchingrequestid") @PathIdFormat Long matchingRequestId){
         try{
             log.info("Request to accept matching request {}", matchingRequestId);
             AcceptMatchingRequestResponse response = matchingRequestService.acceptMatchingRequest(matchingRequestId);
@@ -125,14 +126,14 @@ public class MatchingRequestApiController {
         }catch (MatchingReqException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_REQ_ERR_MSG,
+                    MATCHING_REQ_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }catch (MatchingPostException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_POST_ERR_MSG,
+                    MATCHING_POST_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -140,7 +141,8 @@ public class MatchingRequestApiController {
     }
     // 매칭 거부
     @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/reject")
-    public ResponseEntity<ResponseDto> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> rejectMatchingRequest(
+            @PathVariable("matchingrequestid") @PathIdFormat Long matchingRequestId){
         try{
             log.info("Request to reject matching request {}", matchingRequestId);
             RejectMatchingRequestResponse response = matchingRequestService.rejectMatchingRequest(matchingRequestId);
@@ -151,7 +153,7 @@ public class MatchingRequestApiController {
         }catch (MatchingReqException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    MATCHING_REQ_ERR_MSG,
+                    MATCHING_REQ_ERR_MSG_KEY,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
