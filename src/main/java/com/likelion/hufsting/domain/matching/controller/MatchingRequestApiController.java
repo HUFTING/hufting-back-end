@@ -1,8 +1,8 @@
 package com.likelion.hufsting.domain.matching.controller;
 
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
-import com.likelion.hufsting.domain.matching.exception.MatchingAcceptanceException;
-import com.likelion.hufsting.domain.matching.exception.MatchingReqParticipantException;
+import com.likelion.hufsting.domain.matching.exception.MatchingReqException;
+import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
 import com.likelion.hufsting.global.dto.ResponseDto;
@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MatchingRequestApiController {
     // constant
-    private final String PARTICIPANTS_VALID_ERR_KEY = "participants";
-    private final String ACCEPTANCE_VALID_ERR_KEY = "matchingAcceptance";
+    private final String MATCHING_REQ_ERR_MSG = "matchingRequest";
+    private final String MATCHING_POST_ERR_MSG = "matchingPost";
     // service
     private final MatchingRequestService matchingRequestService;
     // 내 매칭 신청 조회
@@ -50,10 +50,17 @@ public class MatchingRequestApiController {
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (MatchingReqParticipantException e){
+        }catch (MatchingReqException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    PARTICIPANTS_VALID_ERR_KEY,
+                    MATCHING_REQ_ERR_MSG,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (MatchingPostException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_POST_ERR_MSG,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -71,10 +78,10 @@ public class MatchingRequestApiController {
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (MatchingAcceptanceException e){
+        }catch (MatchingPostException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    ACCEPTANCE_VALID_ERR_KEY,
+                    MATCHING_POST_ERR_MSG,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -95,10 +102,10 @@ public class MatchingRequestApiController {
         }catch(IllegalArgumentException e){
             log.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (MatchingReqParticipantException e){
+        }catch (MatchingReqException e){
             log.info(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
-                    PARTICIPANTS_VALID_ERR_KEY,
+                    MATCHING_REQ_ERR_MSG,
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
