@@ -40,8 +40,7 @@ public class MatchingRequestApiController {
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
-    public ResponseEntity<ResponseDto> postMatchingRequest(@RequestBody
-                                                                             @Valid CreateMatchingReqRequest dto){
+    public ResponseEntity<ResponseDto> postMatchingRequest(@RequestBody @Valid CreateMatchingReqRequest dto){
         try {
             log.info("Request to post matching request");
             CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
@@ -69,8 +68,8 @@ public class MatchingRequestApiController {
 
     // 매칭 취소
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<ResponseDto> deleteMatchingRequest(@PathVariable("matchingrequestid")
-                                                          @PathIdFormat Long matchingRequestId){
+    public ResponseEntity<ResponseDto> deleteMatchingRequest(
+            @PathVariable("matchingrequestid") @PathIdFormat Long matchingRequestId){
         log.info("Request to delete matching request {}", matchingRequestId);
         try{
             matchingRequestService.removeMatchingRequest(matchingRequestId);
@@ -90,8 +89,9 @@ public class MatchingRequestApiController {
 
     // 매칭 수정
     @PutMapping("/api/v1/matchingrequests/{matchingrequestid}")
-    public ResponseEntity<ResponseDto> putMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId,
-                                   @RequestBody UpdateMatchingReqRequest dto){
+    public ResponseEntity<ResponseDto> putMatchingRequest(
+            @PathVariable("matchingrequestid") @PathIdFormat Long matchingRequestId,
+            @RequestBody @Valid UpdateMatchingReqRequest dto){
         try{
             log.info("Request to put matching request {}", matchingRequestId);
             UpdateMatchingReqResponse response = matchingRequestService.updateMatchingRequest(
@@ -100,10 +100,10 @@ public class MatchingRequestApiController {
             );
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (MatchingReqException e){
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
                     MATCHING_REQ_ERR_MSG,
                     e.getMessage()
@@ -120,18 +120,41 @@ public class MatchingRequestApiController {
             AcceptMatchingRequestResponse response = matchingRequestService.acceptMatchingRequest(matchingRequestId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingReqException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_REQ_ERR_MSG,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (MatchingPostException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_POST_ERR_MSG,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
     // 매칭 거부
-    @PatchMapping("/api/v1/matchingreqeusts/{matchingrequestid}/reject")
+    @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/reject")
     public ResponseEntity<ResponseDto> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
         try{
             log.info("Request to reject matching request {}", matchingRequestId);
             RejectMatchingRequestResponse response = matchingRequestService.rejectMatchingRequest(matchingRequestId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingReqException e){
+            log.error(e.getMessage());
+            ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_REQ_ERR_MSG,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 }
