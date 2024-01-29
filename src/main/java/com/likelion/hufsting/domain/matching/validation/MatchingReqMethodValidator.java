@@ -15,7 +15,6 @@ public class MatchingReqMethodValidator {
     private final String PARTICIPANT_INCLUDE_REPRESENTATIVE_ERR_MSG = "참여자 목록에 대표자가 포함되어 있지 않습니다.";
     private final String ACCEPTANCE_ALREADY_ACCEPTED = "이미 수락된 요청입니다.";
     private final String ACCEPTANCE_ALREADY_REJECTED = "이미 거부된 요청입니다.";
-    private final String STATUS_ALREADY_COMPLETED = "이미 매칭 완료된 글입니다.";
 
     // 매칭 요청 등록 및 수정시 유효성 검사 메서드
     public void validateParticipantsField(List<Long> participantIds, Long representativeId, int hostCounts){
@@ -43,13 +42,6 @@ public class MatchingReqMethodValidator {
             throw new MatchingReqException(ACCEPTANCE_ALREADY_ACCEPTED);
         }else if(matchingAcceptance.equals(MatchingAcceptance.REJECTED)){
             throw new MatchingReqException(ACCEPTANCE_ALREADY_REJECTED);
-        }
-    }
-
-    // 매칭글 상태 확인
-    public void validateMatchingPostStatus(MatchingStatus matchingStatus){
-        if(matchingStatus.equals(MatchingStatus.COMPLETED)){
-            throw new MatchingPostException(STATUS_ALREADY_COMPLETED);
         }
     }
 

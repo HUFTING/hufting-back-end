@@ -6,6 +6,7 @@ import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQueryRepository;
 
+import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.oauth.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class MatchingRequestService {
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     // Validators
+    private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
 
     // 매칭 신청 생성
@@ -41,7 +43,7 @@ public class MatchingRequestService {
                 matchingPost.getMatchingHosts().size()
         );
         // validation-2 : MatchingPost
-        matchingReqMethodValidator.validateMatchingPostStatus(
+        matchingPostMethodValidator.validateMatchingPostStatus(
                 matchingPost.getMatchingStatus()
         );
         // create matching request obj
@@ -113,8 +115,14 @@ public class MatchingRequestService {
     @Transactional
     public AcceptMatchingRequestResponse acceptMatchingRequest(Long matchingRequestId){
         MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
         MatchingPost findMatchingPost = findMatchingRequest.getMatchingPost();
+        // validation-1 : matchingPost
+        matchingPostMethodValidator.validateMatchingPostStatus(findMatchingPost.getMatchingStatus());
+        // validation-2 : matchingRequest
+        matchingReqMethodValidator.validateCanBeModified(
+                findMatchingRequest.getMatchingAcceptance()
+        );
         // 매칭글 상태 변경
         findMatchingPost.updateMatchingStatus();
         // 매칭 요청 상태 변경
@@ -135,7 +143,11 @@ public class MatchingRequestService {
     @Transactional
     public RejectMatchingRequestResponse rejectMatchingRequest(Long matchingRequestId){
         MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
-                .orElseThrow(IllegalAccessError::new);
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+        // validation : matchingRequest
+        matchingReqMethodValidator.validateCanBeModified(
+                findMatchingRequest.getMatchingAcceptance()
+        );
         // 매칭 요청 상태 변경
         findMatchingRequest.rejectMatchingRequest();
         return RejectMatchingRequestResponse.builder()
