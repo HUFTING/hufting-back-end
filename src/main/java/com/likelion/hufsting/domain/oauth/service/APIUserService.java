@@ -24,7 +24,7 @@ public class APIUserService {
     }
 
     public Member findByMid(String email) {
-        return apiUserRepository.findById(email)
+        return apiUserRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
     }
 }

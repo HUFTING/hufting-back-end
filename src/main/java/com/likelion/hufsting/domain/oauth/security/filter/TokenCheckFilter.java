@@ -41,7 +41,9 @@ public class TokenCheckFilter extends OncePerRequestFilter {
             validateAccessToken(request);
             System.out.println("호출 3!!!!!!!!!!!!");
             filterChain.doFilter(request,response);
+            System.out.println("호출 4!!!!!!!!!!");
         }catch (AccessTokenException accessTokenException){
+            System.out.println(accessTokenException.getMessage());
             filterChain.doFilter(request,response); // 임시 테스트
             //accessTokenException.sendResponseError(response);
         }

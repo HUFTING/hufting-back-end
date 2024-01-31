@@ -49,7 +49,7 @@ public class CustomSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         log.info("--------web configure--------");
-
+        System.out.println("test");
         return (web) -> web.ignoring()
                 .requestMatchers(
                         PathRequest.toStaticResources().atCommonLocations());
@@ -95,14 +95,14 @@ public class CustomSecurityConfig {
         );
 
         //refreshToken 호출처리
-        http.addFilterBefore(new RefreshTokenFilter("/refreshToken",jwtUtil),
-                TokenCheckFilter.class);
+        //http.addFilterBefore(new RefreshTokenFilter("/refreshToken",jwtUtil),
+        //        TokenCheckFilter.class);
 
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// <- 세션을 사용하지 않음
-        http.logout()
-                .logoutSuccessUrl("/files/apiLogin.html");
-        http.authorizeHttpRequests().anyRequest().permitAll();
+        //http.logout()
+        //        .logoutSuccessUrl("/files/apiLogin.html");
+        //http.authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
 

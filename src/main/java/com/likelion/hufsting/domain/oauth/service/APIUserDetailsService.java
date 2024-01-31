@@ -26,7 +26,7 @@ public class APIUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<Member> result = apiUserRepository.findById(username);
+        Optional<Member> result = apiUserRepository.findByEmail(username);
 
         Member member = result.orElseThrow(() -> new UsernameNotFoundException("Cannot find mid")); // username에 해당하는 사용자가 있으면 유저 정보 반환 아니면 예외처리
 
