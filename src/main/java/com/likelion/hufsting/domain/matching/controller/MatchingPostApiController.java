@@ -5,12 +5,11 @@ import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
-import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.exception.ProfileException;
 import com.likelion.hufsting.global.dto.ErrorResponse;
 import com.likelion.hufsting.global.dto.ResponseDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +32,7 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
-    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
+    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(Authentication authentication){
         log.info("Request to get matching posts");
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
         List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
@@ -53,7 +51,7 @@ public class MatchingPostApiController {
     public ResponseEntity<ResponseDto> getMyMatchingPost(){
         try {
             log.info("Request to get my matching posts");
-            Member author = new Member(); // 임시 인증 유저
+            Member author = Member.builder().build(); // 임시 인증 유저
             FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPost(author);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){

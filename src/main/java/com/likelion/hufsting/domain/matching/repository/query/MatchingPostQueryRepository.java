@@ -1,7 +1,7 @@
 package com.likelion.hufsting.domain.matching.repository.query;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
-import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;

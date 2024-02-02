@@ -1,8 +1,7 @@
 package com.likelion.hufsting.domain.profile.validation;
 
 import com.likelion.hufsting.domain.matching.domain.Gender;
-import com.likelion.hufsting.domain.oauth.domain.Member;
-import com.likelion.hufsting.domain.profile.domain.Profile;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.exception.ProfileException;
 import org.springframework.stereotype.Component;
 

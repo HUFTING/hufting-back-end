@@ -1,7 +1,7 @@
 package com.likelion.hufsting.domain.profile.domain;
 
 
-import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
