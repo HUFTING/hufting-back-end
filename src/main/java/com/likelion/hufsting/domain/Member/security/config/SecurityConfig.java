@@ -80,9 +80,5 @@ public class SecurityConfig {
     public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-    private GoogleOauthAuthenticationSuccessHandler oauthAuthenticationSuccessHandler(){
-        return new GoogleOauthAuthenticationSuccessHandler(jwtUtil);
-    }
 }
 
