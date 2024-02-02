@@ -11,20 +11,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: 386676289031-rh4v08860ffopeip90l4ss5en08ot4d6.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 753499212823-ftql7ed4h06gcbm8rrtrbmgg0h5odttl.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope:
               - profile
               - email
-        provider:
-          google:
-            token-uri: https://oauth2.googleapis.com/token
 
 logging:
   level:
@@ -32,11 +30,6 @@ logging:
     org.springframework: info
     org.zercok: debug
     org.springframework.security: debug
-
-org:
-  zerock:
-    jwt:
-      secret: hi123456789
 
 springdoc:
   swagger-ui:

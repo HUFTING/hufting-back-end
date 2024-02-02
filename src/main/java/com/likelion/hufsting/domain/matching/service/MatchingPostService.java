@@ -1,5 +1,6 @@
 package com.likelion.hufsting.domain.matching.service;
 
+import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
@@ -10,8 +11,7 @@ import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPost
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
-import com.likelion.hufsting.domain.oauth.domain.Member;
-import com.likelion.hufsting.domain.oauth.repository.APIUserRepository;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class MatchingPostService {
     // repositories
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
-    private final APIUserRepository apiUserRepository;
+    private final MemberRepository memberRepository;
     // validators
     private final ProfileMethodValidator profileMethodValidator;
     private final MatchingPostMethodValidator matchingPostMethodValidator;
@@ -45,7 +45,7 @@ public class MatchingPostService {
     @Transactional
     public Long saveMatchingPost(CreateMatchingPostData dto){
         // MatchingPost 생성
-        Member author = new Member(); // 임시 작성자
+        Member author = Member.builder().build(); // 임시 작성자
         MatchingPost matchingPost = new MatchingPost(
                 dto.getTitle(),
                 dto.getContent(),
@@ -58,7 +58,7 @@ public class MatchingPostService {
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> {
-                    return apiUserRepository.findById(participantId)
+                    return memberRepository.findById(participantId)
                             .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
                 }
         ).toList();
@@ -81,7 +81,7 @@ public class MatchingPostService {
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> {
-                    return apiUserRepository.findById(participantId)
+                    return memberRepository.findById(participantId)
                             .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
                 }
         ).toList();
@@ -122,7 +122,7 @@ public class MatchingPostService {
     private List<MatchingHost> createMatchingHostsById(MatchingPost matchingPost, List<Long> hostIds){
         List<MatchingHost> matchingHosts = new ArrayList<>();
         for(Long hostId : hostIds){
-            Member findHost = new Member(); // 임시 사용자 생성
+            Member findHost = Member.builder().build(); // 임시 사용자 생성
             matchingHosts.add(new MatchingHost(matchingPost, findHost));
         }
         return matchingHosts;

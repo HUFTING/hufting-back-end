@@ -8,9 +8,8 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
-import com.likelion.hufsting.domain.oauth.domain.Member;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,7 @@ public class MatchingRequestService {
     // 매칭 신청 생성
     @Transactional
     public CreateMatchingReqResponse createMatchingRequests(CreateMatchingReqData dto){
-        Member representative = new Member(); // 임시 대표 신청자
+        Member representative = Member.builder().build(); // 임시 대표 신청자
         // get matchingPost
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
@@ -101,7 +100,7 @@ public class MatchingRequestService {
 
     // 내 매칭 신청 현황 확인
     public FindMyMatchingReqResponse findMyMatchingRequest(){
-        Member participant = new Member(); // 임시 인증 유저
+        Member participant = Member.builder().build(); // 임시 인증 유저
         List<MatchingRequest> findMyMatchingRequests = matchingRequestQueryRepository.findByParticipant(participant);
         List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
                 FindMyMatchingReqData::toFindMatchingReqData
@@ -160,7 +159,7 @@ public class MatchingRequestService {
     private List<MatchingParticipant> createMatchingParticipantsById(MatchingRequest matchingRequest,List<Long> participantIds){
         List<MatchingParticipant> matchingParticipants = new ArrayList<>();
         for(Long participantId : participantIds){
-            Member findParticipant = new Member(); // 임시 사용자 생성
+            Member findParticipant = Member.builder().build(); // 임시 사용자 생성
             matchingParticipants.add(new MatchingParticipant(matchingRequest, findParticipant));
         }
         return matchingParticipants;
