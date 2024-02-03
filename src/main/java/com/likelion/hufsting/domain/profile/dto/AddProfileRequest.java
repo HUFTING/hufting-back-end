@@ -5,24 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class AddProfileRequest {
-    private String name;
     private String gender;
     private String studentNumber;
-    private String major;
     private String mbti;
+    private LocalDate birthday;
     private String content;
 
     public Profile toEntity() {
         return Profile.builder()
-                .name(name)
                 .gender(gender)
                 .studentNumber(studentNumber)
-                .major(major)
                 .mbti(mbti)
+                .birthday(birthday)
                 .content(content)
                 .build();
     }

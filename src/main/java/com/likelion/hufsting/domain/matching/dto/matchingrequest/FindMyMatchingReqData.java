@@ -25,7 +25,7 @@ public class FindMyMatchingReqData {
         findMatchingReqData.setMatchingPostTitle(dto.getMatchingPost().getTitle());
         findMatchingReqData.setMatchingAcceptance(dto.getMatchingAcceptance());
         findMatchingReqData.setRepresentativeId(dto.getRepresentative().getId());
-        findMatchingReqData.setRepresentativeName(dto.getRepresentative().getProfile().getName());
+        findMatchingReqData.setRepresentativeName(dto.getRepresentative().getName());
         return findMatchingReqData;
     }
 }

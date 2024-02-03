@@ -43,7 +43,6 @@ public class GoogleOauthService {
         GoogleOauthToken oauthToken = getAccessToken(accessTokenResponse);
         ResponseEntity<String> userInfoResponse = requestUserInfo(oauthToken);
         GoogleUserInfo userInfo = getUserInfo(userInfoResponse);
-        System.out.println("여기 4444");
         // find user or save user
         Member member = memberRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
             Member newMember = Member.builder()
@@ -71,7 +70,6 @@ public class GoogleOauthService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + googleOauthToken.getAccess_token());
-        System.out.println("여기 22222");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(GOOGLE_USER_INFO_URL, HttpMethod.GET, request, String.class);
         if(responseEntity.getStatusCode() == HttpStatus.OK){

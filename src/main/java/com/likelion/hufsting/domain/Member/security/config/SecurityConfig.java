@@ -1,7 +1,6 @@
 package com.likelion.hufsting.domain.Member.security.config;
 
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
-import com.likelion.hufsting.domain.Member.security.GoogleOauthMemberDetailsService;
 import com.likelion.hufsting.domain.Member.security.filter.OauthJwtAuthorizationFilter;
 import com.likelion.hufsting.domain.Member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
-    private final GoogleOauthMemberDetailsService oauthMemberDetailsService;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     @Bean
