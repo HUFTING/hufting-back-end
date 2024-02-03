@@ -14,6 +14,12 @@ public class Member {
     @Column(name = "MEMBER_ID")
     private Long id;
 
+    @Column(name = "MEMBER_NAME")
+    private String name;
+
+    @Column(name = "MEMBER_MAJOR")
+    private String major;
+
     @Column(name = "MEMBER_EMAIL")
     private String email;
 

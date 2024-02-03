@@ -30,9 +30,10 @@ public class ProfileService {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        profile.update(request.getName(), request.getGender(),
-                request.getStudentNumber(), request.getMajor(),
-                request.getMbti(), request.getContent());
+        profile.update(request.getGender(),
+                request.getStudentNumber(), request.getMbti(),
+                request.getBirthday(),
+                request.getContent());
         return profile;
     }
 
