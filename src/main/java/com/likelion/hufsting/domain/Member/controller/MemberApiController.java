@@ -1,8 +1,7 @@
 package com.likelion.hufsting.domain.Member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.likelion.hufsting.domain.Member.dto.GoogleLoginResponse;
-import com.likelion.hufsting.domain.Member.repository.MemberRepository;
+import com.likelion.hufsting.domain.Member.dto.GoogleOauthLoginResponse;
 import com.likelion.hufsting.domain.Member.service.GoogleOauthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +20,10 @@ public class MemberApiController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/auth/google/callback")
-    public ResponseEntity<GoogleLoginResponse> googleLoginCallbackRequest(@RequestParam("code") String code){
+    public ResponseEntity<GoogleOauthLoginResponse> googleLoginCallbackRequest(@RequestParam("code") String code){
         try {
             log.info("Request to login google oauth2");
-            GoogleLoginResponse responseBody = oauthService.googleLogin(code);
+            GoogleOauthLoginResponse responseBody = oauthService.googleLogin(code);
             // cookie setting
             ResponseCookie responseCookie = ResponseCookie.from("access_token", responseBody.getAccessToken())
                     .httpOnly(true)

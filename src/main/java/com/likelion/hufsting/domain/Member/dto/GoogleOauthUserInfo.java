@@ -5,7 +5,7 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class GoogleUserInfo {
+public class GoogleOauthUserInfo {
     private String name;
     private String picture;
     private String email;

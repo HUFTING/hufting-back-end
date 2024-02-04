@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FilterErrorResponse {
-    private String error_name;
-    private String error_message;
+public class GoogleOauthParseNameAndMajor {
+    private String name;
+    private String major;
 }

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -35,11 +37,12 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
         System.out.println(request.getRequestURI());
-
-        String accessToken = jwtUtil.getAccessToken(request);
-        System.out.println(accessToken);
-        if(accessToken != null) {
+        System.out.println(request.getMethod());
+        if(isRequireFiltering(request)) {
+            // get access token
+            String accessToken = jwtUtil.getAccessToken(request);
             // validation accessToken
             if(!jwtUtil.validateToken(accessToken)){
                 throw new JwtAuthenticationException(INVALID_ACCESS_TOKEN_MSG);
@@ -53,5 +56,37 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
+    }
+
+    private Boolean isRequireFiltering(HttpServletRequest request){
+        System.out.println("여기");
+        return hasAccessToken(request) && isRequireCheckingRequest(request);
+    }
+
+    // 액세스 토큰 여부 확인
+    private Boolean hasAccessToken(HttpServletRequest request){
+        String accessToken = jwtUtil.getAccessToken(request);
+        System.out.println(accessToken);
+        return accessToken != null;
+    }
+
+    // 요청(Request) 필터링 여부 확인
+    private Boolean isRequireCheckingRequest(HttpServletRequest request){
+        // local variable
+        List<String> requireCheckingMethod = List.of("POST", "PUT", "PATCH", "DELETE");
+        List<String> requireCheckingUri = List.of(
+                "/api/v1/my-matchingposts",
+                "/api/v1/my-matchingrequests"
+        );
+        // get various value
+        String requestMethod = request.getMethod();
+        String requestUri = request.getRequestURI();
+        System.out.println(requestMethod.equals("GET") && requireCheckingUri.contains(requestUri));
+        // post, put, patch, delete 요청 확인
+        // 허용되지 않은 get 요청 확인
+        System.out.println(requestUri);
+        System.out.println(requestMethod);
+        return requireCheckingMethod.contains(requestMethod) ||
+                (requestMethod.equals("GET") && requireCheckingUri.contains(requestUri));
     }
 }
