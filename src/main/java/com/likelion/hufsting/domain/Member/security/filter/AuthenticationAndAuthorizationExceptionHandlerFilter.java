@@ -2,7 +2,6 @@ package com.likelion.hufsting.domain.Member.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hufsting.domain.Member.dto.FilterErrorResponse;
-import com.likelion.hufsting.domain.Member.exception.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,16 +11,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
-public class ExceptionHandlerFilter extends OncePerRequestFilter {
+//@Component
+public class AuthenticationAndAuthorizationExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        ObjectMapper om = new ObjectMapper();
         try{
             filterChain.doFilter(request, response);
-        }catch (JwtAuthenticationException e){
-            ObjectMapper om = new ObjectMapper();
-            FilterErrorResponse errorResponse = new FilterErrorResponse(e.getMessage());
-            response.getWriter().write(om.writeValueAsString(errorResponse));
+        } catch (Exception e){ // 나머지 에러
+            FilterErrorResponse errorResponse = new FilterErrorResponse(e.getClass().getSimpleName(), e.getMessage());
+            String convertedErrorResponse = om.writeValueAsString(errorResponse);
+            response.setContentType("application/json"); // 한글 깨짐 방지
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(convertedErrorResponse);
         }
     }
 }

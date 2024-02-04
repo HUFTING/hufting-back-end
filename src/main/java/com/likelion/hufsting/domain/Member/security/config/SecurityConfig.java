@@ -1,11 +1,14 @@
 package com.likelion.hufsting.domain.Member.security.config;
 
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
+import com.likelion.hufsting.domain.Member.security.filter.AuthenticationAndAuthorizationExceptionHandlerFilter;
 import com.likelion.hufsting.domain.Member.security.filter.OauthJwtAuthorizationFilter;
+import com.likelion.hufsting.domain.Member.security.filter.ProfileSetUpStatusFilter;
 import com.likelion.hufsting.domain.Member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,10 +42,23 @@ public class SecurityConfig {
                 configure.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(configure -> {
-            configure.requestMatchers("/api/v1/**").hasRole("USER");
+            configure.requestMatchers("/api/v1/my-**").authenticated(); // my-matchingrequests, my-matchingposts
+            configure.requestMatchers("/profiles/**").authenticated(); //
+            // matching posts authorization
+            configure.requestMatchers(HttpMethod.POST, "/api/v1/matchingposts**").authenticated();
+            configure.requestMatchers(HttpMethod.PUT, "/api/v1/matchingposts**").authenticated();
+            configure.requestMatchers(HttpMethod.DELETE, "/api/v1/matchingposts**").authenticated();
+            //// matching requests authorization
+            configure.requestMatchers(HttpMethod.POST, "/api/v1/matchingrequests**").authenticated();
+            configure.requestMatchers(HttpMethod.PUT, "/api/v1/matchingrequests**").authenticated();
+            configure.requestMatchers(HttpMethod.PATCH, "/api/v1/matchingrequests**").authenticated();
+            configure.requestMatchers(HttpMethod.DELETE, "/api/v1/matchingrequests**").authenticated();
             configure.anyRequest().permitAll();
         });
         http.addFilterBefore(oauthJwtAuthorizationFilter(), LogoutFilter.class);
+        http.addFilterBefore(exceptionHandlerFilter(), OauthJwtAuthorizationFilter.class);
+        http.addFilterAfter(profileSetUpStatusFilter(), OauthJwtAuthorizationFilter.class);
+        http.addFilterBefore(exceptionHandlerFilter(), ProfileSetUpStatusFilter.class);
         return http.build();
     }
 
@@ -66,6 +82,16 @@ public class SecurityConfig {
     @Bean
     public OauthJwtAuthorizationFilter oauthJwtAuthorizationFilter(){
         return new OauthJwtAuthorizationFilter(jwtUtil, memberRepository);
+    }
+
+    @Bean
+    public ProfileSetUpStatusFilter profileSetUpStatusFilter(){
+        return new ProfileSetUpStatusFilter(memberRepository);
+    }
+
+    @Bean
+    public AuthenticationAndAuthorizationExceptionHandlerFilter exceptionHandlerFilter(){
+        return new AuthenticationAndAuthorizationExceptionHandlerFilter();
     }
 
     // password encryption bea

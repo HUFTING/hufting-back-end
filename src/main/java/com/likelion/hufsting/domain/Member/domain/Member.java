@@ -30,8 +30,8 @@ public class Member {
     @Column(name = "MEMBER_ROLE")
     private Role role;
 
-    @Column(name = "PROFILE_SET_UP")
-    private ProfileSetUp profileSetUp;
+    @Column(name = "PROFILE_SET_UP_STATUS")
+    private Boolean profileSetUpStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "PROFILE_ID")

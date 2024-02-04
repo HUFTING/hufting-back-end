@@ -55,6 +55,11 @@ public class JwtUtil {
     }
 
     public String getAccessToken(HttpServletRequest request){
+        // 쿠키를 전송하지 않았을 경우
+        if(request.getCookies() == null){
+            return null;
+        }
+        // 쿠키를 받았을 경우
         for(Cookie cookie : request.getCookies()){
             if(cookie.getName().equals(COOKIE_ACCESS_TOKEN_KEY)){
                 return cookie.getValue();
