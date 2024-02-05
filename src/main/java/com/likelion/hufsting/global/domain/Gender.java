@@ -1,4 +1,4 @@
-package com.likelion.hufsting.domain.matching.domain;
+package com.likelion.hufsting.global.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

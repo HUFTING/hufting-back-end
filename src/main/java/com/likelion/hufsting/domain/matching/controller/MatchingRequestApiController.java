@@ -7,7 +7,7 @@ import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
 import com.likelion.hufsting.global.dto.ResponseDto;
 import com.likelion.hufsting.global.dto.ErrorResponse;
-import com.likelion.hufsting.global.exception.AuthenticationException;
+import com.likelion.hufsting.global.exception.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class MatchingRequestApiController {
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }catch (AuthenticationException e){
+        }catch (AuthException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
                     MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY,
@@ -94,7 +94,7 @@ public class MatchingRequestApiController {
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }catch (AuthenticationException e){
+        }catch (AuthException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
                     MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY,
@@ -127,7 +127,7 @@ public class MatchingRequestApiController {
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }catch (AuthenticationException e){
+        }catch (AuthException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
                     MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY,

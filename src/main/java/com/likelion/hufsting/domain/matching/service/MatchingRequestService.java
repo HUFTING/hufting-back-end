@@ -10,7 +10,8 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
-import com.likelion.hufsting.global.exception.AuthenticationException;
+import com.likelion.hufsting.global.exception.AuthException;
+import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class MatchingRequestService {
     // Validators
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
+    // utils
+    private final AuthUtil authUtil;
 
     // 매칭 신청 생성
     @Transactional
@@ -44,9 +47,7 @@ public class MatchingRequestService {
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
         // validation-0 : 내 글인지 확인(* 나중에 함수로 변경)
-        if(matchingPost.getAuthor().getId().equals(representative.getId())){
-            throw new AuthenticationException(MATCHING_REQUEST_SELF_REQ_ERR_MSG);
-        }
+        authUtil.isNotOwnerOfMatchingObject(representative, matchingPost.getAuthor());
         // validation-1 : DTO
         matchingReqMethodValidator.validateParticipantsField(
                 dto.getParticipantIds(),
@@ -88,9 +89,7 @@ public class MatchingRequestService {
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
         // validation-0: 글 작성자 일치 확인(* 함수로 변환)
-        if(!(matchingRequest.getRepresentative().getId().equals(requestMember.getId()))){
-            throw new AuthenticationException(MATCHING_REQUEST_AUTHENTICATION_ERR_MSG);
-        }
+        authUtil.isOwnerOfMatchingObject(requestMember, matchingRequest.getRepresentative());
         matchingReqMethodValidator.validateCanBeDeleted(matchingRequest.getMatchingAcceptance());
         matchingRequestRepository.delete(matchingRequest);
     }
@@ -104,9 +103,8 @@ public class MatchingRequestService {
         // matchingRequest 조회
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
-        if(!(matchingRequest.getRepresentative().getId().equals(requestMember.getId()))){
-            throw new AuthenticationException(MATCHING_REQUEST_AUTHENTICATION_ERR_MSG);
-        }
+        // validation-0 : 대표자 일치 확인
+        authUtil.isOwnerOfMatchingObject(requestMember, matchingRequest.getRepresentative());
         // matchingPost 조회
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
@@ -156,9 +154,7 @@ public class MatchingRequestService {
         MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
         MatchingPost findMatchingPost = findMatchingRequest.getMatchingPost();
-        if(!(findMatchingPost.getAuthor().getId().equals(requestMember.getId()))){
-            throw new AuthenticationException(MATCHING_REQUEST_AUTHENTICATION_ERR_MSG);
-        }
+        authUtil.isOwnerOfMatchingObject(requestMember, findMatchingPost.getAuthor());
         // validation-1 : matchingPost
         matchingPostMethodValidator.validateMatchingPostStatus(findMatchingPost.getMatchingStatus());
         // validation-2 : matchingRequest
@@ -190,10 +186,9 @@ public class MatchingRequestService {
         MatchingRequest findMatchingRequest = matchingRequestRepository.findById(matchingRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
         MatchingPost findMatchingPost = findMatchingRequest.getMatchingPost();
-        if(!(findMatchingPost.getAuthor().getId().equals(requestMember.getId()))){
-            throw new AuthenticationException(MATCHING_REQUEST_AUTHENTICATION_ERR_MSG);
-        }
-        // validation : matchingRequest
+        // validation-0
+        authUtil.isOwnerOfMatchingObject(requestMember, findMatchingPost.getAuthor());
+        // validation-1 : matchingRequest
         matchingReqMethodValidator.validateCanBeModified(
                 findMatchingRequest.getMatchingAcceptance()
         );

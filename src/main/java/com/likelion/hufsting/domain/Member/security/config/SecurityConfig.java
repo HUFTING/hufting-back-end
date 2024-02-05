@@ -29,21 +29,20 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CorsConfigurationSource corsConfigurationSource;
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable); // csrf disable
         http.cors(configure -> {
-            configure.configurationSource(corsConfigurationSource);
+            configure.configurationSource(corsFilter());
         });
         http.sessionManagement(configure ->
                 configure.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(configure -> {
             configure.requestMatchers("/api/v1/my-**").authenticated(); // my-matchingrequests, my-matchingposts
-            configure.requestMatchers("/profiles/**").authenticated(); //
+            configure.requestMatchers("/api/v1/profile/**").authenticated(); //
             // matching posts authorization
             configure.requestMatchers(HttpMethod.POST, "/api/v1/matchingposts**").authenticated();
             configure.requestMatchers(HttpMethod.PUT, "/api/v1/matchingposts**").authenticated();
@@ -63,19 +62,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource cosFilter(){
+    public CorsConfigurationSource corsFilter(){
         // 필요한 객체 초기화
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        // 허용 URL List 만들기
-        List<String> allowedUrls = new ArrayList<>();
-        allowedUrls.add("*");
         // config 객체 설정
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(allowedUrls);
-        config.setAllowedOrigins(allowedUrls);
-        config.setAllowedMethods(allowedUrls);
-        source.registerCorsConfiguration("/api/**", config);
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "OPTIONS"));
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 

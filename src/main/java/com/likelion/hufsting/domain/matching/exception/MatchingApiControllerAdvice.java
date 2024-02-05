@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class MatchingPostApiControllerAdvice {
+public class MatchingApiControllerAdvice {
     private final String MULTI_FIELD_ERROR = "multiField";
     private final String PATH_OR_QUERY_ERROR_KEY = "pathOrQuery";
     @ExceptionHandler(MethodArgumentNotValidException.class)

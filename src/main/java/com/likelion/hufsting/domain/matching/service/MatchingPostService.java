@@ -13,9 +13,11 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryR
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
-import com.likelion.hufsting.global.exception.AuthenticationException;
+import com.likelion.hufsting.global.exception.AuthException;
+import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingPostService {
-    // constant
-    private final String MATCHING_POST_AUTHENTICATION_ERR_MSG = "내가 작성한 글이 아닙니다.";
     // repositories
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
@@ -35,6 +35,8 @@ public class MatchingPostService {
     // validators
     private final ProfileMethodValidator profileMethodValidator;
     private final MatchingPostMethodValidator matchingPostMethodValidator;
+    // utils
+    private final AuthUtil authUtil;
 
     // 훕팅 글 전체 조회
     public List<MatchingPost> findAllMatchingPost(){
@@ -83,9 +85,7 @@ public class MatchingPostService {
         // 자신의 작성한 글인지 확인
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
-        if(!(matchingPost.getAuthor().getId().equals(author.getId()))){
-            throw new AuthenticationException(MATCHING_POST_AUTHENTICATION_ERR_MSG);
-        }
+        authUtil.isOwnerOfMatchingObject(author, matchingPost.getAuthor());
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> memberRepository.findById(participantId)
@@ -109,9 +109,7 @@ public class MatchingPostService {
         // 자신의 작성한 글인지 확인
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
-        if(!(matchingPost.getAuthor().getId().equals(author.getId()))){
-            throw new AuthenticationException(MATCHING_POST_AUTHENTICATION_ERR_MSG);
-        }
+        authUtil.isOwnerOfMatchingObject(author, matchingPost.getAuthor());
         // validation: matchingPost
         matchingPostMethodValidator.validateMatchingPostStatus(matchingPost.getMatchingStatus());
         // delete operation

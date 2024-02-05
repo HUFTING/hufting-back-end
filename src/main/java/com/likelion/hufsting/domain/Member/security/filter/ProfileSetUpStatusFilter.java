@@ -29,7 +29,6 @@ public class ProfileSetUpStatusFilter extends OncePerRequestFilter {
         if(isRequireFiltering(request)){
             GoogleOauthMemberDetails googleOauthMemberDetails = (GoogleOauthMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String email = googleOauthMemberDetails.getName();
-            System.out.println("test!!!");
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow();
             if(member.getProfileSetUpStatus().equals(Boolean.FALSE)){
@@ -57,6 +56,6 @@ public class ProfileSetUpStatusFilter extends OncePerRequestFilter {
         String requestMethod = request.getMethod();
         String requestUri = request.getRequestURI();
         // validation
-        return !(requestMethod.equals("POST") && requestUri.equals("/profiles"));
+        return !(requestMethod.equals("POST") && requestUri.equals("/api/v1/profile"));
     }
 }

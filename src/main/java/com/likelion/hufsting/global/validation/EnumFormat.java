@@ -1,4 +1,4 @@
-package com.likelion.hufsting.domain.matching.validation;
+package com.likelion.hufsting.global.validation;
 
 import jakarta.validation.Constraint;
 

@@ -2,6 +2,7 @@ package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.global.domain.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
