@@ -2,6 +2,7 @@ package com.likelion.hufsting.domain.matching.dto.matchingpost;
 
 import com.likelion.hufsting.domain.matching.domain.Gender;
 import lombok.Data;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 

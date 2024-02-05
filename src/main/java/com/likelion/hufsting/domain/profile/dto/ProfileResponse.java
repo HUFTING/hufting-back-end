@@ -1,6 +1,7 @@
 package com.likelion.hufsting.domain.profile.dto;
 
 import com.likelion.hufsting.domain.profile.domain.Profile;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.cglib.core.Local;
 

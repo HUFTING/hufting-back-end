@@ -33,7 +33,18 @@ public class Member {
     @Column(name = "PROFILE_SET_UP_STATUS")
     private Boolean profileSetUpStatus;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "PROFILE_ID")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
+
+    public void changeProfileSetUpStatus(){
+        if(this.profileSetUpStatus.equals(Boolean.FALSE)){
+            this.profileSetUpStatus = Boolean.TRUE;
+        }else{
+            this.profileSetUpStatus = Boolean.FALSE;
+        }
+    }
+
+    public void setUpProfile(Profile profile){
+        this.profile = profile;
+    }
 }

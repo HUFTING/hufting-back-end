@@ -2,12 +2,7 @@ package com.likelion.hufsting.domain.profile.domain;
 
 
 import com.likelion.hufsting.domain.Member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,19 +32,21 @@ public class Profile {
     @Column(name = "PROFILE_BIRTHDAY", nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "CONTENT", nullable = false)
+    @Column(name = "PROFILE_CONTENT", nullable = false)
     private String content;
 
-    @OneToOne(mappedBy = "profile")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @Builder
-    public Profile(String gender, String studentNumber, String mbti, LocalDate birthday, String content) {
+    public Profile(String gender, String studentNumber, String mbti, LocalDate birthday, String content, Member member) {
         this.gender = gender;
         this.studentNumber = studentNumber;
         this.mbti = mbti;
         this.birthday = birthday;
         this.content = content;
+        this.member = member;
     }
 
     public void update(String gender, String studentNumber, String mbti, LocalDate birthday, String content) {

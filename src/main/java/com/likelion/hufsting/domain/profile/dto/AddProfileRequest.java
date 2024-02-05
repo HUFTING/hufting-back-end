@@ -1,5 +1,6 @@
 package com.likelion.hufsting.domain.profile.dto;
 
+import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.domain.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,13 +18,14 @@ public class AddProfileRequest {
     private LocalDate birthday;
     private String content;
 
-    public Profile toEntity() {
+    public Profile toEntity(Member member) {
         return Profile.builder()
                 .gender(gender)
                 .studentNumber(studentNumber)
                 .mbti(mbti)
                 .birthday(birthday)
                 .content(content)
+                .member(member)
                 .build();
     }
 }

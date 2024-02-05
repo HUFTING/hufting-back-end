@@ -53,7 +53,7 @@ public class GoogleOauthService {
                 .name(member.getName())
                 .major(member.getMajor())
                 .accessToken(accessToken)
-                .profileSetUpStatus(Boolean.FALSE)
+                .profileSetUpStatus(member.getProfileSetUpStatus())
                 .build();
     }
 }
