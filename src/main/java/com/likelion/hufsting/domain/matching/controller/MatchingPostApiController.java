@@ -40,9 +40,11 @@ public class MatchingPostApiController {
         List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
         List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
                 .map(matchingPost -> new FindMatchingPostsData(
+                        matchingPost.getId(),
                         matchingPost.getTitle(),
                         matchingPost.getGender(),
                         matchingPost.getDesiredNumPeople(),
+                        matchingPost.getMatchingStatus(),
                         matchingPost.getAuthor().getName(),
                         matchingPost.getCreatedAt()
                 ))
