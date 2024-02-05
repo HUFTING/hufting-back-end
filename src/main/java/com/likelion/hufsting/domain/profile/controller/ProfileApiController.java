@@ -9,6 +9,7 @@ import com.likelion.hufsting.domain.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +25,9 @@ public class ProfileApiController {
     private final ProfileService profileService;
 
     @PostMapping("/profiles")
-    public ResponseEntity<Profile> addProfile(@RequestBody AddProfileRequest request) {
-        Profile saveProfile = profileService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(saveProfile);
+    public ResponseEntity<ProfileResponse> addProfile(@RequestBody AddProfileRequest request, Authentication authentication) {
+        ProfileResponse response = profileService.save(request, authentication);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @GetMapping("/profiles/{id}")
     public ResponseEntity<ProfileResponse> findProfile(@PathVariable long id) {

@@ -16,7 +16,7 @@ public class MatchingRequestQueryRepository {
 
     // 내 매칭 참여 현황 가져오기
     public List<MatchingRequest> findByParticipant(Member participant){
-        Long participantId = 1L; // 임시 사용자 ID
+        Long participantId = participant.getId();
         String jpql = "select distinct mr from MatchingRequest mr"
                 + " join fetch mr.matchingPost mrmp"
                 + " join fetch mr.representative mrr"

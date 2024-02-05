@@ -13,7 +13,9 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryR
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
+import com.likelion.hufsting.global.exception.AuthenticationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingPostService {
+    // constant
+    private final String MATCHING_POST_AUTHENTICATION_ERR_MSG = "내가 작성한 글이 아닙니다.";
     // repositories
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
@@ -43,30 +47,28 @@ public class MatchingPostService {
     }
     // 훕팅 글 등록
     @Transactional
-    public Long saveMatchingPost(CreateMatchingPostData dto){
+    public Long saveMatchingPost(CreateMatchingPostData dto, Authentication authentication){
         // MatchingPost 생성
-        Member author = Member.builder().build(); // 임시 작성자
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         MatchingPost matchingPost = new MatchingPost(
                 dto.getTitle(),
                 dto.getContent(),
                 dto.getGender(),
                 dto.getDesiredNumPeople(),
                 dto.getOpenTalkLink(),
-                author, // 임시 사용자
+                author,
                 MatchingStatus.WAITING
         );
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
-                (participantId) -> {
-                    return memberRepository.findById(participantId)
-                            .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
-                }
+                (participantId) -> memberRepository.findById(participantId)
+                        .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
         // validation : Member
         profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
         // 호스트 조회 및 생성
-        List<MatchingHost> matchingHosts = createMatchingHostsById(matchingPost, dto.getParticipants());
-
+        List<MatchingHost> matchingHosts = createMatchingHosts(matchingPost, findParticipants);
         // 매칭 글에 참가자(* 호스트) 추가
         matchingPost.addHost(matchingHosts);
         // 매칭글 영속화
@@ -75,15 +77,19 @@ public class MatchingPostService {
     }
     // 훕팅 글 수정
     @Transactional
-    public Long updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto){
+    public Long updateMatchingPost(Long matchingPostId, Authentication authentication, UpdateMatchingPostData dto){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // 자신의 작성한 글인지 확인
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
+        if(!(matchingPost.getAuthor().getId().equals(author.getId()))){
+            throw new AuthenticationException(MATCHING_POST_AUTHENTICATION_ERR_MSG);
+        }
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
-                (participantId) -> {
-                    return memberRepository.findById(participantId)
-                            .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId));
-                }
+                (participantId) -> memberRepository.findById(participantId)
+                        .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
         // validation-1 : GENDER
         profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
@@ -91,16 +97,21 @@ public class MatchingPostService {
         matchingPostMethodValidator.validateMatchingPostStatus(matchingPost.getMatchingStatus());
 
         matchingPost.updateMatchingPost(dto); // 변경 감지(Dirty checking)
-
         // 호스트 수정
-        matchingPost.updateHost(createMatchingHostsById(matchingPost, dto.getParticipants()));
+        matchingPost.updateHost(createMatchingHosts(matchingPost, findParticipants));
         return matchingPostId;
     }
     // 훕팅 글 삭제
     @Transactional
-    public void removeMatchingPost(Long matchingPostId){
+    public void removeMatchingPost(Long matchingPostId, Authentication authentication){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // 자신의 작성한 글인지 확인
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
+        if(!(matchingPost.getAuthor().getId().equals(author.getId()))){
+            throw new AuthenticationException(MATCHING_POST_AUTHENTICATION_ERR_MSG);
+        }
         // validation: matchingPost
         matchingPostMethodValidator.validateMatchingPostStatus(matchingPost.getMatchingStatus());
         // delete operation
@@ -108,7 +119,10 @@ public class MatchingPostService {
     }
 
     // 내 매칭글 조회
-    public FindMyMatchingPostResponse findMyMatchingPost(Member author){
+    public FindMyMatchingPostResponse findMyMatchingPost(Authentication authentication){
+        // 요청자 확인
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         List<MatchingPost> findMyMatchingPosts = matchingPostQueryRepository.findByAuthor(author);
         List<FindMyMatchingPostData> findMyMatchingPostDatas = findMyMatchingPosts.stream()
                 .map(FindMyMatchingPostData::toFindMyMatchingPostData)
@@ -119,11 +133,10 @@ public class MatchingPostService {
     }
 
     // 사용자 정의 메서드
-    private List<MatchingHost> createMatchingHostsById(MatchingPost matchingPost, List<Long> hostIds){
+    private List<MatchingHost> createMatchingHosts(MatchingPost matchingPost, List<Member> hosts){
         List<MatchingHost> matchingHosts = new ArrayList<>();
-        for(Long hostId : hostIds){
-            Member findHost = Member.builder().build(); // 임시 사용자 생성
-            matchingHosts.add(new MatchingHost(matchingPost, findHost));
+        for(Member host : hosts){
+            matchingHosts.add(new MatchingHost(matchingPost, host));
         }
         return matchingHosts;
     }

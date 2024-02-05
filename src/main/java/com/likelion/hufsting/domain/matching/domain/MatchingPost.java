@@ -89,14 +89,20 @@ public class MatchingPost {
 
     // MatchingHost Update Function
     public void updateHost(List<MatchingHost> hosts){
+        List<Long> originHostIds = this.matchingHosts.stream()
+                .map(matchingHost -> matchingHost.getHost().getId())
+                .toList();
+        List<Long> newHostIds = hosts.stream()
+                .map(matchingHost -> matchingHost.getHost().getId())
+                .toList();
         // add new host
         for(MatchingHost host : hosts){
-            if(!matchingHosts.contains(host)){
+            if(!originHostIds.contains(host.getHost().getId())){
                 matchingHosts.add(host);
             }
         }
         // remove not in hosts
-        matchingHosts.removeIf(matchingHost -> !hosts.contains(matchingHost));
+        matchingHosts.removeIf(matchingHost -> !newHostIds.contains(matchingHost.getHost().getId()));
     }
 
     public void updateMatchingStatus(){
