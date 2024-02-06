@@ -188,7 +188,9 @@ public class MatchingPostService {
                 .map(post -> new SearchingMatchingPostResponse(
                         post.getTitle(),
                         post.getDesiredNumPeople(),
-                        post.getAuthor().getName()))
+                        post.getGender(),
+                        post.getAuthor().getName(),
+                        post.getCreatedAt()))
                 .collect(Collectors.toList());
     }
 }
