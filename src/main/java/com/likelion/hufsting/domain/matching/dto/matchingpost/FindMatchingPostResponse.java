@@ -6,13 +6,14 @@ import com.likelion.hufsting.global.dto.ResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public class FindMatchingPostResponse implements ResponseDto {
     private String title;
     private Gender gender;
     private int desiredNumPeople;
-    private String authorName;
-    private String openTalkLink;
     private MatchingStatus matchingStatus;
+    private List<FindMatchingPostParticipantData> participants;
 }

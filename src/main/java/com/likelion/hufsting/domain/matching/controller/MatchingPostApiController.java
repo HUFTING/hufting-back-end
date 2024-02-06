@@ -96,15 +96,7 @@ public class MatchingPostApiController {
                                                                         @PathIdFormat Long matchingPostId){
         log.info("Request to get matching post: {}", matchingPostId);
         try {
-            MatchingPost findMatchingPost = matchingPostService.findByIdMatchingPost(matchingPostId);
-            FindMatchingPostResponse response = new FindMatchingPostResponse(
-                    findMatchingPost.getTitle(),
-                    findMatchingPost.getGender(),
-                    findMatchingPost.getDesiredNumPeople(),
-                    findMatchingPost.getAuthor().getName(), // 임시 사용자
-                    findMatchingPost.getOpenTalkLink(),
-                    findMatchingPost.getMatchingStatus()
-            );
+            FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
