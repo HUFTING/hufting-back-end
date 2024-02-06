@@ -76,7 +76,8 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
         List<String> requireCheckingMethod = List.of("POST", "PUT", "PATCH", "DELETE");
         List<String> requireCheckingUri = List.of(
                 "/api/v1/my-matchingposts",
-                "/api/v1/my-matchingrequests"
+                "/api/v1/my-matchingrequests",
+                "/api/v1/alarms"
         );
         // get various value
         String requestMethod = request.getMethod();

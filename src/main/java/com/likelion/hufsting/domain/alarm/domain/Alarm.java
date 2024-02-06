@@ -3,6 +3,7 @@ package com.likelion.hufsting.domain.alarm.domain;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 public class Alarm {
     @Id @GeneratedValue
     @Column(name = "ALARM_ID")

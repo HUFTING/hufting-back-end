@@ -1,6 +1,9 @@
 package com.likelion.hufsting.domain.matching.service;
 
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
+import com.likelion.hufsting.domain.alarm.domain.Alarm;
+import com.likelion.hufsting.domain.alarm.domain.AlarmType;
+import com.likelion.hufsting.domain.alarm.repository.AlarmRepository;
 import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
@@ -24,14 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingRequestService {
-    // constant
-    private final String MATCHING_REQUEST_AUTHENTICATION_ERR_MSG = "내가 신청한 요청이 아닙니다.";
-    private final String MATCHING_REQUEST_SELF_REQ_ERR_MSG = "내가 작성한 글은 신청할 수 없습니다.";
     // Repositories
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MemberRepository memberRepository;
+    private final AlarmRepository alarmRepository;
     // Validators
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
@@ -73,7 +74,13 @@ public class MatchingRequestService {
         List<MatchingParticipant> matchingParticipants = createMatchingParticipants(newMatchingRequest, findParticipants);
         newMatchingRequest.addParticipant(matchingParticipants);
         matchingRequestRepository.save(newMatchingRequest);
-
+        // alarm 생성
+        Alarm matchingRequestAlarm = Alarm.builder()
+                        .alarmType(AlarmType.NEW)
+                                .matchingPost(matchingPost)
+                                        .owner(matchingPost.getAuthor())
+                                                .build();
+        alarmRepository.save(matchingRequestAlarm);
         // return value generation
         Long createdMatchingRequestId = newMatchingRequest.getId();
         List<Long> createdMatchingRequestParticipants = dto.getParticipantIds();
@@ -168,10 +175,27 @@ public class MatchingRequestService {
                 .forEach(matchingRequest -> {
                     if(matchingRequest.getId().equals(matchingRequestId)){
                         matchingRequest.acceptMatchingRequest();
+                        // accept alarm generation
+                        Alarm matchingRequestAccept = Alarm.builder()
+                                .matchingPost(findMatchingPost)
+                                .owner(matchingRequest.getRepresentative())
+                                .alarmType(AlarmType.ACCEPT)
+                                .build();
+                        alarmRepository.save(matchingRequestAccept);
                     }else{
                         matchingRequest.rejectMatchingRequest();
+                        // reject alarm generation
+                        // alarm 생성
+                        Alarm matchingRequestReject = Alarm.builder()
+                                .matchingPost(findMatchingPost)
+                                .owner(matchingRequest.getRepresentative())
+                                .alarmType(AlarmType.REJECT)
+                                .build();
+                        alarmRepository.save(matchingRequestReject);
                     }
                 });
+
+        // return value
         return AcceptMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
                 .build();
@@ -194,6 +218,13 @@ public class MatchingRequestService {
         );
         // 매칭 요청 상태 변경
         findMatchingRequest.rejectMatchingRequest();
+        // alarm 생성
+        Alarm matchingRequestReject = Alarm.builder()
+                .matchingPost(findMatchingPost)
+                .owner(findMatchingRequest.getRepresentative())
+                .alarmType(AlarmType.REJECT)
+                .build();
+        alarmRepository.save(matchingRequestReject);
         return RejectMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
                 .build();
