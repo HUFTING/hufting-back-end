@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/hufsting
     username: huigwan
-    password:
+    password: 1234
     driver-class-name: org.h2.Driver
 
   jpa:
@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  defer-datasource-initialization: true # spring 실행시 data.sql 자동 실행
 
   security:
     oauth2:
