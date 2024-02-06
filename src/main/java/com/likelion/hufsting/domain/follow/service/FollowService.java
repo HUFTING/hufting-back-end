@@ -1,6 +1,8 @@
 package com.likelion.hufsting.domain.follow.service;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.Member.exception.MemberRequestException;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
@@ -21,8 +23,12 @@ public class FollowService {
 
 
     @Transactional
-    public Boolean toggleMember(Long followeeId, Authentication authentication) {
-        Optional<Member> followeeMember = memberRepository.findById(followeeId);
+    public Boolean toggleMember(String followeeEmail, Authentication authentication) {
+        System.out.println("followeeEmail 값" + followeeEmail.toString());
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(followeeEmail, JsonObject.class);
+        String fEmail = jsonObject.get("memberEmail").getAsString();
+        Optional<Member> followeeMember = memberRepository.findByEmail(fEmail);
         Optional<Member> followMember = memberRepository.findByEmail(authentication.getName());
         if (followeeMember.get().getId().equals(followMember.get().getId())) {
             throw new MemberRequestException("본인을 팔로우 할 수 없습니다.");
