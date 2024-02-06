@@ -1,4 +1,4 @@
-package com.likelion.hufsting.domain.matching.exception;
+package com.likelion.hufsting.global.exception;
 
 import com.likelion.hufsting.global.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class MatchingApiControllerAdvice {
+public class GlobalControllerAdvice {
     private final String MULTI_FIELD_ERROR = "multiField";
     private final String PATH_OR_QUERY_ERROR_KEY = "pathOrQuery";
     @ExceptionHandler(MethodArgumentNotValidException.class)

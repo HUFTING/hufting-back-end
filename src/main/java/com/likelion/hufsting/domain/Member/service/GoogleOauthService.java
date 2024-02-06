@@ -10,6 +10,7 @@ import com.likelion.hufsting.domain.Member.dto.GoogleOauthUserInfo;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.Member.util.GoogleOauthUtil;
 import com.likelion.hufsting.domain.Member.util.JwtUtil;
+import com.likelion.hufsting.domain.Member.validation.GoogleAuthMethodValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class GoogleOauthService {
     private final GoogleOauthUtil googleOauthUtil;
     // repositories
     private final MemberRepository memberRepository;
+    // validators
+    private final GoogleAuthMethodValidator googleAuthMethodValidator;
 
     @Transactional
     public GoogleOauthLoginResponse googleLogin(String code) throws JsonProcessingException{
@@ -34,7 +37,8 @@ public class GoogleOauthService {
         GoogleOauthUserInfo userInfo = googleOauthUtil.getUserInfo(userInfoResponse);
         // parsing name, major from gotten data
         GoogleOauthParseNameAndMajor parsedResult = googleOauthUtil.parseNameAndMajor(userInfo.getName());
-        System.out.println(parsedResult.getName());
+        // validation-0 : 이메일 도메인 확인(* hufs.ac.kr)
+        googleAuthMethodValidator.isAppropriateEmailDomain(userInfo.getEmail());
         // find user or save user
         Member member = memberRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
             Member newMember = Member.builder()
