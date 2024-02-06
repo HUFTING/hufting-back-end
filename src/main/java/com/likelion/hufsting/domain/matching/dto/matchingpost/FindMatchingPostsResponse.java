@@ -9,6 +9,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class FindMatchingPostsResponse<T> implements ResponseDto {
+    private int totalPage;
+    private int curPage;
     private int count;
     private List<T> data;
 }

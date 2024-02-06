@@ -11,19 +11,16 @@ import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValida
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.domain.Profile;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
-import com.likelion.hufsting.global.exception.AuthException;
 import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +37,25 @@ public class MatchingPostService {
     private final AuthUtil authUtil;
 
     // 훕팅 글 전체 조회
-    public List<MatchingPost> findAllMatchingPost(){
-        return matchingPostRepository.findAll();
+    public FindMatchingPostsResponse<FindMatchingPostsData> findAllMatchingPost(Pageable pageable){
+        Page<MatchingPost> findMatchingPostResult = matchingPostRepository.findAll(pageable);
+        List<MatchingPost> findMatchingPosts = findMatchingPostResult.getContent();
+        List<FindMatchingPostsData> convertedResult = findMatchingPosts.stream()
+                .map(matchingPost -> new FindMatchingPostsData(
+                        matchingPost.getId(),
+                        matchingPost.getTitle(),
+                        matchingPost.getGender(),
+                        matchingPost.getDesiredNumPeople(),
+                        matchingPost.getMatchingStatus(),
+                        matchingPost.getAuthor().getName(),
+                        matchingPost.getCreatedAt()
+                ))
+                .toList();
+        return new FindMatchingPostsResponse<FindMatchingPostsData>(
+                findMatchingPostResult.getTotalPages(),
+                findMatchingPostResult.getNumber(),
+                convertedResult.size(),
+                convertedResult);
     }
     // 훕팅 글 상세 조회
     public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId){
