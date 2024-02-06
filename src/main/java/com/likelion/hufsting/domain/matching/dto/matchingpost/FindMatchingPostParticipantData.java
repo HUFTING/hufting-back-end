@@ -9,7 +9,9 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class FindMatchingPostParticipantData {
+    private Long id;
     private String name;
+    private String major;
     private String studentNumber;
     private LocalDate age;
     private Mbti mbti;
