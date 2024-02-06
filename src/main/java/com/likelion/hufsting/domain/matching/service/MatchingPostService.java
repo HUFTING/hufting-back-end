@@ -7,6 +7,7 @@ import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
+import com.likelion.hufsting.domain.matching.util.MatchingPostUtil;
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.domain.Profile;
@@ -36,6 +37,7 @@ public class MatchingPostService {
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     // utils
     private final AuthUtil authUtil;
+    private final MatchingPostUtil matchingPostUtil;
 
     // 훕팅 글 전체 조회
     public FindMatchingPostsResponse<FindMatchingPostsData> findAllMatchingPost(Pageable pageable){
@@ -48,7 +50,7 @@ public class MatchingPostService {
                         matchingPost.getGender(),
                         matchingPost.getDesiredNumPeople(),
                         matchingPost.getMatchingStatus(),
-                        matchingPost.getAuthor().getName(),
+                        matchingPostUtil.changeNameToBlurName(matchingPost.getAuthor().getName()),
                         matchingPost.getCreatedAt()
                 ))
                 .toList();
@@ -69,7 +71,9 @@ public class MatchingPostService {
                     Member host = matchingHost.getHost();
                     Profile hostProfile = host.getProfile();
                     return FindMatchingPostParticipantData.builder()
-                            .name(host.getName())
+                            .id(host.getId())
+                            .name(matchingPostUtil.changeNameToBlurName(host.getName()))
+                            .major(host.getMajor())
                             .age(hostProfile.getBirthday())
                             .mbti(hostProfile.getMbti())
                             .studentNumber(hostProfile.getStudentNumber())
