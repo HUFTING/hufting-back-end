@@ -12,6 +12,7 @@ import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.profile.domain.Profile;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import com.likelion.hufsting.global.util.AuthUtil;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -173,5 +174,17 @@ public class MatchingPostService {
             matchingHosts.add(new MatchingHost(matchingPost, host));
         }
         return matchingHosts;
+    }
+
+    // 훕팅 목록 글 검색
+    public List<SearchingMatchingPostResponse> findOneMatchingPost(String title) {
+        System.out.println("제목 " + title);
+        List<MatchingPost> matchingPosts = matchingPostRepository.findByTitleContaining(title);
+        return matchingPosts.stream()
+                .map(post -> new SearchingMatchingPostResponse(
+                        post.getTitle(),
+                        post.getDesiredNumPeople(),
+                        post.getAuthor().getName()))
+                .collect(Collectors.toList());
     }
 }

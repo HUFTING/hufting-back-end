@@ -21,13 +21,17 @@ public class MatchingPost {
     @Column(name = "POST_ID")
     private Long id; // PK
 
+    @Column(name = "TITLE")
     private String title; // 제목
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "GENDER")
     private Gender gender; // 성별, MALE, FEMALE
 
+    @Column(name = "DESIRED_NUM_PEOPLE")
     private int desiredNumPeople; // 희망 매칭 인원
 
+    @Column(name = "OPEN_TALK_LINK")
     private String openTalkLink; // 오픈톡 링크
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
@@ -35,6 +39,7 @@ public class MatchingPost {
     private Member author; // 작성자
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "MATCHING_STATUS")
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
     @OneToMany(mappedBy = "matchingPost", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -44,9 +49,11 @@ public class MatchingPost {
     private List<MatchingRequest> matchingRequests = new ArrayList<>();
 
     @CreationTimestamp
+    @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
     @Override

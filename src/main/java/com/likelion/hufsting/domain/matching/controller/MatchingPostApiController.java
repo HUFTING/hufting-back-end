@@ -10,6 +10,7 @@ import com.likelion.hufsting.global.dto.ErrorResponse;
 import com.likelion.hufsting.global.dto.ResponseDto;
 import com.likelion.hufsting.global.exception.AuthException;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -153,5 +154,13 @@ public class MatchingPostApiController {
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/api/v1/searchingtitle")
+    public ResponseEntity<List<SearchingMatchingPostResponse>> searchingMatchPost(@RequestParam("title") String title) {
+
+        List<SearchingMatchingPostResponse> searchResultList = matchingPostService.findOneMatchingPost(title);
+        System.out.println("검색결과 " + searchResultList.toString());
+        return ResponseEntity.ok(searchResultList);
     }
 }
