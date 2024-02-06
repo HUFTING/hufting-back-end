@@ -23,7 +23,7 @@ public class ProfileMethodValidator {
     }
 
     public void validateAlreadySetUpProfile(Member member){
-        if(member.getProfile().){
+        if(member.getProfile() != null){
             throw new ProfileException(ALREADY_SET_UP_PROFILE_ERR_MSG);
         }
     }
