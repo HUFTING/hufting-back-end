@@ -12,14 +12,14 @@ import com.likelion.hufsting.global.exception.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -34,21 +34,11 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts")
-    public FindMatchingPostsResponse<FindMatchingPostsData> getMatchingPosts(){
+    public ResponseEntity<ResponseDto> getMatchingPosts(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
+                                                        Pageable pageable){
         log.info("Request to get matching posts");
-        List<MatchingPost> findMatchingPosts = matchingPostService.findAllMatchingPost();
-        List<FindMatchingPostsData> matchingPosts = findMatchingPosts.stream()
-                .map(matchingPost -> new FindMatchingPostsData(
-                        matchingPost.getId(),
-                        matchingPost.getTitle(),
-                        matchingPost.getGender(),
-                        matchingPost.getDesiredNumPeople(),
-                        matchingPost.getMatchingStatus(),
-                        matchingPost.getAuthor().getName(),
-                        matchingPost.getCreatedAt()
-                ))
-                .collect(Collectors.toList());
-        return new FindMatchingPostsResponse<FindMatchingPostsData>(matchingPosts.size(), matchingPosts);
+        FindMatchingPostsResponse<FindMatchingPostsData> response = matchingPostService.findAllMatchingPost(pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/my-matchingposts")
