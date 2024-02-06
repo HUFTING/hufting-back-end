@@ -16,5 +16,4 @@ public class SearchingMatchingPostResponse {
     private Gender gender;
     private String author;
     private LocalDateTime createdAt;
-
 }

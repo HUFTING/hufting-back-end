@@ -37,9 +37,6 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        System.out.println(request.getRequestURI());
-        System.out.println(request.getMethod());
         if(isRequireFiltering(request)) {
             // get access token
             String accessToken = jwtUtil.getAccessToken(request);
@@ -59,7 +56,6 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private Boolean isRequireFiltering(HttpServletRequest request){
-        System.out.println("여기");
         return hasAccessToken(request) && isRequireCheckingRequest(request);
     }
 

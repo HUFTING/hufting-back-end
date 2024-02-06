@@ -182,14 +182,13 @@ public class MatchingPostService {
 
     // 훕팅 목록 글 검색
     public List<SearchingMatchingPostResponse> findOneMatchingPost(String title) {
-        System.out.println("제목 " + title);
         List<MatchingPost> matchingPosts = matchingPostRepository.findByTitleContaining(title);
         return matchingPosts.stream()
                 .map(post -> new SearchingMatchingPostResponse(
                         post.getTitle(),
                         post.getDesiredNumPeople(),
                         post.getGender(),
-                        post.getAuthor().getName(),
+                        matchingPostUtil.changeNameToBlurName(post.getAuthor().getName()),
                         post.getCreatedAt()))
                 .collect(Collectors.toList());
     }

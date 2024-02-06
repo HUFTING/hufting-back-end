@@ -1,11 +1,14 @@
 package com.likelion.hufsting.domain.Member.service;
 
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.domain.Member.dto.MemberDetailInfoResponse;
 import com.likelion.hufsting.domain.Member.dto.MemberInfoResponse;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.likelion.hufsting.domain.Member.repository.query.MemberQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class MemberInfoService {
 
     private final MemberRepository memberRepository;
+    private final MemberQueryRepository memberQueryRepository;
     public MemberInfoResponse findByEmail(String Email) {
         Member member = memberRepository.findByEmail(Email)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + Email));
@@ -34,5 +38,19 @@ public class MemberInfoService {
                         follow.getFollowee().getName(),
                         follow.getFollowee().getProfile().getContent()))
                 .collect(Collectors.toList());
+    }
+
+    public MemberDetailInfoResponse findMemberDetailInfoById(Long memberId){
+        Member findMember = memberQueryRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + memberId));
+        return MemberDetailInfoResponse.builder()
+                .id(findMember.getId())
+                .name(findMember.getName())
+                .major(findMember.getMajor())
+                .studentNumber(findMember.getProfile().getStudentNumber())
+                .age(findMember.getProfile().getBirthday())
+                .mbti(findMember.getProfile().getMbti())
+                .content(findMember.getProfile().getContent())
+                .build();
     }
 }

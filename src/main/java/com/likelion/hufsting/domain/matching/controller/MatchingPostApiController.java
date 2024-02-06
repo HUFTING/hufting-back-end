@@ -158,9 +158,7 @@ public class MatchingPostApiController {
 
     @GetMapping("/api/v1/searchingtitle")
     public ResponseEntity<List<SearchingMatchingPostResponse>> searchingMatchPost(@RequestParam("title") String title) {
-
         List<SearchingMatchingPostResponse> searchResultList = matchingPostService.findOneMatchingPost(title);
-        System.out.println("검색결과 " + searchResultList.toString());
         return ResponseEntity.ok(searchResultList);
     }
 }
