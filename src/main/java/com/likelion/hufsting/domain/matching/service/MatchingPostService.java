@@ -4,14 +4,12 @@ import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
-import com.likelion.hufsting.domain.matching.dto.matchingpost.CreateMatchingPostData;
-import com.likelion.hufsting.domain.matching.dto.matchingpost.FindMyMatchingPostData;
-import com.likelion.hufsting.domain.matching.dto.matchingpost.FindMyMatchingPostResponse;
-import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
+import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.domain.profile.domain.Profile;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import com.likelion.hufsting.global.exception.AuthException;
 import com.likelion.hufsting.global.util.AuthUtil;
@@ -21,8 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,9 +44,30 @@ public class MatchingPostService {
         return matchingPostRepository.findAll();
     }
     // 훕팅 글 상세 조회
-    public MatchingPost findByIdMatchingPost(Long matchingPostId){
-        return matchingPostRepository.findById(matchingPostId)
+    public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId){
+        // get matching post
+        MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // create response
+        List<FindMatchingPostParticipantData> participants = findMatchingPost.getMatchingHosts().stream()
+                .map((matchingHost) -> {
+                    Member host = matchingHost.getHost();
+                    Profile hostProfile = host.getProfile();
+                    return FindMatchingPostParticipantData.builder()
+                            .name(host.getName())
+                            .age(hostProfile.getBirthday())
+                            .mbti(hostProfile.getMbti())
+                            .studentNumber(hostProfile.getStudentNumber())
+                            .content(hostProfile.getContent())
+                            .build();
+                }).toList();
+        return new FindMatchingPostResponse(
+                findMatchingPost.getTitle(),
+                findMatchingPost.getGender(),
+                findMatchingPost.getDesiredNumPeople(),
+                findMatchingPost.getMatchingStatus(),
+                participants
+                );
     }
     // 훕팅 글 등록
     @Transactional
