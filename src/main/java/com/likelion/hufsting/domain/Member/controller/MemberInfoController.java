@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberInfoController {
 
     private final MemberInfoService memberInfoService;
-    @GetMapping("/api/v1/following")
+    @GetMapping("/api/v1/searching")
     public ResponseEntity<MemberInfoResponse> follow(@RequestParam("member_email") String memberEmail) {
         MemberInfoResponse memberInfoResponse = memberInfoService.findByEmail(memberEmail);
         return ResponseEntity.ok(memberInfoResponse);
