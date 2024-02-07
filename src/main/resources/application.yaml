@@ -7,24 +7,10 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
-
-  defer-datasource-initialization: true # spring 실행시 data.sql 자동 실행
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 753499212823-ftql7ed4h06gcbm8rrtrbmgg0h5odttl.apps.googleusercontent.com
-            client-secret: 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
-            redirect-uri: http://localhost:8080/auth/google/callback
-            scope:
-              - profile
-              - email
 
 logging:
   level:

@@ -9,15 +9,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.likelion.hufsting.domain.Member.repository.query.MemberQueryRepository;
+import com.likelion.hufsting.domain.Member.validation.GlobalAuthMethodValidator;
+import com.likelion.hufsting.domain.follow.domain.Follow;
+import com.likelion.hufsting.domain.follow.repository.FollowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class MemberInfoService {
-
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final FollowRepository followRepository;
+    // validators
+    private final GlobalAuthMethodValidator globalAuthMethodValidator;
+
     public MemberInfoResponse findByEmail(String Email) {
         Member member = memberRepository.findByEmail(Email)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + Email));
@@ -40,7 +47,14 @@ public class MemberInfoService {
                 .collect(Collectors.toList());
     }
 
-    public MemberDetailInfoResponse findMemberDetailInfoById(Long memberId){
+    public MemberDetailInfoResponse findMemberDetailInfoById(Long memberId, Authentication authentication){
+        // get login user
+        Member loginUser = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
+        // validation-0 : 내가 팔로우하는 사람인지 확인
+        List<Follow> followees = followRepository.findByFollower(loginUser);
+        globalAuthMethodValidator.isMemberInFollwees(followees, memberId);
+        // Get profile the member
         Member findMember = memberQueryRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + memberId));
         return MemberDetailInfoResponse.builder()

@@ -62,28 +62,35 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
     // 액세스 토큰 여부 확인
     private Boolean hasAccessToken(HttpServletRequest request){
         String accessToken = jwtUtil.getAccessToken(request);
-        System.out.println(accessToken);
         return accessToken != null;
     }
 
     // 요청(Request) 필터링 여부 확인
     private Boolean isRequireCheckingRequest(HttpServletRequest request){
         // local variable
-        List<String> requireCheckingMethod = List.of("POST", "PUT", "PATCH", "DELETE");
-        List<String> requireCheckingUri = List.of(
+        List<String> requireCheckingMethods = List.of("POST", "PUT", "PATCH", "DELETE");
+        List<String> requireCheckingUris = List.of(
                 "/api/v1/my-matchingposts",
                 "/api/v1/my-matchingrequests",
-                "/api/v1/alarms"
+                "/api/v1/alarms",
+                "/api/v1/member/",
+                "/api/v1/followingList/",
+                "/api/v1/searching"
         );
         // get various value
         String requestMethod = request.getMethod();
         String requestUri = request.getRequestURI();
-        System.out.println(requestMethod.equals("GET") && requireCheckingUri.contains(requestUri));
-        // post, put, patch, delete 요청 확인
-        // 허용되지 않은 get 요청 확인
-        System.out.println(requestUri);
-        System.out.println(requestMethod);
-        return requireCheckingMethod.contains(requestMethod) ||
-                (requestMethod.equals("GET") && requireCheckingUri.contains(requestUri));
+        // post, put, patch, delete 요청 + 불허용 get 요청 확인
+        boolean notGetRequestCondition = requireCheckingMethods.contains(requestMethod);
+        boolean getRequestCondition = false;
+        if(requestMethod.equals("GET")){
+            for(String requireCheckingUri : requireCheckingUris){
+                if(requestUri.startsWith(requireCheckingUri)){
+                    getRequestCondition = true;
+                    break;
+                }
+            }
+        }
+        return notGetRequestCondition || getRequestCondition;
     }
 }
