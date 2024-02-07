@@ -28,7 +28,14 @@ public class FollowService {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(followeeEmail, JsonObject.class);
         String fEmail = jsonObject.get("memberEmail").getAsString();
-        Optional<Member> followeeMember = memberRepository.findByEmail(fEmail);
+        final String finalEmail;
+        if(!followeeEmail.contains("@hufs.ac.kr")) {
+            finalEmail = fEmail + "@hufs.ac.kr";
+        } else {
+            finalEmail = fEmail;
+        }
+        System.out.println("finalEmail" + finalEmail);
+        Optional<Member> followeeMember = memberRepository.findByEmail(finalEmail);
         Optional<Member> followMember = memberRepository.findByEmail(authentication.getName());
         if (followeeMember.get().getId().equals(followMember.get().getId())) {
             throw new MemberRequestException("본인을 팔로우 할 수 없습니다.");
