@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hufsting.domain.Member.dto.GoogleOauthToken;
 import com.likelion.hufsting.domain.Member.dto.GoogleOauthUserInfo;
 import com.likelion.hufsting.domain.Member.dto.GoogleOauthParseNameAndMajor;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,6 +30,17 @@ public class GoogleOauthUtil {
     private final String PARSE_NAME_AND_MAJOR_REGEX = "\\[|/|\\]";
     private final int PARSE_NAME_INDEX = 0;
     private final int PARSE_MAJOR_INDEX = 2;
+
+    // env
+    @Value("${google-oauth-client-id}")
+    private String param_client_id_value;
+    @Value("${google-oauth-secret-key}")
+    private String param_secret_key_value;
+    @Value("${google-oauth-redirect-uri}")
+    private String param_redirect_uri_value;
+    @Value("${google-oauth-grant-type}")
+    private String param_grant_type_value;
+
     public GoogleOauthUserInfo getUserInfo(ResponseEntity<String> response) throws JsonProcessingException {
         ObjectMapper om = new ObjectMapper();
         return om.readValue(response.getBody(), GoogleOauthUserInfo.class);
@@ -55,10 +68,10 @@ public class GoogleOauthUtil {
         RestTemplate restTemplate = new RestTemplate();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add(PARAM_CODE, code);
-        params.add(PARAM_CLIENT_ID, "753499212823-ftql7ed4h06gcbm8rrtrbmgg0h5odttl.apps.googleusercontent.com");
-        params.add(PARAM_SECRET_KEY, "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");
-        params.add(PARAM_REDIRECT_URI, "http://localhost:8080/auth/google/callback");
-        params.add(PARAM_GRANT_TYPE, "authorization_code");
+        params.add(PARAM_CLIENT_ID, param_client_id_value);
+        params.add(PARAM_SECRET_KEY, param_secret_key_value);
+        params.add(PARAM_REDIRECT_URI, param_redirect_uri_value);
+        params.add(PARAM_GRANT_TYPE, param_grant_type_value);
 
         // http headers setting
         HttpHeaders headers = new HttpHeaders();
