@@ -2,6 +2,7 @@ package com.likelion.hufsting.domain.follow.repository;
 
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.follow.domain.Follow;
+import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -25,9 +25,15 @@ public class MemberInfoService {
     // validators
     private final GlobalAuthMethodValidator globalAuthMethodValidator;
 
-    public MemberInfoResponse findByEmail(String Email) {
-        Member member = memberRepository.findByEmail(Email)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + Email));
+    public MemberInfoResponse findByEmail(String email) {
+        final String finalEmail;
+        if(!email.contains("@hufs.ac.kr")) {
+            finalEmail = email + "@hufs.ac.kr";
+        } else {
+            finalEmail = email;
+        }
+        Member member = memberRepository.findByEmail(finalEmail)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + finalEmail));
         Long id = member.getId();
         String name = member.getName();
         String content = member.getProfile().getContent();
