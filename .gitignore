@@ -37,5 +37,5 @@ out/
 .vscode/
 
 ### application setting file ###
-application-*.yml
-application-*.properties
+application*.yml
+application-secret.properties
