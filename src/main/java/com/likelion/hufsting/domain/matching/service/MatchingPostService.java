@@ -61,7 +61,7 @@ public class MatchingPostService {
                 convertedResult);
     }
     // 훕팅 글 상세 조회
-    public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId){
+    public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId, Authentication authentication){
         // get matching post
         MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));

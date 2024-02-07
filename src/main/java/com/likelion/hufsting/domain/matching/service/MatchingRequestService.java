@@ -184,17 +184,8 @@ public class MatchingRequestService {
                         alarmRepository.save(matchingRequestAccept);
                     }else{
                         matchingRequest.rejectMatchingRequest();
-                        // reject alarm generation
-                        // alarm 생성
-                        Alarm matchingRequestReject = Alarm.builder()
-                                .matchingPost(findMatchingPost)
-                                .owner(matchingRequest.getRepresentative())
-                                .alarmType(AlarmType.REJECT)
-                                .build();
-                        alarmRepository.save(matchingRequestReject);
                     }
                 });
-
         // return value
         return AcceptMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
@@ -218,13 +209,6 @@ public class MatchingRequestService {
         );
         // 매칭 요청 상태 변경
         findMatchingRequest.rejectMatchingRequest();
-        // alarm 생성
-        Alarm matchingRequestReject = Alarm.builder()
-                .matchingPost(findMatchingPost)
-                .owner(findMatchingRequest.getRepresentative())
-                .alarmType(AlarmType.REJECT)
-                .build();
-        alarmRepository.save(matchingRequestReject);
         return RejectMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
                 .build();

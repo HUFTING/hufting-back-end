@@ -84,10 +84,10 @@ public class MatchingPostApiController {
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}")
     public ResponseEntity<ResponseDto> getMatchingPost(@PathVariable("matchingpostid")
-                                                                        @PathIdFormat Long matchingPostId){
+                                                                        @PathIdFormat Long matchingPostId, Authentication authentication){
         log.info("Request to get matching post: {}", matchingPostId);
         try {
-            FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId);
+            FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId, authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
