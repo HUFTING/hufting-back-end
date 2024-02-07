@@ -38,14 +38,16 @@ public class FollowService {
         }
 
         if (followMember.isPresent()) {
+            //추가 기능(언팔로우)
             for(Follow follow : followeeMember.get().getFolloweeList()) {
                 if(follow.getFollower().getId().equals(followMember.get().getId())) {
-                    followeeMember.get().getFolloweeList().remove(follow);
-                    followMember.get().getFollowerList().remove(follow);
-                    follow.disconnectFollower();
-                    follow.disconnectFollowee();
-                    followRepository.delete(follow);
-                    return false;
+                    return true; // 언팔로우 기능 없어서 true 로 반환
+//                    followeeMember.get().getFolloweeList().remove(follow);
+//                    followMember.get().getFollowerList().remove(follow);
+//                    follow.disconnectFollower();
+//                    follow.disconnectFollowee();
+//                    followRepository.delete(follow);
+//                    return false;
                 }
             }
             followRepository.save(Follow.builder()
