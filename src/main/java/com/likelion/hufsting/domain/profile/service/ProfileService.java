@@ -47,7 +47,7 @@ public class ProfileService {
         // find profile of login member
         Profile findProfile = profileRepository.findById(loginMember.getId())
                 .orElseThrow(() -> new ProfileException(PROFILE_NOT_FOUND_MSG));
-        return new FindMyProfileResponse(findProfile);
+        return new FindMyProfileResponse(loginMember, findProfile);
     }
 
     @Transactional
