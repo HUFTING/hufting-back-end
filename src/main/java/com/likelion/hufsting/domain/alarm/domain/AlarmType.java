@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public enum AlarmType {
     ACCEPT("매칭 수락"),
-    REJECT("매칭 거부"),
     NEW("매칭 요청");
 
     private final String value;

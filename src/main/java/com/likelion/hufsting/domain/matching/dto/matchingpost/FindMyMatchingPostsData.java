@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FindMyMatchingPostData {
+public class FindMyMatchingPostsData {
     // 매칭글 관련
     private Long matchingPostId;
     private String matchingPostTitle;
@@ -18,8 +18,8 @@ public class FindMyMatchingPostData {
     private List<FindMatchingReqInPostData> matchingRequests;
 
     // convert to FindMyMatchingPostData
-    public static FindMyMatchingPostData toFindMyMatchingPostData(MatchingPost matchingPost){
-        FindMyMatchingPostData myMatchingPostData = new FindMyMatchingPostData();
+    public static FindMyMatchingPostsData toFindMyMatchingPostData(MatchingPost matchingPost){
+        FindMyMatchingPostsData myMatchingPostData = new FindMyMatchingPostsData();
         myMatchingPostData.setMatchingPostId(matchingPost.getId());
         myMatchingPostData.setMatchingPostTitle(matchingPost.getTitle());
         myMatchingPostData.setMatchingStatus(matchingPost.getMatchingStatus());

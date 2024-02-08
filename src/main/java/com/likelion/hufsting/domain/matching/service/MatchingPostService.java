@@ -3,8 +3,10 @@ package com.likelion.hufsting.domain.matching.service;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.matching.domain.MatchingHost;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
+import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
+import com.likelion.hufsting.domain.matching.dto.matchingrequest.FindMatchingReqInPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
 import com.likelion.hufsting.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.hufsting.domain.matching.util.MatchingPostUtil;
@@ -158,16 +160,48 @@ public class MatchingPostService {
     }
 
     // 내 매칭글 조회
-    public FindMyMatchingPostResponse findMyMatchingPost(Authentication authentication){
+    public FindMyMatchingPostsResponse findMyMatchingPosts(Authentication authentication){
         // 요청자 확인
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         List<MatchingPost> findMyMatchingPosts = matchingPostQueryRepository.findByAuthor(author);
-        List<FindMyMatchingPostData> findMyMatchingPostDatas = findMyMatchingPosts.stream()
-                .map(FindMyMatchingPostData::toFindMyMatchingPostData)
+        List<FindMyMatchingPostsData> findMyMatchingPostDatas = findMyMatchingPosts.stream()
+                .map(FindMyMatchingPostsData::toFindMyMatchingPostData)
                 .toList();
-        return FindMyMatchingPostResponse.builder()
+        return FindMyMatchingPostsResponse.builder()
+                .count(findMyMatchingPostDatas.size())
                 .data(findMyMatchingPostDatas)
+                .build();
+    }
+
+    // 내 특정 매칭글 조회
+    public FindMyMatchingPostResponse findMyMatchingPost(Long matchingPostId, Authentication authentication){
+        // 요청자 확인
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
+        // get MatchingPost
+        MatchingPost findMatchingPost = matchingPostQueryRepository.findOneByAuthor(author, matchingPostId)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // get matchingHosts Data
+        List<Member> matchingMembers = findMatchingPost.getMatchingHosts().stream()
+                .map(MatchingHost::getHost).toList();
+        List<FindMyMatchingPostInHostData> matchingHostsData = matchingMembers.stream()
+                .map(FindMyMatchingPostInHostData::toFindMyMatchingPostInHostData).toList();
+        // get matchingRequest Data
+        List<MatchingRequest> matchingRequests = findMatchingPost.getMatchingRequests();
+        List<FindMatchingReqInPostData> matchingRequestsData = matchingRequests.stream()
+                .map(FindMatchingReqInPostData::toFindMatchingReqInPostData).toList();
+        // return value
+        return FindMyMatchingPostResponse.builder()
+                .matchingPostId(findMatchingPost.getId())
+                .matchingPostTitle(findMatchingPost.getTitle())
+                .gender(findMatchingPost.getGender())
+                .desiredNumPeople(findMatchingPost.getDesiredNumPeople())
+                .openKakaoTalk(findMatchingPost.getOpenTalkLink())
+                .matchingStatus(findMatchingPost.getMatchingStatus())
+                .matchingHosts(matchingHostsData)
+                .matchingRequestsCount(matchingRequestsData.size())
+                .matchingRequests(matchingRequestsData)
                 .build();
     }
 

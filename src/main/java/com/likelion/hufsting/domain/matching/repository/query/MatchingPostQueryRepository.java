@@ -7,7 +7,9 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,12 +19,24 @@ public class MatchingPostQueryRepository {
     public List<MatchingPost> findByAuthor(Member host){
         Long hostId = host.getId();
         String jpql = "select distinct mp from MatchingPost mp" +
-                " join fetch mp.matchingRequests mpmr" +
                 " join mp.matchingHosts mpmh" +
                 " join mpmh.host mpmhh" +
                 " where mpmhh.id = :hostId";
         TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
                 .setParameter("hostId", hostId);
         return query.getResultList();
+    }
+
+    public Optional<MatchingPost> findOneByAuthor(Member host, Long matchingPostId){
+        Long hostId = host.getId();
+        String jpql = "select distinct mp from MatchingPost mp" +
+                " join fetch mp.matchingHosts mpmh" +
+                " join mpmh.host mpmhh" +
+                " where mpmhh.id = :hostId" +
+                " and mp.id = :matchingPostId";
+        TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
+                .setParameter("hostId", hostId)
+                .setParameter("matchingPostId", matchingPostId);
+        return Optional.ofNullable(query.getSingleResult());
     }
 }
