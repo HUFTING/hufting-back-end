@@ -1,6 +1,5 @@
 package com.likelion.hufsting.domain.matching.controller;
 
-import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import com.likelion.hufsting.domain.matching.service.MatchingPostService;
@@ -43,12 +42,27 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/my-matchingposts")
-    public ResponseEntity<ResponseDto> getMyMatchingPost(Authentication authentication){
+    public ResponseEntity<ResponseDto> getMyMatchingPosts(Authentication authentication){
         try {
             log.info("Request to get my matching posts");
-            FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPost(authentication);
+            System.out.println(matchingPostService);
+            FindMyMatchingPostsResponse response = matchingPostService.findMyMatchingPosts(authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+    }
+
+    @GetMapping("/api/v1/my-matchingposts/{matchingpostid}")
+    public ResponseEntity<ResponseDto> getMyMatchingPost(@PathVariable("matchingpostid") Long matchingPostId, Authentication authentication){
+        try {
+            log.info("Request to get my matching post");
+            System.out.println(authentication.getName());
+            System.out.println(matchingPostService);
+            FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPost(matchingPostId, authentication);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
     }
@@ -87,7 +101,7 @@ public class MatchingPostApiController {
                                                                         @PathIdFormat Long matchingPostId, Authentication authentication){
         log.info("Request to get matching post: {}", matchingPostId);
         try {
-            FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId, authentication);
+            FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

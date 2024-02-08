@@ -6,6 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 public class PathIdFormatValidator implements ConstraintValidator<PathIdFormat, Long> {
     @Override
     public boolean isValid(Long value, ConstraintValidatorContext context) {
-        return value > 0;
+        return value >= 0;
     }
 }

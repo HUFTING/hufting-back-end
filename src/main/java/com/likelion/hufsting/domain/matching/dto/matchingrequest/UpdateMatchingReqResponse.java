@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class UpdateMatchingReqResponse implements ResponseDto {
+    private final String title;
     private final Long matchingRequestId;
     private final List<Long> participantIds;
 }

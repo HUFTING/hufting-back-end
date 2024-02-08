@@ -21,6 +21,9 @@ public class MatchingRequest {
     @Column(name = "MATCHING_REQ_ID")
     private Long id;
 
+    @Column(name = "MATCHING_REQ_TITLE")
+    private String title;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
@@ -47,6 +50,10 @@ public class MatchingRequest {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void updateTitle(String title){
+        this.title = title;
     }
 
     // MatchingRequest add participants

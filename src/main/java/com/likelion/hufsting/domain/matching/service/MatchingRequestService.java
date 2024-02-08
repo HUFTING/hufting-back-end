@@ -66,6 +66,7 @@ public class MatchingRequestService {
         ).toList();
         // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
+                .title(dto.getTitle())
                 .matchingPost(matchingPost)
                 .representative(representative)
                 .matchingAcceptance(MatchingAcceptance.WAITING)
@@ -82,9 +83,10 @@ public class MatchingRequestService {
                                                 .build();
         alarmRepository.save(matchingRequestAlarm);
         // return value generation
+        String title = dto.getTitle();
         Long createdMatchingRequestId = newMatchingRequest.getId();
         List<Long> createdMatchingRequestParticipants = dto.getParticipantIds();
-        return new CreateMatchingReqResponse(createdMatchingRequestId, createdMatchingRequestParticipants);
+        return new CreateMatchingReqResponse(title, createdMatchingRequestId, createdMatchingRequestParticipants);
     }
 
     // 매칭 신청 취소
@@ -131,11 +133,11 @@ public class MatchingRequestService {
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
         // 매칭 신청 수정
-        matchingRequest.updateParticipant(
+        matchingRequest.updateTitle(dto.getTitle()); // 제목 수정
+        matchingRequest.updateParticipant( // 참가자 수정
                 createMatchingParticipants(matchingRequest, findParticipants)
         );
-
-        return new UpdateMatchingReqResponse(matchingRequestId, dto.getParticipantIds());
+        return new UpdateMatchingReqResponse(dto.getTitle(), matchingRequestId, dto.getParticipantIds());
     }
 
     // 내 매칭 신청 현황 확인
