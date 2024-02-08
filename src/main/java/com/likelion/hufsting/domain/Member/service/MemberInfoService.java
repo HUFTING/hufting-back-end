@@ -42,8 +42,9 @@ public class MemberInfoService {
 
     }
 
-    public List<MemberInfoResponse> getFollowerList(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public List<MemberInfoResponse> getFollowerList(Authentication authentication) {
+        System.out.println("authentication-Email 값" + authentication.getName());
+        Member member = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
         return member.getFollowerList().stream()
                 .map(follow -> new MemberInfoResponse(
