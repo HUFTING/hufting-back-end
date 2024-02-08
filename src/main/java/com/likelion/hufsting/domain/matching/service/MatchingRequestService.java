@@ -13,7 +13,6 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
-import com.likelion.hufsting.global.exception.AuthException;
 import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -141,16 +140,47 @@ public class MatchingRequestService {
     }
 
     // 내 매칭 신청 현황 확인
-    public FindMyMatchingReqResponse findMyMatchingRequest(Authentication authentication){
+    public FindMyMatchingReqsResponse findMyMatchingRequests(Authentication authentication){
         // 신청자 확인
         Member participant = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         List<MatchingRequest> findMyMatchingRequests = matchingRequestQueryRepository.findByParticipant(participant);
-        List<FindMyMatchingReqData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
-                FindMyMatchingReqData::toFindMatchingReqData
+        List<FindMyMatchingReqsData> convertedMyMatchingRequests = findMyMatchingRequests.stream().map(
+                FindMyMatchingReqsData::toFindMatchingReqData
         ).toList();
-        return FindMyMatchingReqResponse.builder()
+        return FindMyMatchingReqsResponse.builder()
                 .data(convertedMyMatchingRequests)
+                .build();
+    }
+
+    // 특정 내 매칭 신청 확인
+    public FindComeMatchingReqResponse findComeMatchingRequest(Long matchingRequestId, Authentication authentication){
+        // 로그인 유저 확인
+        Member loginUser = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
+        // get matching request by id
+        MatchingRequest findMyMatchingRequest = matchingRequestQueryRepository.findById(matchingRequestId)
+                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+        // get matching post by req
+        MatchingPost matchingPost = findMyMatchingRequest.getMatchingPost();
+        // validation-0 : loginUser == matchingPost.getAuthor
+        matchingReqMethodValidator.validateCanAccessToComeReq(matchingPost.getAuthor().getId(), loginUser.getId());
+        // get matching participants in matching request
+        List<Member> participants = findMyMatchingRequest.getParticipants().stream()
+                .map(MatchingParticipant::getParticipant).toList();
+        List<FindComeMatchingReqInParticipantData> participantsData = participants.stream()
+                .map(FindComeMatchingReqInParticipantData::toFindComeMatchingReqInParticipantData).toList();
+        // get matching hosts in matching request
+        List<Member> hosts = matchingPost.getMatchingHosts().stream()
+                .map(MatchingHost::getHost).toList();
+        List<FindComeMatchingReqInHostData> hostsData = hosts.stream()
+                .map(FindComeMatchingReqInHostData::toFindMatchingReqHostData).toList();
+        // return value
+        return FindComeMatchingReqResponse.builder()
+                .matchingRequestId(findMyMatchingRequest.getId())
+                .matchingRequestTitle(findMyMatchingRequest.getTitle())
+                .participants(participantsData)
+                .hosts(hostsData)
                 .build();
     }
 

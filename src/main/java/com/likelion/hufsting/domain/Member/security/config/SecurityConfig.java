@@ -47,6 +47,7 @@ public class SecurityConfig {
             configure.requestMatchers("/api/v1/member/**").authenticated();
             configure.requestMatchers("/api/v1/followingList/**").authenticated();
             configure.requestMatchers("/api/v1/searching").authenticated();
+            configure.requestMatchers("/api/v1/come-**").authenticated();
             // matching posts authorization
             configure.requestMatchers(HttpMethod.POST, "/api/v1/matchingposts**").authenticated();
             configure.requestMatchers(HttpMethod.PUT, "/api/v1/matchingposts**").authenticated();
