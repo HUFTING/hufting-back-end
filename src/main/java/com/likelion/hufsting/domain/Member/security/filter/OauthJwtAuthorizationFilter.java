@@ -72,6 +72,7 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
         List<String> requireCheckingUris = List.of(
                 "/api/v1/my-matchingposts",
                 "/api/v1/my-matchingrequests",
+                "/api/v1/profile",
                 "/api/v1/alarms",
                 "/api/v1/member/",
                 "/api/v1/followingList/",
