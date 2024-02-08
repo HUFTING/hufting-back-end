@@ -31,9 +31,10 @@ public class MemberInfoController {
         return ResponseEntity.ok(memberInfoResponse);
     }
 
-    @GetMapping("/api/v1/followingList/{memberId}")
-    public ResponseEntity<List<MemberInfoResponse>> findAllFollowing(@PathVariable Long memberId) {
-        List<MemberInfoResponse> followList = memberInfoService.getFollowerList(memberId);
+    @GetMapping("/api/v1/followingList")
+    public ResponseEntity<List<MemberInfoResponse>> findAllFollowing(Authentication authentication) {
+        System.out.println(authentication.getName());
+        List<MemberInfoResponse> followList = memberInfoService.getFollowerList(authentication);
         return ResponseEntity.ok(followList);
     }
 
