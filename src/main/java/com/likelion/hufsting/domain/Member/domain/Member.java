@@ -32,6 +32,9 @@ public class Member {
     @Column(name = "MEMBER_PWD")
     private String password;
 
+    @Column(name = "MEMBER_PHOTO_URL")
+    private String photoUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "MEMBER_ROLE")
     private Role role;

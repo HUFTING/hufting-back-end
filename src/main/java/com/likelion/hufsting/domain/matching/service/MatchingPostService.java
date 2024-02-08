@@ -193,8 +193,8 @@ public class MatchingPostService {
                 .map(FindMatchingReqInPostData::toFindMatchingReqInPostData).toList();
         // return value
         return FindMyMatchingPostResponse.builder()
-                .matchingPostId(findMatchingPost.getId())
-                .matchingPostTitle(findMatchingPost.getTitle())
+                .id(findMatchingPost.getId())
+                .title(findMatchingPost.getTitle())
                 .gender(findMatchingPost.getGender())
                 .desiredNumPeople(findMatchingPost.getDesiredNumPeople())
                 .openKakaoTalk(findMatchingPost.getOpenTalkLink())

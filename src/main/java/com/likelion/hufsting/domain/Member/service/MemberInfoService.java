@@ -34,12 +34,13 @@ public class MemberInfoService {
         }
         Member member = memberRepository.findByEmail(finalEmail)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + finalEmail));
-        Long id = member.getId();
-        String name = member.getName();
-        String content = member.getProfile().getContent();
-
-        return new MemberInfoResponse(id, name, content);
-
+        return new MemberInfoResponse(
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                member.getPhotoUrl(),
+                member.getProfile().getContent()
+        );
     }
 
     public List<MemberInfoResponse> getFollowerList(Authentication authentication) {
@@ -50,6 +51,8 @@ public class MemberInfoService {
                 .map(follow -> new MemberInfoResponse(
                         follow.getFollowee().getId(),
                         follow.getFollowee().getName(),
+                        follow.getFollowee().getEmail(),
+                        follow.getFollowee().getPhotoUrl(),
                         follow.getFollowee().getProfile().getContent()))
                 .collect(Collectors.toList());
     }

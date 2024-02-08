@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoResponse {
-
     private Long id;
-
     private String name;
-
+    private String email;
+    private String photo;
     private String content;
-
 }
