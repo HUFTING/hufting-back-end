@@ -63,6 +63,13 @@ public class SecurityConfig {
         http.addFilterBefore(exceptionHandlerFilter(), OauthJwtAuthorizationFilter.class);
         http.addFilterAfter(profileSetUpStatusFilter(), OauthJwtAuthorizationFilter.class);
         http.addFilterBefore(exceptionHandlerFilter(), ProfileSetUpStatusFilter.class);
+        http.logout(configure -> {
+            configure.logoutUrl("/api/v1/logout");
+            configure.logoutSuccessHandler((request, response, authentication) -> {
+                response.sendRedirect("http://localhost:3000");
+            });
+            configure.deleteCookies("access_token");
+        });
         return http.build();
     }
 
