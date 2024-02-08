@@ -8,6 +8,6 @@ import java.util.List;
 
 @Getter
 @Builder
-public class FindMyMatchingReqResponse implements ResponseDto {
-    private List<FindMyMatchingReqData> data; // 요청 현황
+public class FindMyMatchingReqsResponse implements ResponseDto {
+    private List<FindMyMatchingReqsData> data; // 요청 현황
 }

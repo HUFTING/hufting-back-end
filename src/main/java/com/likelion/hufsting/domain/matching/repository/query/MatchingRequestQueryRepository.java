@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,5 +28,16 @@ public class MatchingRequestQueryRepository {
         TypedQuery<MatchingRequest> query = em.createQuery(jpql, MatchingRequest.class);
         query.setParameter("participantId", participantId);
         return query.getResultList();
+    }
+
+    public Optional<MatchingRequest> findById(Long matchingRequestId){
+        String jpql = "select distinct mr from MatchingRequest mr" +
+                " join fetch mr.participants mrp" +
+                " join fetch mrp.participant mrpp" +
+                " join fetch mrpp.profile mrppp" +
+                " where mr.id = :matchingRequestId";
+        TypedQuery<MatchingRequest> query = em.createQuery(jpql, MatchingRequest.class);
+        query.setParameter("matchingRequestId", matchingRequestId);
+        return Optional.ofNullable(query.getSingleResult());
     }
 }

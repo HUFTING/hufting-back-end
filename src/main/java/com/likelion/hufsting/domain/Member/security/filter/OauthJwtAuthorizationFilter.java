@@ -75,7 +75,8 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
                 "/api/v1/alarms",
                 "/api/v1/member/",
                 "/api/v1/followingList/",
-                "/api/v1/searching"
+                "/api/v1/searching",
+                "/api/v1/come-matchingrequests"
         );
         // get various value
         String requestMethod = request.getMethod();

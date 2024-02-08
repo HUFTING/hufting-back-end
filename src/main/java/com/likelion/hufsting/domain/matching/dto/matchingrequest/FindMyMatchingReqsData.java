@@ -1,14 +1,11 @@
 package com.likelion.hufsting.domain.matching.dto.matchingrequest;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingAcceptance;
-import com.likelion.hufsting.domain.matching.domain.MatchingParticipant;
 import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class FindMyMatchingReqData {
+public class FindMyMatchingReqsData {
     // 매칭글 관련
     private Long matchingPostId; // 매칭글 ID
     private String matchingPostTitle; // 매칭글 제목
@@ -19,8 +16,8 @@ public class FindMyMatchingReqData {
     private String representativeName; // 대표자 이름
 
     // convert to FindMatchingReqData
-    public static FindMyMatchingReqData toFindMatchingReqData(MatchingRequest dto){
-        FindMyMatchingReqData findMatchingReqData = new FindMyMatchingReqData();
+    public static FindMyMatchingReqsData toFindMatchingReqData(MatchingRequest dto){
+        FindMyMatchingReqsData findMatchingReqData = new FindMyMatchingReqsData();
         findMatchingReqData.setMatchingPostId(dto.getMatchingPost().getId());
         findMatchingReqData.setMatchingPostTitle(dto.getMatchingPost().getTitle());
         findMatchingReqData.setMatchingAcceptance(dto.getMatchingAcceptance());

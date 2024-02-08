@@ -31,14 +31,34 @@ public class MatchingRequestApiController {
     @GetMapping("/api/v1/my-matchingrequests")
     public ResponseEntity<ResponseDto> getMyMatchingRequests(Authentication authentication){
         try {
-            log.info("Request to get my matchingrequests");
-            FindMyMatchingReqResponse response = matchingRequestService.findMyMatchingRequest(authentication);
+            log.info("Request to get my matching requests");
+            FindMyMatchingReqsResponse response = matchingRequestService.findMyMatchingRequests(authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
     }
+
+    @GetMapping("/api/v1/come-matchingrequests/{matchingrequestid}")
+    public ResponseEntity<ResponseDto> getComeMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId, Authentication authentication){
+        try{
+            log.info("Request to get my matching request");
+            FindComeMatchingReqResponse response = matchingRequestService.findComeMatchingRequest(matchingRequestId, authentication);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (MatchingReqException e){
+            log.error(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_REQ_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
