@@ -17,12 +17,7 @@ public class NullPossibleEnumFormatValidator implements ConstraintValidator<Null
 
     @Override
     public boolean isValid(Enum value, ConstraintValidatorContext context) {
-        return isNull(value) || isContainsValue(value);
-    }
-
-    // enum 객체의 값이 NULL 인지 확인
-    private boolean isNull(Enum value){
-        return value == null;
+        return (value == null) || isContainsValue(value);
     }
 
     private boolean isContainsValue(Enum value){

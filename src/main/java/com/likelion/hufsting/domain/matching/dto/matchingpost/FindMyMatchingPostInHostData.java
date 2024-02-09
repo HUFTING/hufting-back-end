@@ -11,7 +11,7 @@ public class FindMyMatchingPostInHostData {
     private String name;
     private String major;
     private String studentNumber;
-    private int age;
+    private String age;
     private Mbti mbti;
     private String content;
 

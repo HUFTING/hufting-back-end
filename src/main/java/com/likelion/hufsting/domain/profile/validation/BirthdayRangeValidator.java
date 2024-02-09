@@ -5,11 +5,13 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 
-public class BirthdayRangeValidator implements ConstraintValidator<BirthdayRange, Integer> {
+public class BirthdayRangeValidator implements ConstraintValidator<BirthdayRange, String> {
     @Override
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         int minYear = 1996;
         int maxYear = LocalDate.now().getYear() - 19;
-        return value >= minYear && value <= maxYear;
+        if(value == null) return true;
+        int birthDay = Integer.parseInt(value);
+        return (birthDay >= minYear && birthDay <= maxYear);
     }
 }

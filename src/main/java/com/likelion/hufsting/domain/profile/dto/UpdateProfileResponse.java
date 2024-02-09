@@ -14,6 +14,6 @@ public class UpdateProfileResponse implements ResponseDto {
     private Gender gender;
     private String studentNumber;
     private Mbti mbti;
-    private int birthday;
+    private String birthday;
     private String content;
 }

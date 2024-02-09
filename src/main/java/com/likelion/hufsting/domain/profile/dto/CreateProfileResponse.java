@@ -13,7 +13,7 @@ public class CreateProfileResponse implements ResponseDto {
     private final Gender gender;
     private final String studentNumber;
     private final Mbti mbti;
-    private final int birthday;
+    private final String birthday;
     private final String content;
 
     public CreateProfileResponse(Profile profile) {
