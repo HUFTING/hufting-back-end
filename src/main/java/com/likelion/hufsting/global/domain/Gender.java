@@ -30,4 +30,9 @@ public enum Gender {
     public String serializerGender(){
         return value;
     }
+
+    public static Gender toggleGender(Gender gender){
+        if(gender.getValue().equals("남")) return Gender.FEMALE;
+        return Gender.MALE;
+    }
 }

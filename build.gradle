@@ -57,3 +57,12 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+
+tasks.register("CopySubmodule") {
+	copy {
+		from("./lib")
+		include("*.yml", "*.properties")
+		into("./src/main/resources")
+	}
+}

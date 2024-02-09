@@ -13,6 +13,8 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
+import com.likelion.hufsting.global.domain.Gender;
 import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -35,6 +37,7 @@ public class MatchingRequestService {
     // Validators
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
+    private final ProfileMethodValidator profileMethodValidator;
     // utils
     private final AuthUtil authUtil;
 
@@ -63,6 +66,8 @@ public class MatchingRequestService {
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
+        // validation-3 : 성별 확인
+        profileMethodValidator.validateMemberOfGender(findParticipants, Gender.toggleGender(matchingPost.getGender()));
         // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .title(dto.getTitle())
@@ -131,6 +136,8 @@ public class MatchingRequestService {
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
+        // validation-3 : 성별 확인
+        profileMethodValidator.validateMemberOfGender(findParticipants, Gender.toggleGender(matchingPost.getGender()));
         // 매칭 신청 수정
         matchingRequest.updateTitle(dto.getTitle()); // 제목 수정
         matchingRequest.updateParticipant( // 참가자 수정

@@ -105,12 +105,18 @@ public class MatchingPostService {
                 author,
                 MatchingStatus.WAITING
         );
+        // validation-0 : DTO
+        matchingPostMethodValidator.validateParticipantsField(
+                dto.getParticipants(),
+                author.getId(),
+                dto.getDesiredNumPeople()
+        );
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
-        // validation : Member
+        // validation-1 : Member
         profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
         // 호스트 조회 및 생성
         List<MatchingHost> matchingHosts = createMatchingHosts(matchingPost, findParticipants);
@@ -129,6 +135,12 @@ public class MatchingPostService {
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         authUtil.isOwnerOfMatchingObject(author, matchingPost.getAuthor());
+        // validation-0 : DTO
+        matchingPostMethodValidator.validateParticipantsField(
+                dto.getParticipants(),
+                author.getId(),
+                dto.getDesiredNumPeople()
+        );
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> memberRepository.findById(participantId)
