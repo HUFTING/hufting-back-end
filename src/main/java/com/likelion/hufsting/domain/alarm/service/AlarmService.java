@@ -32,6 +32,7 @@ public class AlarmService {
         // create FindAlarmsResponse
         List<FindAlarmsData> convertedData = findAlarms.stream()
                 .map((alarm) -> FindAlarmsData.builder()
+                        .id(alarm.getMatchingPost().getId())
                         .title(alarm.getMatchingPost().getTitle())
                         .alarmType(alarm.getAlarmType())
                         .createdAt(alarm.getCreatedAt())
