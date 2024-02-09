@@ -17,7 +17,7 @@ public class FindMyProfileResponse implements ResponseDto {
     private final Gender gender;
     private final String studentNumber;
     private final Mbti mbti;
-    private final LocalDate age;
+    private final int age;
     private final String content;
 
     public FindMyProfileResponse(Member member, Profile profile){

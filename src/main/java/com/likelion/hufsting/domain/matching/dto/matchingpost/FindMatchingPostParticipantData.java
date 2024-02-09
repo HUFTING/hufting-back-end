@@ -13,7 +13,7 @@ public class FindMatchingPostParticipantData {
     private String name;
     private String major;
     private String studentNumber;
-    private LocalDate age;
+    private int age;
     private Mbti mbti;
     private String content;
 }

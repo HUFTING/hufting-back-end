@@ -1,9 +1,11 @@
 package com.likelion.hufsting.domain.profile.dto;
 
 
+import com.likelion.hufsting.domain.profile.validation.BirthdayRange;
 import com.likelion.hufsting.global.validation.EnumFormat;
 import com.likelion.hufsting.domain.profile.domain.Mbti;
 import com.likelion.hufsting.global.domain.Gender;
+import com.likelion.hufsting.global.validation.NullPossibleEnumFormat;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +21,9 @@ public class UpdateProfileRequest {
     private Gender gender;
     @Pattern(regexp = "[0-9]{2}학번")
     private String studentNumber;
-    @EnumFormat(enumClass = Mbti.class)
+    @NullPossibleEnumFormat(enumClass = Mbti.class)
     private Mbti mbti;
-    private LocalDate birthday;
+    @BirthdayRange
+    private int birthday;
     private String content;
 }

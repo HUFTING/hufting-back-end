@@ -11,7 +11,7 @@ public class FindMyMatchingPostInHostData {
     private String name;
     private String major;
     private String studentNumber;
-    private LocalDate birthDay;
+    private int age;
     private Mbti mbti;
     private String content;
 
@@ -20,7 +20,7 @@ public class FindMyMatchingPostInHostData {
         findMyMatchingPostInHostData.name = member.getName();
         findMyMatchingPostInHostData.major = member.getMajor();
         findMyMatchingPostInHostData.studentNumber = member.getProfile().getStudentNumber();
-        findMyMatchingPostInHostData.birthDay = member.getProfile().getBirthday();
+        findMyMatchingPostInHostData.age = member.getProfile().getBirthday();
         findMyMatchingPostInHostData.mbti = member.getProfile().getMbti();
         findMyMatchingPostInHostData.content = member.getProfile().getContent();
         return  findMyMatchingPostInHostData;

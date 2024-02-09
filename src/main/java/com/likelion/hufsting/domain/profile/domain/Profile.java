@@ -36,7 +36,7 @@ public class Profile {
     private Mbti mbti;
 
     @Column(name = "PROFILE_BIRTHDAY")
-    private LocalDate birthday;
+    private int birthday;
 
     @Column(name = "PROFILE_CONTENT")
     private String content;
@@ -46,7 +46,7 @@ public class Profile {
     private Member member;
 
     @Builder
-    public Profile(Gender gender, String studentNumber, Mbti mbti, LocalDate birthday, String content, Member member) {
+    public Profile(Gender gender, String studentNumber, Mbti mbti, int birthday, String content, Member member) {
         this.gender = gender;
         this.studentNumber = studentNumber;
         this.mbti = mbti;
