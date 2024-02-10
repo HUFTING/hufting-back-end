@@ -22,7 +22,7 @@ public class FindMyMatchingPostInHostData {
         findMyMatchingPostInHostData.name = member.getName();
         findMyMatchingPostInHostData.major = member.getMajor();
         findMyMatchingPostInHostData.studentNumber = member.getProfile().getStudentNumber();
-        findMyMatchingPostInHostData.age = member.getProfile().getBirthday();
+        findMyMatchingPostInHostData.age = member.getProfile().getAge();
         findMyMatchingPostInHostData.mbti = member.getProfile().getMbti();
         findMyMatchingPostInHostData.content = member.getProfile().getContent();
         return  findMyMatchingPostInHostData;

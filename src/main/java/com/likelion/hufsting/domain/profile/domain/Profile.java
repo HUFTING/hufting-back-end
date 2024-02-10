@@ -35,8 +35,8 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     private Mbti mbti;
 
-    @Column(name = "PROFILE_BIRTHDAY")
-    private String birthday;
+    @Column(name = "PROFILE_AGE")
+    private String age;
 
     @Column(name = "PROFILE_CONTENT")
     private String content;
@@ -46,11 +46,11 @@ public class Profile {
     private Member member;
 
     @Builder
-    public Profile(Gender gender, String studentNumber, Mbti mbti, String birthday, String content, Member member) {
+    public Profile(Gender gender, String studentNumber, Mbti mbti, String age, String content, Member member) {
         this.gender = gender;
         this.studentNumber = studentNumber;
         this.mbti = mbti;
-        this.birthday = birthday;
+        this.age = age;
         this.content = content;
         this.member = member;
     }
@@ -59,7 +59,7 @@ public class Profile {
         this.gender = dto.getGender();
         this.studentNumber = dto.getStudentNumber();
         this.mbti = dto.getMbti();
-        this.birthday = dto.getBirthday();
+        this.age = dto.getAge();
         this.content = dto.getContent();
     }
 }

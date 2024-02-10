@@ -27,7 +27,7 @@ public class FindMyProfileResponse implements ResponseDto {
         this.gender = profile.getGender();
         this.studentNumber = profile.getStudentNumber();
         this.mbti = profile.getMbti();
-        this.age = profile.getBirthday();
+        this.age = profile.getAge();
         this.content = profile.getContent();
     }
 }

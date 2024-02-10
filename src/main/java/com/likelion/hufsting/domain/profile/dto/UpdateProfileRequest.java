@@ -29,7 +29,7 @@ public class UpdateProfileRequest {
     private Mbti mbti;
 
     @BirthdayRange
-    private String birthday;
+    private String age;
 
     private String content;
 }

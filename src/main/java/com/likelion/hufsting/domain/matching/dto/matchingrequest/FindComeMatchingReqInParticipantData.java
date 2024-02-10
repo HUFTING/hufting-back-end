@@ -26,7 +26,7 @@ public class FindComeMatchingReqInParticipantData {
         findComeMatchingReqInParticipantData.setName(member.getName().charAt(0) + "**");
         findComeMatchingReqInParticipantData.setMajor(member.getMajor());
         findComeMatchingReqInParticipantData.setStudentNumber(member.getProfile().getStudentNumber());
-        findComeMatchingReqInParticipantData.setAge(member.getProfile().getBirthday());
+        findComeMatchingReqInParticipantData.setAge(member.getProfile().getAge());
         findComeMatchingReqInParticipantData.setMbti(member.getProfile().getMbti());
         findComeMatchingReqInParticipantData.setContent(member.getProfile().getContent());
         return findComeMatchingReqInParticipantData;

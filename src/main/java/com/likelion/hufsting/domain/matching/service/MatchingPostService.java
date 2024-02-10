@@ -76,7 +76,7 @@ public class MatchingPostService {
                             .id(host.getId())
                             .name(matchingPostUtil.changeNameToBlurName(host.getName()))
                             .major(host.getMajor())
-                            .age(hostProfile.getBirthday())
+                            .age(hostProfile.getAge())
                             .mbti(hostProfile.getMbti())
                             .studentNumber(hostProfile.getStudentNumber())
                             .content(hostProfile.getContent())

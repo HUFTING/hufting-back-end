@@ -74,7 +74,7 @@ public class ProfileService {
                 .mbti(findProfile.getMbti())
                 .studentNumber(findProfile.getStudentNumber())
                 .content(findProfile.getContent())
-                .birthday(findProfile.getBirthday())
+                .age(findProfile.getAge())
                 .build();
     }
 }

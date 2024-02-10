@@ -72,7 +72,7 @@ public class MemberInfoService {
                 .name(findMember.getName())
                 .major(findMember.getMajor())
                 .studentNumber(findMember.getProfile().getStudentNumber())
-                .age(findMember.getProfile().getBirthday())
+                .age(findMember.getProfile().getAge())
                 .mbti(findMember.getProfile().getMbti())
                 .content(findMember.getProfile().getContent())
                 .build();

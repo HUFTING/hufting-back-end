@@ -28,7 +28,7 @@ public class CreateProfileRequest {
     private Mbti mbti;
 
     @BirthdayRange
-    private String birthday;
+    private String age;
 
     private String content;
 
@@ -37,7 +37,7 @@ public class CreateProfileRequest {
                 .gender(gender)
                 .studentNumber(studentNumber)
                 .mbti(mbti)
-                .birthday(birthday)
+                .age(age)
                 .content(content)
                 .member(member)
                 .build();

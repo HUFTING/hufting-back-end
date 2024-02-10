@@ -13,14 +13,14 @@ public class CreateProfileResponse implements ResponseDto {
     private final Gender gender;
     private final String studentNumber;
     private final Mbti mbti;
-    private final String birthday;
+    private final String age;
     private final String content;
 
     public CreateProfileResponse(Profile profile) {
         this.gender = profile.getGender();
         this.studentNumber = profile.getStudentNumber();
         this.mbti = profile.getMbti();
-        this.birthday = profile.getBirthday();
+        this.age = profile.getAge();
         this.content = profile.getContent();
     }
 }
