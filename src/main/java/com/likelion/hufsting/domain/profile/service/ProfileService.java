@@ -65,8 +65,7 @@ public class ProfileService {
         Member loginMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ProfileException("Not Found: " + authentication.getName()));
         // get profile of login member
-        Profile findProfile = profileRepository.findById(loginMember.getProfile().getId())
-                .orElseThrow(() -> new ProfileException(PROFILE_NOT_FOUND_MSG));
+        Profile findProfile = loginMember.getProfile();
         // update profile
         findProfile.update(dto);
         return UpdateProfileResponse.builder()

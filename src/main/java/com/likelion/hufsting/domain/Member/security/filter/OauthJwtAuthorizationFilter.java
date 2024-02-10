@@ -62,8 +62,7 @@ public class OauthJwtAuthorizationFilter extends OncePerRequestFilter {
     // 액세스 토큰 여부 확인
     private Boolean hasAccessToken(HttpServletRequest request){
         String accessToken = jwtUtil.getAccessToken(request);
-        System.out.println("Please give me cookie!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(accessToken);
+        System.out.println("access token: " + accessToken);
         return accessToken != null;
     }
 

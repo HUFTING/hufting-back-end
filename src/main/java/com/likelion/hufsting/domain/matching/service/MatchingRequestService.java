@@ -219,12 +219,7 @@ public class MatchingRequestService {
                     if(matchingRequest.getId().equals(matchingRequestId)){
                         matchingRequest.acceptMatchingRequest();
                         // accept alarm generation
-                        Alarm matchingRequestAccept = Alarm.builder()
-                                .matchingPost(findMatchingPost)
-                                .owner(matchingRequest.getRepresentative())
-                                .alarmType(AlarmType.ACCEPT)
-                                .build();
-                        alarmRepository.save(matchingRequestAccept);
+                        generationAcceptAlarm(findMatchingPost, matchingRequest);
                     }else{
                         matchingRequest.rejectMatchingRequest();
                     }
@@ -265,5 +260,27 @@ public class MatchingRequestService {
             matchingParticipants.add(new MatchingParticipant(matchingRequest, participant));
         }
         return matchingParticipants;
+    }
+
+    private void generationAcceptAlarm(MatchingPost matchingPost, MatchingRequest matchingRequest){
+        // 매칭 호스트 멤버
+        List<Member> matchingHosts = matchingPost.getMatchingHosts().stream()
+                .map(MatchingHost::getHost).toList();
+        // 매칭 참가자 멤버
+        List<Member> matchingParticipants = matchingRequest.getParticipants().stream()
+                .map(MatchingParticipant::getParticipant).toList();
+        // 알림이 필요한 전체 사용자
+        List<Member> needToChangeMembers = new ArrayList<>();
+        needToChangeMembers.addAll(matchingHosts);
+        needToChangeMembers.addAll(matchingParticipants);
+        // 알림 생성
+        for(Member needToChangeMember : needToChangeMembers){
+            Alarm newAlarm = Alarm.builder()
+                    .matchingPost(matchingPost)
+                    .owner(needToChangeMember)
+                    .alarmType(AlarmType.ACCEPT)
+                    .build();
+            alarmRepository.save(newAlarm);
+        }
     }
 }
