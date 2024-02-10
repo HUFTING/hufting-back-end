@@ -34,7 +34,7 @@ public class MatchingPost {
     @Column(name = "OPEN_TALK_LINK")
     private String openTalkLink; // 오픈톡 링크
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
     @JoinColumn(name = "AUTHOR_ID")
     private Member author; // 작성자
 
@@ -42,7 +42,7 @@ public class MatchingPost {
     @Column(name = "MATCHING_STATUS")
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
-    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
     private List<MatchingHost> matchingHosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)

@@ -14,11 +14,11 @@ public class MatchingHost {
     @Column(name = "MATCHING_HOST_iD")
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
     @JoinColumn(name = "HOST_Id")
     private Member host;
 

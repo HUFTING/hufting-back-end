@@ -42,13 +42,13 @@ public class Member {
     @Column(name = "PROFILE_SET_UP_STATUS")
     private Boolean profileSetUpStatus;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
     private Profile profile;
 
-    @OneToMany(mappedBy = "follower",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Follow> followerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "followee",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Follow> followeeList = new ArrayList<>();
 
     public void changeProfileSetUpStatus(){

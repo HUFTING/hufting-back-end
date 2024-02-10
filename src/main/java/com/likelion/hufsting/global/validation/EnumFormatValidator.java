@@ -16,10 +16,6 @@ public class EnumFormatValidator implements ConstraintValidator<EnumFormat, Enum
 
     @Override
     public boolean isValid(Enum value, ConstraintValidatorContext context) {
-        System.out.println("판단2!!!!!!!!!!!");
-        System.out.println(isNotNull(value));
-        System.out.println("판단3!!!!!!!!!");
-        System.out.println(isContainsValue(value));
         return isNotNull(value) && isContainsValue(value);
     }
 
@@ -29,11 +25,7 @@ public class EnumFormatValidator implements ConstraintValidator<EnumFormat, Enum
     }
 
     private boolean isContainsValue(Enum value){
-        System.out.println("gender!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(value);
         List<Enum> enumValues = Arrays.stream(enumClass.getEnumConstants()).collect(Collectors.toList());
-        System.out.println("판단1!!!!!!!!!!!!!");
-        System.out.println(enumValues.contains(value));
         return enumValues.contains(value);
     }
 }
