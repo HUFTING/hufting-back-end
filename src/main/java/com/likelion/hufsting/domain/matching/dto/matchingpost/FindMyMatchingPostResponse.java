@@ -23,4 +23,6 @@ public class FindMyMatchingPostResponse implements ResponseDto {
     // 매칭 요청 관련
     private int matchingRequestsCount;
     private List<FindMatchingReqInPostData> matchingRequests;
+    // 글 작성자 이메일
+    private String representativeEmail;
 }

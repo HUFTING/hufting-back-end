@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 public class FindMyMatchingPostInHostData {
+    private Long id;
     private String name;
     private String major;
     private String studentNumber;
@@ -17,6 +18,7 @@ public class FindMyMatchingPostInHostData {
 
     public static FindMyMatchingPostInHostData toFindMyMatchingPostInHostData(Member member){
         FindMyMatchingPostInHostData findMyMatchingPostInHostData = new FindMyMatchingPostInHostData();
+        findMyMatchingPostInHostData.id = member.getId();
         findMyMatchingPostInHostData.name = member.getName();
         findMyMatchingPostInHostData.major = member.getMajor();
         findMyMatchingPostInHostData.studentNumber = member.getProfile().getStudentNumber();

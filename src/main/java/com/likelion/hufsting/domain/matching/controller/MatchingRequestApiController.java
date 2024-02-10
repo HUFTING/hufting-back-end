@@ -34,9 +34,13 @@ public class MatchingRequestApiController {
             log.info("Request to get my matching requests");
             FindMyMatchingReqsResponse response = matchingRequestService.findMyMatchingRequests(authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

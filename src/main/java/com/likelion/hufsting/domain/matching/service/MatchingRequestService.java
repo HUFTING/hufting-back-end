@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +69,9 @@ public class MatchingRequestService {
         ).toList();
         // validation-3 : 성별 확인
         profileMethodValidator.validateMemberOfGender(findParticipants, Gender.toggleGender(matchingPost.getGender()));
+        // validation-4 : 이미 신청한 글인지 확인
+        Optional<MatchingRequest> findMatchingRequest = matchingRequestQueryRepository.findByParticipantAndPostId(representative.getId(), matchingPost.getId());
+        matchingReqMethodValidator.validateAlreadyRequest(findMatchingRequest);
         // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .title(dto.getTitle())

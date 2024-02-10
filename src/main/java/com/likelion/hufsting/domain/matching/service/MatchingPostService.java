@@ -194,6 +194,8 @@ public class MatchingPostService {
         // get MatchingPost
         MatchingPost findMatchingPost = matchingPostQueryRepository.findOneByAuthor(author, matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // validation-0 : 내가 조회할 수 있는 매칭글이 맞는지 유효성 검사
+        matchingPostMethodValidator.validateLoginMemberInHosts(author, findMatchingPost);
         // get matchingHosts Data
         List<Member> matchingMembers = findMatchingPost.getMatchingHosts().stream()
                 .map(MatchingHost::getHost).toList();
@@ -214,6 +216,7 @@ public class MatchingPostService {
                 .matchingHosts(matchingHostsData)
                 .matchingRequestsCount(matchingRequestsData.size())
                 .matchingRequests(matchingRequestsData)
+                .representativeEmail(findMatchingPost.getAuthor().getEmail())
                 .build();
     }
 

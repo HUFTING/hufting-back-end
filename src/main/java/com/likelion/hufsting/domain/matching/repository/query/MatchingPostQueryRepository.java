@@ -31,11 +31,8 @@ public class MatchingPostQueryRepository {
         Long hostId = host.getId();
         String jpql = "select distinct mp from MatchingPost mp" +
                 " join fetch mp.matchingHosts mpmh" +
-                " join mpmh.host mpmhh" +
-                " where mpmhh.id = :hostId" +
-                " and mp.id = :matchingPostId";
+                " where mp.id = :matchingPostId";
         TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
-                .setParameter("hostId", hostId)
                 .setParameter("matchingPostId", matchingPostId);
         return Optional.ofNullable(query.getSingleResult());
     }
