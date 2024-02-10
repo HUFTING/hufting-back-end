@@ -58,11 +58,11 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+tasks.register('copyBackEndConfig', Copy){
+	from "config"
+	into 'src/main/resources'
+}
 
-tasks.register("CopySubmodule") {
-	copy {
-		from("./lib")
-		include("*.yml", "*.properties")
-		into("./src/main/resources")
-	}
+tasks.named('processResources'){
+	dependsOn 'copyBackEndConfig'
 }
