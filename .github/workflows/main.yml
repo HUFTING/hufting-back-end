@@ -75,5 +75,5 @@ jobs:
           push: true
           tags: |
             ${{ env.ACCOUNT_NAME }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.ACCOUNT_NAME }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE_VERSION }}
+            ${{ env.ACCOUNT_NAME }}/${{ env.IMAGE_NAME }}:test
             
