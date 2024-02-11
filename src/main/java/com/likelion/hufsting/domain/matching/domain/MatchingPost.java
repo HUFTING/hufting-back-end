@@ -34,7 +34,7 @@ public class MatchingPost {
     @Column(name = "OPEN_TALK_LINK")
     private String openTalkLink; // 오픈톡 링크
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AUTHOR_ID")
     private Member author; // 작성자
 

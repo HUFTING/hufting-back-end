@@ -12,11 +12,11 @@ public class MatchingParticipant {
     @Column(name = "MATCHING_PART_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REQ_ID")
     private MatchingRequest matchingRequest;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARTICIPANT_ID")
     private Member participant;
 

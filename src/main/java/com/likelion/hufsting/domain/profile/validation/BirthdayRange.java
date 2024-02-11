@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = BirthdayRangeValidator.class)
 public @interface BirthdayRange {
-    String message() default "가입이 불가능한 나이입니다.";
+    String message() default "유효하지 않는 입력값 입니다.";
     Class[] groups() default {};
     Class[] payload() default {};
 }

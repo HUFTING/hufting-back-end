@@ -24,11 +24,11 @@ public class MatchingRequest {
     @Column(name = "MATCHING_REQ_TITLE")
     private String title;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY) // 개발 완료 후 영속성 전이 제거 필요
+    @ManyToOne(fetch = FetchType.LAZY) // 개발 완료 후 영속성 전이 제거 필요
     @JoinColumn(name = "REPRESENTATIVE_ID")
     private Member representative;
 

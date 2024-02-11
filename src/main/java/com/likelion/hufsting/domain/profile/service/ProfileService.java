@@ -46,10 +46,7 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileException("Not Found: " + authentication.getName()));
         // find profile of login member
         Profile findProfile = loginMember.getProfile();
-        System.out.println(findProfile.getAge());
-        FindMyProfileResponse response = new FindMyProfileResponse(loginMember, findProfile);
-        System.out.println(response.getAge());
-        return response;
+        return new FindMyProfileResponse(loginMember, findProfile);
     }
 
     @Transactional

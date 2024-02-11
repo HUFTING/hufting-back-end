@@ -42,7 +42,7 @@ public class Member {
     @Column(name = "PROFILE_SET_UP_STATUS")
     private Boolean profileSetUpStatus;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
