@@ -10,6 +10,8 @@ on:
   workflow_dispatch:
 
 env:
+  # docker account name
+  ACCOUNT_NAME: seolhuigwan
   # docker image name
   IMAGE_NAME: hufsting-back-end
 
