@@ -22,17 +22,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # private key를 통해 sub_module 접근
-      - name: Setup SSH key to access private submodule
-        run: |
-          mkdir -p ~/.ssh
-          echo '${{secrets.BACKEND_CONFIG_PRIVATE_KEY}}' > ~/.ssh/id_rsa
-          chmod 400 ~/.ssh/id_rsa
       # 레포지토리로 체크아웃을 진행
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          submodule: true
+          submodules: true
+          token: ${{secrets.BACKEND_CONFIG_PRIVATE_KEY}}
       # submodule 업데이트
       - name: Update config submodule
         shell: bash
