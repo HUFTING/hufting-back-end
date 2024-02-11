@@ -1,5 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
+import com.likelion.hufsting.domain.alarm.domain.Alarm;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.global.domain.Gender;
@@ -43,10 +44,13 @@ public class MatchingPost {
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
+    private List<MatchingRequest> matchingRequests = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
     private List<MatchingHost> matchingHosts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
-    private List<MatchingRequest> matchingRequests = new ArrayList<>();
+    private List<Alarm> alarms = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")
