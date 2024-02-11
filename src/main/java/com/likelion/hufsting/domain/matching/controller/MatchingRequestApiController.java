@@ -63,7 +63,6 @@ public class MatchingRequestApiController {
         }
     }
 
-
     // 매칭 신청
     @PostMapping("/api/v1/matchingrequests")
     public ResponseEntity<ResponseDto> postMatchingRequest(@RequestBody @Valid CreateMatchingReqRequest dto, Authentication authentication){

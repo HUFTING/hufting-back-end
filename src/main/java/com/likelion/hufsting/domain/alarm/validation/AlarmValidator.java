@@ -19,8 +19,8 @@ public class AlarmValidator {
     }
 
     // 매칭 호스트 또는 매칭 참가자 확인
-    public void validateIsAlarmOwner(Member owner, Alarm alarm){
-        if(!owner.getId().equals(alarm.getOwner().getId())){
+    public void validateIsAlarmOwner(Member loginMember, Alarm alarm){
+        if(!loginMember.getId().equals(alarm.getOwner().getId())){
             throw new AlarmException(ALARM_OWNER_NOT_MATCH_ERR_MSG);
         }
     }

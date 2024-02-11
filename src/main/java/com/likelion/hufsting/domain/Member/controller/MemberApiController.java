@@ -60,7 +60,14 @@ public class MemberApiController {
         try{
             log.info("Request to delete member");
             memberService.removeMember(authentication);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            // cookie setting
+            ResponseCookie responseCookie = ResponseCookie.from("access_token", "")
+                    .httpOnly(true)
+                    .maxAge(0)
+                    .path("/")
+                    .build();
+            return ResponseEntity.noContent()
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString()).build();
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

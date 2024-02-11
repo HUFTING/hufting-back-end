@@ -40,7 +40,13 @@ public class MatchingRequestQueryRepository {
                 " where mr.id = :matchingRequestId";
         TypedQuery<MatchingRequest> query = em.createQuery(jpql, MatchingRequest.class);
         query.setParameter("matchingRequestId", matchingRequestId);
-        return Optional.ofNullable(query.getSingleResult());
+        try{
+            MatchingRequest findMatchingRequest = query.getSingleResult();
+            return Optional.of(findMatchingRequest);
+        }catch (NoResultException e){
+            log.info(e.getMessage());
+        }
+        return Optional.empty();
     }
 
     public Optional<MatchingRequest> findByParticipantAndPostId(Long participantId, Long matchingPostId){

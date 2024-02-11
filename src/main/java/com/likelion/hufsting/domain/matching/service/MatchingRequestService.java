@@ -86,6 +86,7 @@ public class MatchingRequestService {
         // alarm 생성
         Alarm matchingRequestAlarm = Alarm.builder()
                         .alarmType(AlarmType.NEW)
+                .matchingRequest(newMatchingRequest)
                                 .matchingPost(matchingPost)
                                         .owner(matchingPost.getAuthor())
                                                 .build();

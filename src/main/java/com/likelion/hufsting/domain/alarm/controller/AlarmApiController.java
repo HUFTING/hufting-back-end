@@ -40,7 +40,7 @@ public class AlarmApiController {
     public ResponseEntity<ResponseDto> getMyAlarm(@PathVariable("alarmid") Long alarmId, Authentication authentication){
         try{
             log.info("Request to get the alarm-{}", alarmId);
-            FindAlarmResponse response = alarmService.findMyAlarm(alarmId, authentication);
+            ResponseDto response = alarmService.findMyAlarm(alarmId, authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
