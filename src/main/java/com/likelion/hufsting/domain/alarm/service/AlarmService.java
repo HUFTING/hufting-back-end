@@ -89,6 +89,7 @@ public class AlarmService {
             return FindComeMatchingReqResponse.builder()
                     .matchingRequestId(findMatchingRequest.getId())
                     .matchingRequestTitle(findMatchingRequest.getTitle())
+                    .matchingStatus(matchingPost.getMatchingStatus())
                     .participants(participantsData)
                     .hosts(hostsData)
                     .build();
