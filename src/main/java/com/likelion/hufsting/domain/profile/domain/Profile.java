@@ -41,7 +41,7 @@ public class Profile {
     @Column(name = "PROFILE_CONTENT")
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

@@ -42,10 +42,10 @@ public class MatchingPost {
     @Column(name = "MATCHING_STATUS")
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
-    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
     private List<MatchingHost> matchingHosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
     private List<MatchingRequest> matchingRequests = new ArrayList<>();
 
     @CreationTimestamp

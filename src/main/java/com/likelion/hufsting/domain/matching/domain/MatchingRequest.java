@@ -24,7 +24,7 @@ public class MatchingRequest {
     @Column(name = "MATCHING_REQ_TITLE")
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
@@ -32,7 +32,7 @@ public class MatchingRequest {
     @JoinColumn(name = "REPRESENTATIVE_ID")
     private Member representative;
 
-    @OneToMany(mappedBy = "matchingRequest", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingRequest", orphanRemoval = true)
     @Builder.Default
     private List<MatchingParticipant> participants = new ArrayList<>();
 
