@@ -1,5 +1,7 @@
 package com.likelion.hufsting.domain.matching.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
@@ -12,4 +14,19 @@ public enum MatchingAcceptance {
         this.value = value;
     }
     private final String value;
+
+    @JsonCreator
+    public static MatchingAcceptance deserializerMatchingAcceptance(String value){
+        for(MatchingAcceptance matchingAcceptance : MatchingAcceptance.values()){
+            if(matchingAcceptance.getValue().equals(value)){
+                return matchingAcceptance;
+            }
+        }
+        return null;
+    }
+
+    @JsonValue
+    public String serializerMatchingAcceptance(){
+        return value;
+    }
 }

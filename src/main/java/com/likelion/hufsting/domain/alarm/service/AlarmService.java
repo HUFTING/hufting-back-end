@@ -24,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -89,11 +91,26 @@ public class AlarmService {
             return FindComeMatchingReqResponse.builder()
                     .matchingRequestId(findMatchingRequest.getId())
                     .matchingRequestTitle(findMatchingRequest.getTitle())
-                    .matchingStatus(matchingPost.getMatchingStatus())
+                    .matchingAcceptance(findMatchingRequest.getMatchingAcceptance())
                     .participants(participantsData)
                     .hosts(hostsData)
                     .build();
         }
         throw new AlarmException("유효한 알림 타입이 아닙니다.");
+    }
+
+    @Transactional
+    public void removeOverOneMonth(){
+        // get all alarms
+        List<Alarm> findAlarms = alarmRepository.findAll();
+        // get current date
+        LocalDateTime now = LocalDateTime.now();
+        // standard date
+        LocalDateTime stdDate = now.minusDays(30);
+        for(Alarm alarm : findAlarms){
+            if(alarm.getCreatedAt().isBefore(stdDate)){
+                alarmRepository.delete(alarm);
+            }
+        }
     }
 }
