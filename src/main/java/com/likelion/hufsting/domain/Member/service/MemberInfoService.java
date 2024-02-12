@@ -71,6 +71,7 @@ public class MemberInfoService {
                 .id(findMember.getId())
                 .name(findMember.getName())
                 .major(findMember.getMajor())
+                .gender(findMember.getProfile().getGender())
                 .studentNumber(findMember.getProfile().getStudentNumber())
                 .age(findMember.getProfile().getAge())
                 .mbti(findMember.getProfile().getMbti())

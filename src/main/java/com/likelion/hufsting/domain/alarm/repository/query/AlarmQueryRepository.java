@@ -24,7 +24,8 @@ public class AlarmQueryRepository {
         String jpql = "select distinct a from Alarm a" +
                 " join fetch a.matchingPost amp" +
                 " join fetch a.owner ao" +
-                " where ao.id = :ownerId";
+                " where ao.id = :ownerId" +
+                " order by a.createdAt desc";
         TypedQuery<Alarm> query = em.createQuery(jpql, Alarm.class)
                 .setParameter("ownerId", ownerId);
         return query.getResultList();

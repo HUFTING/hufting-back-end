@@ -16,6 +16,8 @@ import com.likelion.hufsting.domain.profile.domain.Profile;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import com.likelion.hufsting.global.util.AuthUtil;
 import java.util.stream.Collectors;
+
+import com.vane.badwordfiltering.BadWordFiltering;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -240,5 +242,21 @@ public class MatchingPostService {
                         matchingPostUtil.changeNameToBlurName(post.getAuthor().getName()),
                         post.getCreatedAt()))
                 .collect(Collectors.toList());
+    }
+
+    // 제목 욕설 포함 게시글 삭제
+    @Transactional
+    public void removeMatchingPostIncludeBadWord(){
+        BadWordFiltering badWordFiltering = new BadWordFiltering();
+        List<MatchingPost> matchingPosts = matchingPostRepository.findAll();
+        int deletedMatchingPostCount = 0;
+        for(MatchingPost matchingPost : matchingPosts){
+            String title = matchingPost.getTitle();
+            if(badWordFiltering.blankCheck(title)){
+                matchingPostRepository.delete(matchingPost);
+                deletedMatchingPostCount += 1;
+            }
+        }
+        System.out.println("Success Processing Bad word filtering, deleted post count: " + deletedMatchingPostCount);
     }
 }
