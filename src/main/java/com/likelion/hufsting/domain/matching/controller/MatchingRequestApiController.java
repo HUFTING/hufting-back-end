@@ -1,10 +1,12 @@
 package com.likelion.hufsting.domain.matching.controller;
 
+import com.likelion.hufsting.domain.alarm.exception.AlarmException;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.exception.MatchingReqException;
 import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import com.likelion.hufsting.domain.matching.service.MatchingRequestService;
 import com.likelion.hufsting.domain.matching.validation.PathIdFormat;
+import com.likelion.hufsting.domain.profile.exception.ProfileException;
 import com.likelion.hufsting.global.dto.ResponseDto;
 import com.likelion.hufsting.global.dto.ErrorResponse;
 import com.likelion.hufsting.global.exception.AuthException;
@@ -25,6 +27,7 @@ public class MatchingRequestApiController {
     private final String MATCHING_REQ_ERR_MSG_KEY = "matchingRequest";
     private final String MATCHING_POST_ERR_MSG_KEY = "matchingPost";
     private final String MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY = "authentication";
+    private final String ALARM_ERR_MSG_KEY = "alarm";
     // service
     private final MatchingRequestService matchingRequestService;
     // 내 매칭 신청 조회
@@ -74,7 +77,7 @@ public class MatchingRequestApiController {
         }catch (IllegalArgumentException e){
             log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (MatchingReqException e){
+        }catch (MatchingReqException | ProfileException e){
             log.error(e.getMessage());
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(
                     MATCHING_REQ_ERR_MSG_KEY,
@@ -185,6 +188,13 @@ public class MatchingRequestApiController {
                     e.getMessage()
             );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }catch (AlarmException e){
+            log.error(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.createSingleResponseErrorMessage(
+                    ALARM_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
     // 매칭 거부

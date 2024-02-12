@@ -3,7 +3,9 @@ package com.likelion.hufsting.domain.matching.service;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.alarm.domain.Alarm;
 import com.likelion.hufsting.domain.alarm.domain.AlarmType;
+import com.likelion.hufsting.domain.alarm.exception.AlarmException;
 import com.likelion.hufsting.domain.alarm.repository.AlarmRepository;
+import com.likelion.hufsting.domain.alarm.repository.query.AlarmQueryRepository;
 import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
@@ -29,12 +31,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingRequestService {
+    // constant
+    private final String FIND_MY_ACCEPT_ALARM_ERR_MSG = "존재하지 않는 알림입니다.";
     // Repositories
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final AlarmQueryRepository alarmQueryRepository;
     // Validators
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
@@ -215,19 +220,23 @@ public class MatchingRequestService {
         // 매칭글 상태 변경
         findMatchingPost.updateMatchingStatus();
         // 매칭 요청 상태 변경
-        findMatchingPost.getMatchingRequests()
-                .forEach(matchingRequest -> {
-                    if(matchingRequest.getId().equals(matchingRequestId)){
-                        matchingRequest.acceptMatchingRequest();
-                        // accept alarm generation
-                        generationAcceptAlarm(findMatchingPost, matchingRequest);
-                    }else{
-                        matchingRequest.rejectMatchingRequest();
-                    }
-                });
+        List<MatchingRequest> findMatchingRequests = findMatchingPost.getMatchingRequests();
+        for(MatchingRequest matchingRequest : findMatchingRequests){
+            if(matchingRequest.getId().equals(matchingRequestId)){
+                matchingRequest.acceptMatchingRequest();
+                // accept alarm generation
+                generationAcceptAlarm(findMatchingPost, matchingRequest);
+            }else{
+                matchingRequest.rejectMatchingRequest();
+            }
+        }
+        // 내 알람 찾기
+        Alarm findMyAlarm = alarmQueryRepository.findMyAcceptAlarm(requestMember, findMatchingPost)
+                .orElseThrow(() -> new AlarmException(FIND_MY_ACCEPT_ALARM_ERR_MSG));
         // return value
         return AcceptMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
+                .alarmId(findMyAlarm.getId())
                 .build();
     }
 

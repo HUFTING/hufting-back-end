@@ -7,5 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AcceptMatchingRequestResponse implements ResponseDto {
-    private Long matchingRequestId;
+    private Long matchingRequestId; // 매칭 요청 ID
+    private Long alarmId; // 알람 ID
 }
