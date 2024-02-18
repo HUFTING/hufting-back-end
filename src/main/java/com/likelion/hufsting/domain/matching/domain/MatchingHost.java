@@ -3,6 +3,8 @@ package com.likelion.hufsting.domain.matching.domain;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Objects;
 
@@ -14,11 +16,11 @@ public class MatchingHost {
     @Column(name = "MATCHING_HOST_iD")
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOST_Id")
     private Member host;
 

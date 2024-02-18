@@ -28,11 +28,11 @@ public class MatchingRequest {
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 영속성 전이 제거 필요
+    @ManyToOne(fetch = FetchType.LAZY) // 개발 완료 후 영속성 전이 제거 필요
     @JoinColumn(name = "REPRESENTATIVE_ID")
     private Member representative;
 
-    @OneToMany(mappedBy = "matchingRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingRequest", orphanRemoval = true)
     @Builder.Default
     private List<MatchingParticipant> participants = new ArrayList<>();
 

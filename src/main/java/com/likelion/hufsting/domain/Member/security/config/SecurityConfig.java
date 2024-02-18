@@ -42,10 +42,10 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(configure -> {
             configure.requestMatchers("/api/v1/my-**").authenticated(); // my-matchingrequests, my-matchingposts
-            configure.requestMatchers("/api/v1/profile/**").authenticated();
-            configure.requestMatchers("/api/v1/alarms").authenticated();
+            configure.requestMatchers("/api/v1/profile**").authenticated();
+            configure.requestMatchers("/api/v1/alarms**").authenticated();
             configure.requestMatchers("/api/v1/member/**").authenticated();
-            configure.requestMatchers("/api/v1/followingList/**").authenticated();
+            configure.requestMatchers("/api/v1/followingList").authenticated();
             configure.requestMatchers("/api/v1/searching").authenticated();
             configure.requestMatchers("/api/v1/come-**").authenticated();
             // matching posts authorization

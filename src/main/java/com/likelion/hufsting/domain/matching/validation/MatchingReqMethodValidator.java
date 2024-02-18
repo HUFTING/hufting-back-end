@@ -1,12 +1,14 @@
 package com.likelion.hufsting.domain.matching.validation;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingAcceptance;
+import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
 import com.likelion.hufsting.domain.matching.exception.MatchingReqException;
 import com.likelion.hufsting.domain.matching.exception.MatchingPostException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class MatchingReqMethodValidator {
@@ -16,6 +18,7 @@ public class MatchingReqMethodValidator {
     private final String ACCEPTANCE_ALREADY_ACCEPTED = "이미 수락된 요청입니다.";
     private final String ACCEPTANCE_ALREADY_REJECTED = "이미 거부된 요청입니다.";
     private final String NOT_EQUAL_AUTHOR_AND_ACCESS_MEMBER_ID = "조회할 수 없는 매칭 요청입니다.";
+    private final String ALREADY_REQUEST_ERR_MSG = "이미 신청한 매칭글입니다.";
 
     // 매칭 요청 등록 및 수정시 유효성 검사 메서드
     public void validateParticipantsField(List<Long> participantIds, Long representativeId, int hostCounts){
@@ -48,8 +51,16 @@ public class MatchingReqMethodValidator {
 
     // 나에게 온 매칭 요청 조회 시 유효성 검사 메서드
     public void validateCanAccessToComeReq(Long authorId, Long accessMemberId){
+        System.out.println("1번 들어옴!!!!!");
         if(!authorId.equals(accessMemberId)){
             throw new MatchingReqException(NOT_EQUAL_AUTHOR_AND_ACCESS_MEMBER_ID);
+        }
+    }
+
+    // 이미 신청한 매칭 요청인지 확인
+    public void validateAlreadyRequest(Optional<MatchingRequest> matchingRequest){
+        if(matchingRequest.isPresent()){
+            throw new MatchingReqException(ALREADY_REQUEST_ERR_MSG);
         }
     }
 

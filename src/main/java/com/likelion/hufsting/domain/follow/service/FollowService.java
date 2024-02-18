@@ -24,12 +24,7 @@ public class FollowService {
 
 
     @Transactional
-<<<<<<< Updated upstream
-    public Boolean toggleMember(String followeeEmail, Authentication authentication) {
-        System.out.println("followeeEmail 값" + followeeEmail.toString());
-=======
     public SuccessMessage toggleMember(String followeeEmail, Authentication authentication) {
->>>>>>> Stashed changes
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(followeeEmail, JsonObject.class);
         String fEmail = jsonObject.get("memberEmail").getAsString();
@@ -39,7 +34,6 @@ public class FollowService {
         } else {
             finalEmail = fEmail;
         }
-        System.out.println("finalEmail" + finalEmail);
         Optional<Member> followeeMember = memberRepository.findByEmail(finalEmail);
         Optional<Member> followMember = memberRepository.findByEmail(authentication.getName());
         if (followeeMember.get().getId().equals(followMember.get().getId())) {

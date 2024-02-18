@@ -16,6 +16,8 @@ import com.likelion.hufsting.domain.profile.domain.Profile;
 import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
 import com.likelion.hufsting.global.util.AuthUtil;
 import java.util.stream.Collectors;
+
+import com.vane.badwordfiltering.BadWordFiltering;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -76,7 +78,7 @@ public class MatchingPostService {
                             .id(host.getId())
                             .name(matchingPostUtil.changeNameToBlurName(host.getName()))
                             .major(host.getMajor())
-                            .age(hostProfile.getBirthday())
+                            .age(hostProfile.getAge())
                             .mbti(hostProfile.getMbti())
                             .studentNumber(hostProfile.getStudentNumber())
                             .content(hostProfile.getContent())
@@ -105,12 +107,18 @@ public class MatchingPostService {
                 author,
                 MatchingStatus.WAITING
         );
+        // validation-0 : DTO
+        matchingPostMethodValidator.validateParticipantsField(
+                dto.getParticipants(),
+                author.getId(),
+                dto.getDesiredNumPeople()
+        );
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
-        // validation : Member
+        // validation-1 : Member
         profileMethodValidator.validateMemberOfGender(findParticipants, dto.getGender());
         // 호스트 조회 및 생성
         List<MatchingHost> matchingHosts = createMatchingHosts(matchingPost, findParticipants);
@@ -129,6 +137,12 @@ public class MatchingPostService {
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + authentication.getName()));
         authUtil.isOwnerOfMatchingObject(author, matchingPost.getAuthor());
+        // validation-0 : DTO
+        matchingPostMethodValidator.validateParticipantsField(
+                dto.getParticipants(),
+                author.getId(),
+                dto.getDesiredNumPeople()
+        );
         // 멤버 ID를 통해 Member 조회
         List<Member> findParticipants = dto.getParticipants().stream().map(
                 (participantId) -> memberRepository.findById(participantId)
@@ -182,6 +196,8 @@ public class MatchingPostService {
         // get MatchingPost
         MatchingPost findMatchingPost = matchingPostQueryRepository.findOneByAuthor(author, matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+        // validation-0 : 내가 조회할 수 있는 매칭글이 맞는지 유효성 검사
+        matchingPostMethodValidator.validateLoginMemberInHosts(author, findMatchingPost);
         // get matchingHosts Data
         List<Member> matchingMembers = findMatchingPost.getMatchingHosts().stream()
                 .map(MatchingHost::getHost).toList();
@@ -193,8 +209,8 @@ public class MatchingPostService {
                 .map(FindMatchingReqInPostData::toFindMatchingReqInPostData).toList();
         // return value
         return FindMyMatchingPostResponse.builder()
-                .matchingPostId(findMatchingPost.getId())
-                .matchingPostTitle(findMatchingPost.getTitle())
+                .id(findMatchingPost.getId())
+                .title(findMatchingPost.getTitle())
                 .gender(findMatchingPost.getGender())
                 .desiredNumPeople(findMatchingPost.getDesiredNumPeople())
                 .openKakaoTalk(findMatchingPost.getOpenTalkLink())
@@ -202,6 +218,7 @@ public class MatchingPostService {
                 .matchingHosts(matchingHostsData)
                 .matchingRequestsCount(matchingRequestsData.size())
                 .matchingRequests(matchingRequestsData)
+                .representativeEmail(findMatchingPost.getAuthor().getEmail())
                 .build();
     }
 
@@ -225,5 +242,21 @@ public class MatchingPostService {
                         matchingPostUtil.changeNameToBlurName(post.getAuthor().getName()),
                         post.getCreatedAt()))
                 .collect(Collectors.toList());
+    }
+
+    // 제목 욕설 포함 게시글 삭제
+    @Transactional
+    public void removeMatchingPostIncludeBadWord(){
+        BadWordFiltering badWordFiltering = new BadWordFiltering();
+        List<MatchingPost> matchingPosts = matchingPostRepository.findAll();
+        int deletedMatchingPostCount = 0;
+        for(MatchingPost matchingPost : matchingPosts){
+            String title = matchingPost.getTitle();
+            if(badWordFiltering.blankCheck(title)){
+                matchingPostRepository.delete(matchingPost);
+                deletedMatchingPostCount += 1;
+            }
+        }
+        System.out.println("Success Processing Bad word filtering, deleted post count: " + deletedMatchingPostCount);
     }
 }

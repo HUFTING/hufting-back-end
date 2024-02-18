@@ -11,21 +11,23 @@ import java.time.LocalDate;
 
 @Getter
 public class FindMyProfileResponse implements ResponseDto {
+    private final Long id;
     private final String name;
     private final String major;
     private final Gender gender;
     private final String studentNumber;
     private final Mbti mbti;
-    private final LocalDate birthday;
+    private final String age;
     private final String content;
 
     public FindMyProfileResponse(Member member, Profile profile){
+        this.id = member.getId();
         this.name = member.getName();
         this.major = member.getMajor();
         this.gender = profile.getGender();
         this.studentNumber = profile.getStudentNumber();
         this.mbti = profile.getMbti();
-        this.birthday = profile.getBirthday();
+        this.age = profile.getAge();
         this.content = profile.getContent();
     }
 }

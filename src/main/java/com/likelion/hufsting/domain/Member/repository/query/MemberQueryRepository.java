@@ -3,6 +3,7 @@ package com.likelion.hufsting.domain.Member.repository.query;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +17,10 @@ public class MemberQueryRepository {
 
     public Optional<Member> findById(Long memberId){
         String jpql = "select distinct m from Member m" +
-                " join fetch m.profile mp";
-        Member findMember = em.createQuery(jpql, Member.class).getSingleResult();
-        return Optional.ofNullable(findMember);
+                " join fetch m.profile mp" +
+                " where m.id = :memberId";
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class)
+                .setParameter("memberId", memberId);
+        return Optional.ofNullable(query.getSingleResult());
     }
 }

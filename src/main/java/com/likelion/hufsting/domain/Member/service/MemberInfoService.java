@@ -5,6 +5,8 @@ import com.likelion.hufsting.domain.Member.dto.MemberDetailInfoResponse;
 import com.likelion.hufsting.domain.Member.dto.MemberInfoResponse;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 
+import com.likelion.hufsting.domain.follow.service.FollowService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class MemberInfoService {
     // validators
     private final GlobalAuthMethodValidator globalAuthMethodValidator;
 
-    public MemberInfoResponse findByEmail(String email) {
+    public MemberInfoResponse findByEmail(String email, Authentication authentication) {
         final String finalEmail;
         if(!email.contains("@hufs.ac.kr")) {
             finalEmail = email + "@hufs.ac.kr";
@@ -34,24 +36,52 @@ public class MemberInfoService {
         }
         Member member = memberRepository.findByEmail(finalEmail)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + finalEmail));
-        Long id = member.getId();
-        String name = member.getName();
-        String content = member.getProfile().getContent();
-
-        return new MemberInfoResponse(id, name, content);
-
+        boolean isFollowingResponse = isFollowing(authentication, member);
+        return new MemberInfoResponse(
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                member.getPhotoUrl(),
+                member.getProfile().getContent(),
+                isFollowingResponse);
     }
 
-    public List<MemberInfoResponse> getFollowerList(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public boolean isFollowing(Authentication authentication, Member findMember) {
+        Member currentMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));; // 본인
+        System.out.println(currentMember.getFollowerList());
+        System.out.println("findMember id " + findMember.getId());
+        System.out.println(currentMember.getFollowerList().toString());
+        System.out.println("findMember id " + currentMember.getFolloweeList());
+
+
+        return currentMember.getFollowerList().stream()
+                .anyMatch(follow -> follow.getFollowee().getId().equals(findMember.getId()));
+    }
+
+    public List<MemberInfoResponse> getFollowerList(Authentication authentication) {
+        System.out.println("authentication-Email 값" + authentication.getName());
+        Member member = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
 
-        return member.getFollowerList().stream()
-                .map(follow -> new MemberInfoResponse(
-                        follow.getFollowee().getId(),
-                        follow.getFollowee().getName(),
-                        follow.getFollowee().getProfile().getContent()))
-                .collect(Collectors.toList());
+        List<MemberInfoResponse> followerInfoList = new ArrayList<>();
+
+        for (Follow follow : member.getFollowerList()) {
+            Member followee = follow.getFollowee();
+            boolean isFollowing = true;
+
+            MemberInfoResponse memberInfoResponse = new MemberInfoResponse(
+                    followee.getId(),
+                    followee.getName(),
+                    followee.getEmail(),
+                    followee.getPhotoUrl(),
+                    followee.getProfile().getContent(),
+                    isFollowing  // 팔로우 여부 설정
+            );
+            followerInfoList.add(memberInfoResponse);
+        }
+
+        return followerInfoList;
     }
 
     public MemberDetailInfoResponse findMemberDetailInfoById(Long memberId, Authentication authentication){
@@ -68,8 +98,9 @@ public class MemberInfoService {
                 .id(findMember.getId())
                 .name(findMember.getName())
                 .major(findMember.getMajor())
+                .gender(findMember.getProfile().getGender())
                 .studentNumber(findMember.getProfile().getStudentNumber())
-                .age(findMember.getProfile().getBirthday())
+                .age(findMember.getProfile().getAge())
                 .mbti(findMember.getProfile().getMbti())
                 .content(findMember.getProfile().getContent())
                 .build();

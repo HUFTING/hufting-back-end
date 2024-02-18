@@ -43,6 +43,7 @@ public class GoogleOauthService {
         Member member = memberRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
             Member newMember = Member.builder()
                     .email(userInfo.getEmail())
+                    .photoUrl(userInfo.getPicture())
                     .name(parsedResult.getName())
                     .major(parsedResult.getMajor())
                     .role(Role.ROLE_USER)

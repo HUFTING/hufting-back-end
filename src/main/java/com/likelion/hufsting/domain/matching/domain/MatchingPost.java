@@ -1,5 +1,6 @@
 package com.likelion.hufsting.domain.matching.domain;
 
+import com.likelion.hufsting.domain.alarm.domain.Alarm;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.UpdateMatchingPostData;
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.global.domain.Gender;
@@ -34,7 +35,7 @@ public class MatchingPost {
     @Column(name = "OPEN_TALK_LINK")
     private String openTalkLink; // 오픈톡 링크
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // 개발 완료 후 cascade 삭제
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AUTHOR_ID")
     private Member author; // 작성자
 
@@ -42,11 +43,14 @@ public class MatchingPost {
     @Column(name = "MATCHING_STATUS")
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
-    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
+    private List<MatchingRequest> matchingRequests = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
     private List<MatchingHost> matchingHosts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
-    private List<MatchingRequest> matchingRequests = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingPost", orphanRemoval = true)
+    private List<Alarm> alarms = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")

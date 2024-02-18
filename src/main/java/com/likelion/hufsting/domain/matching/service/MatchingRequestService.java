@@ -3,7 +3,9 @@ package com.likelion.hufsting.domain.matching.service;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.alarm.domain.Alarm;
 import com.likelion.hufsting.domain.alarm.domain.AlarmType;
+import com.likelion.hufsting.domain.alarm.exception.AlarmException;
 import com.likelion.hufsting.domain.alarm.repository.AlarmRepository;
+import com.likelion.hufsting.domain.alarm.repository.query.AlarmQueryRepository;
 import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.*;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
@@ -13,6 +15,8 @@ import com.likelion.hufsting.domain.matching.repository.query.MatchingRequestQue
 import com.likelion.hufsting.domain.matching.validation.MatchingPostMethodValidator;
 import com.likelion.hufsting.domain.matching.validation.MatchingReqMethodValidator;
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.domain.profile.validation.ProfileMethodValidator;
+import com.likelion.hufsting.global.domain.Gender;
 import com.likelion.hufsting.global.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,20 +25,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingRequestService {
+    // constant
+    private final String FIND_MY_ACCEPT_ALARM_ERR_MSG = "존재하지 않는 알림입니다.";
     // Repositories
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final AlarmQueryRepository alarmQueryRepository;
     // Validators
     private final MatchingPostMethodValidator matchingPostMethodValidator;
     private final MatchingReqMethodValidator matchingReqMethodValidator;
+    private final ProfileMethodValidator profileMethodValidator;
     // utils
     private final AuthUtil authUtil;
 
@@ -63,6 +72,11 @@ public class MatchingRequestService {
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
+        // validation-3 : 성별 확인
+        profileMethodValidator.validateMemberOfGender(findParticipants, Gender.toggleGender(matchingPost.getGender()));
+        // validation-4 : 이미 신청한 글인지 확인
+        Optional<MatchingRequest> findMatchingRequest = matchingRequestQueryRepository.findByParticipantAndPostId(representative.getId(), matchingPost.getId());
+        matchingReqMethodValidator.validateAlreadyRequest(findMatchingRequest);
         // create matching request obj
         MatchingRequest newMatchingRequest = MatchingRequest.builder()
                 .title(dto.getTitle())
@@ -77,6 +91,7 @@ public class MatchingRequestService {
         // alarm 생성
         Alarm matchingRequestAlarm = Alarm.builder()
                         .alarmType(AlarmType.NEW)
+                .matchingRequest(newMatchingRequest)
                                 .matchingPost(matchingPost)
                                         .owner(matchingPost.getAuthor())
                                                 .build();
@@ -131,6 +146,8 @@ public class MatchingRequestService {
                 (participantId) -> memberRepository.findById(participantId)
                         .orElseThrow(() -> new IllegalArgumentException("Not Found: " + participantId))
         ).toList();
+        // validation-3 : 성별 확인
+        profileMethodValidator.validateMemberOfGender(findParticipants, Gender.toggleGender(matchingPost.getGender()));
         // 매칭 신청 수정
         matchingRequest.updateTitle(dto.getTitle()); // 제목 수정
         matchingRequest.updateParticipant( // 참가자 수정
@@ -203,24 +220,23 @@ public class MatchingRequestService {
         // 매칭글 상태 변경
         findMatchingPost.updateMatchingStatus();
         // 매칭 요청 상태 변경
-        findMatchingPost.getMatchingRequests()
-                .forEach(matchingRequest -> {
-                    if(matchingRequest.getId().equals(matchingRequestId)){
-                        matchingRequest.acceptMatchingRequest();
-                        // accept alarm generation
-                        Alarm matchingRequestAccept = Alarm.builder()
-                                .matchingPost(findMatchingPost)
-                                .owner(matchingRequest.getRepresentative())
-                                .alarmType(AlarmType.ACCEPT)
-                                .build();
-                        alarmRepository.save(matchingRequestAccept);
-                    }else{
-                        matchingRequest.rejectMatchingRequest();
-                    }
-                });
+        List<MatchingRequest> findMatchingRequests = findMatchingPost.getMatchingRequests();
+        for(MatchingRequest matchingRequest : findMatchingRequests){
+            if(matchingRequest.getId().equals(matchingRequestId)){
+                matchingRequest.acceptMatchingRequest();
+                // accept alarm generation
+                generationAcceptAlarm(findMatchingPost, matchingRequest);
+            }else{
+                matchingRequest.rejectMatchingRequest();
+            }
+        }
+        // 내 알람 찾기
+        Alarm findMyAlarm = alarmQueryRepository.findMyAcceptAlarm(requestMember, findMatchingPost)
+                .orElseThrow(() -> new AlarmException(FIND_MY_ACCEPT_ALARM_ERR_MSG));
         // return value
         return AcceptMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
+                .alarmId(findMyAlarm.getId())
                 .build();
     }
 
@@ -254,5 +270,27 @@ public class MatchingRequestService {
             matchingParticipants.add(new MatchingParticipant(matchingRequest, participant));
         }
         return matchingParticipants;
+    }
+
+    private void generationAcceptAlarm(MatchingPost matchingPost, MatchingRequest matchingRequest){
+        // 매칭 호스트 멤버
+        List<Member> matchingHosts = matchingPost.getMatchingHosts().stream()
+                .map(MatchingHost::getHost).toList();
+        // 매칭 참가자 멤버
+        List<Member> matchingParticipants = matchingRequest.getParticipants().stream()
+                .map(MatchingParticipant::getParticipant).toList();
+        // 알림이 필요한 전체 사용자
+        List<Member> needToChangeMembers = new ArrayList<>();
+        needToChangeMembers.addAll(matchingHosts);
+        needToChangeMembers.addAll(matchingParticipants);
+        // 알림 생성
+        for(Member needToChangeMember : needToChangeMembers){
+            Alarm newAlarm = Alarm.builder()
+                    .matchingPost(matchingPost)
+                    .owner(needToChangeMember)
+                    .alarmType(AlarmType.ACCEPT)
+                    .build();
+            alarmRepository.save(newAlarm);
+        }
     }
 }

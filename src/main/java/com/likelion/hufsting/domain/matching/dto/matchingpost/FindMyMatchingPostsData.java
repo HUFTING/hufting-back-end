@@ -2,33 +2,33 @@ package com.likelion.hufsting.domain.matching.dto.matchingpost;
 
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
-import com.likelion.hufsting.domain.matching.dto.matchingrequest.FindMatchingReqInPostData;
+import com.likelion.hufsting.global.domain.Gender;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class FindMyMatchingPostsData {
     // 매칭글 관련
-    private Long matchingPostId;
-    private String matchingPostTitle;
+    private Long id;
+    private String title;
+    private int desiredNumPeople;
+    private Gender gender;
+    private String authorName;
+    private LocalDateTime createdAt;
     private MatchingStatus matchingStatus;
-    // 매칭 요청 관련
-    private int matchingRequestCount;
-    private List<FindMatchingReqInPostData> matchingRequests;
 
     // convert to FindMyMatchingPostData
     public static FindMyMatchingPostsData toFindMyMatchingPostData(MatchingPost matchingPost){
         FindMyMatchingPostsData myMatchingPostData = new FindMyMatchingPostsData();
-        myMatchingPostData.setMatchingPostId(matchingPost.getId());
-        myMatchingPostData.setMatchingPostTitle(matchingPost.getTitle());
+        myMatchingPostData.setId(matchingPost.getId());
+        myMatchingPostData.setTitle(matchingPost.getTitle());
+        myMatchingPostData.setDesiredNumPeople(matchingPost.getDesiredNumPeople());
+        myMatchingPostData.setGender(matchingPost.getGender());
+        myMatchingPostData.setAuthorName(matchingPost.getAuthor().getName());
+        myMatchingPostData.setCreatedAt(matchingPost.getCreatedAt());
         myMatchingPostData.setMatchingStatus(matchingPost.getMatchingStatus());
-        myMatchingPostData.setMatchingRequestCount(matchingPost.getMatchingRequests().size());
-        // 매칭 요청 변환
-       List<FindMatchingReqInPostData> findMatchingReqInPostDatas = matchingPost.getMatchingRequests().stream()
-                .map(FindMatchingReqInPostData::toFindMatchingReqInPostData)
-                .toList();
-        myMatchingPostData.setMatchingRequests(findMatchingReqInPostDatas);
         return myMatchingPostData;
     }
 }

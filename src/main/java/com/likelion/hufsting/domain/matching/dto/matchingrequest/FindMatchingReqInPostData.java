@@ -1,6 +1,4 @@
 package com.likelion.hufsting.domain.matching.dto.matchingrequest;
-
-import com.likelion.hufsting.domain.matching.domain.MatchingAcceptance;
 import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
 import lombok.Data;
 

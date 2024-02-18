@@ -45,8 +45,7 @@ public class ProfileService {
         Member loginMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ProfileException("Not Found: " + authentication.getName()));
         // find profile of login member
-        Profile findProfile = profileRepository.findById(loginMember.getId())
-                .orElseThrow(() -> new ProfileException(PROFILE_NOT_FOUND_MSG));
+        Profile findProfile = loginMember.getProfile();
         return new FindMyProfileResponse(loginMember, findProfile);
     }
 
@@ -65,8 +64,7 @@ public class ProfileService {
         Member loginMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new ProfileException("Not Found: " + authentication.getName()));
         // get profile of login member
-        Profile findProfile = profileRepository.findById(loginMember.getId())
-                .orElseThrow(() -> new ProfileException(PROFILE_NOT_FOUND_MSG));
+        Profile findProfile = loginMember.getProfile();
         // update profile
         findProfile.update(dto);
         return UpdateProfileResponse.builder()
@@ -74,7 +72,7 @@ public class ProfileService {
                 .mbti(findProfile.getMbti())
                 .studentNumber(findProfile.getStudentNumber())
                 .content(findProfile.getContent())
-                .birthday(findProfile.getBirthday())
+                .age(findProfile.getAge())
                 .build();
     }
 }

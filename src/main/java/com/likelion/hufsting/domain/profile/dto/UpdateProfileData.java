@@ -11,7 +11,7 @@ public class UpdateProfileData {
     private Gender gender;
     private String studentNumber;
     private Mbti mbti;
-    private LocalDate birthday;
+    private String age;
     private String content;
 
     public static UpdateProfileData toUpdateProfileData(UpdateProfileRequest dto){
@@ -19,7 +19,7 @@ public class UpdateProfileData {
         updateProfileData.setGender(dto.getGender());
         updateProfileData.setStudentNumber(dto.getStudentNumber());
         updateProfileData.setMbti(dto.getMbti());
-        updateProfileData.setBirthday(dto.getBirthday());
+        updateProfileData.setAge(dto.getAge());
         updateProfileData.setContent(dto.getContent());
         return updateProfileData;
     }
