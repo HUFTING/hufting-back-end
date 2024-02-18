@@ -26,8 +26,8 @@ public class MemberInfoController {
     private final String NOT_FOUND_FOLLOWEE_ERR_KEY = "follow";
     private final MemberInfoService memberInfoService;
     @GetMapping("/api/v1/searching")
-    public ResponseEntity<MemberInfoResponse> follow(@RequestParam("member_email") String memberEmail) {
-        MemberInfoResponse memberInfoResponse = memberInfoService.findByEmail(memberEmail);
+    public ResponseEntity<MemberInfoResponse> follow(@RequestParam("member_email") String memberEmail, Authentication authentication) {
+        MemberInfoResponse memberInfoResponse = memberInfoService.findByEmail(memberEmail, authentication);
         return ResponseEntity.ok(memberInfoResponse);
     }
 

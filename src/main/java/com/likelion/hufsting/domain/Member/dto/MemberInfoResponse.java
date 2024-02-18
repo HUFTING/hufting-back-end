@@ -16,4 +16,5 @@ public class MemberInfoResponse {
     private String email;
     private String photo;
     private String content;
+    private boolean isFollowing;
 }

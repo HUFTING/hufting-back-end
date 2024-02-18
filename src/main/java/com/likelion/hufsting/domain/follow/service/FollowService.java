@@ -7,6 +7,7 @@ import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.Member.exception.MemberRequestException;
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.follow.domain.Follow;
+import com.likelion.hufsting.domain.follow.dto.SuccessMessage;
 import com.likelion.hufsting.domain.follow.repository.FollowRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class FollowService {
 
 
     @Transactional
-    public Boolean toggleMember(String followeeEmail, Authentication authentication) {
+    public SuccessMessage toggleMember(String followeeEmail, Authentication authentication) {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(followeeEmail, JsonObject.class);
         String fEmail = jsonObject.get("memberEmail").getAsString();
@@ -46,7 +47,9 @@ public class FollowService {
             //추가 기능(언팔로우)
             for(Follow follow : followeeMember.get().getFolloweeList()) {
                 if(follow.getFollower().getId().equals(followMember.get().getId())) {
-                    return true; // 언팔로우 기능 없어서 true 로 반환
+
+                    return new SuccessMessage("true");
+                    //return true; // 언팔로우 기능 없어서 true 로 반환
 //                    followeeMember.get().getFolloweeList().remove(follow);
 //                    followMember.get().getFollowerList().remove(follow);
 //                    follow.disconnectFollower();
@@ -59,7 +62,7 @@ public class FollowService {
                     .follower(followMember.get())
                     .followee(followeeMember.get())
                     .build());
-            return true;
+            return new SuccessMessage("true");
         }
         else {
             throw new MemberRequestException("해당 유저가 없습니다");
