@@ -45,6 +45,7 @@ public class MemberInfoService {
     public List<MemberInfoResponse> getFollowerList(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다."));
+
         return member.getFollowerList().stream()
                 .map(follow -> new MemberInfoResponse(
                         follow.getFollowee().getId(),
