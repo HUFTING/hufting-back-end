@@ -45,7 +45,6 @@ public class MatchingPostApiController {
     public ResponseEntity<ResponseDto> getMyMatchingPosts(Authentication authentication){
         try {
             log.info("Request to get my matching posts");
-            System.out.println(matchingPostService);
             FindMyMatchingPostsResponse response = matchingPostService.findMyMatchingPosts(authentication);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception e){

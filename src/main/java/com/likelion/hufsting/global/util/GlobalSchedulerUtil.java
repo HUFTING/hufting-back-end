@@ -12,13 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class GlobalSchedulerUtil {
-    private final AlarmService alarmService;
     private final MatchingPostService matchingPostService;
-    @Scheduled(cron = "0 0 0 1 * *")
-    public void deleteAlarm(){
-        log.info("Scheduling remove alarms over 1 month");
-        alarmService.removeOverOneMonth();
-    }
 
     @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
     public void deleteMatchingPostIncludeBadWord(){
