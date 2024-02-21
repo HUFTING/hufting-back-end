@@ -8,6 +8,7 @@ import com.likelion.hufsting.domain.Member.repository.MemberRepository;
 import com.likelion.hufsting.domain.follow.service.FollowService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.likelion.hufsting.domain.Member.repository.query.MemberQueryRepository;
@@ -34,16 +35,21 @@ public class MemberInfoService {
         } else {
             finalEmail = email;
         }
-        Member member = memberRepository.findByEmail(finalEmail)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + finalEmail));
-        boolean isFollowingResponse = isFollowing(authentication, member);
-        return new MemberInfoResponse(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.getPhotoUrl(),
-                member.getProfile().getContent(),
-                isFollowingResponse);
+//        Member member = memberRepository.findByEmail(finalEmail)
+//                .orElseThrow(() -> new IllegalArgumentException("not found: " + finalEmail));
+        Optional<Member> member = memberRepository.findByEmail(finalEmail);
+        if(member.isPresent()) {
+            boolean isFollowingResponse = isFollowing(authentication, member.get());
+            return new MemberInfoResponse(
+                    member.get().getId(),
+                    member.get().getName(),
+                    member.get().getEmail(),
+                    member.get().getPhotoUrl(),
+                    member.get().getProfile().getContent(),
+                    isFollowingResponse);
+        } else {
+            return null;
+        }
     }
 
     public boolean isFollowing(Authentication authentication, Member findMember) {
