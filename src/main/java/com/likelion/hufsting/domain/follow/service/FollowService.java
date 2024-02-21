@@ -42,6 +42,9 @@ public class FollowService {
         if (!followMember.isPresent()) {
             throw new MemberRequestException("회원정보를 찾을 수 없습니다.");
         }
+        if (!followeeMember.isPresent()) {
+            throw new MemberRequestException("검색한 회원은 존재하지 않습니다.");
+        }
 
         if (followMember.isPresent()) {
             //추가 기능(언팔로우)
