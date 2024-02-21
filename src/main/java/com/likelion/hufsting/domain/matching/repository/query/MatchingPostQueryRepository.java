@@ -21,7 +21,8 @@ public class MatchingPostQueryRepository {
         String jpql = "select distinct mp from MatchingPost mp" +
                 " join fetch mp.matchingHosts mpmh" +
                 " join fetch mpmh.host mpmhh" +
-                " where mpmhh.id = :hostId";
+                " where mpmhh.id = :hostId" +
+                " order by mp.createdAt DESC";
         TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
                 .setParameter("hostId", hostId);
         return query.getResultList();
