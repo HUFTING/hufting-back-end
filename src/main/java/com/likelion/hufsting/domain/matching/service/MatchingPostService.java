@@ -1,10 +1,7 @@
 package com.likelion.hufsting.domain.matching.service;
 
 import com.likelion.hufsting.domain.Member.repository.MemberRepository;
-import com.likelion.hufsting.domain.matching.domain.MatchingHost;
-import com.likelion.hufsting.domain.matching.domain.MatchingPost;
-import com.likelion.hufsting.domain.matching.domain.MatchingRequest;
-import com.likelion.hufsting.domain.matching.domain.MatchingStatus;
+import com.likelion.hufsting.domain.matching.domain.*;
 import com.likelion.hufsting.domain.matching.dto.matchingpost.*;
 import com.likelion.hufsting.domain.matching.dto.matchingrequest.FindMatchingReqInPostData;
 import com.likelion.hufsting.domain.matching.repository.MatchingPostRepository;
@@ -204,7 +201,9 @@ public class MatchingPostService {
         List<FindMyMatchingPostInHostData> matchingHostsData = matchingMembers.stream()
                 .map(FindMyMatchingPostInHostData::toFindMyMatchingPostInHostData).toList();
         // get matchingRequest Data
-        List<MatchingRequest> matchingRequests = findMatchingPost.getMatchingRequests();
+        List<MatchingRequest> matchingRequests = findMatchingPost.getMatchingRequests().stream()
+                .filter(matchingRequest -> matchingRequest.getMatchingAcceptance().equals(MatchingAcceptance.WAITING))
+                .toList();
         List<FindMatchingReqInPostData> matchingRequestsData = matchingRequests.stream()
                 .map(FindMatchingReqInPostData::toFindMatchingReqInPostData).toList();
         // return value

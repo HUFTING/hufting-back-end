@@ -19,8 +19,8 @@ public class MatchingPostQueryRepository {
     public List<MatchingPost> findByAuthor(Member host){
         Long hostId = host.getId();
         String jpql = "select distinct mp from MatchingPost mp" +
-                " join mp.matchingHosts mpmh" +
-                " join mpmh.host mpmhh" +
+                " join fetch mp.matchingHosts mpmh" +
+                " join fetch mpmh.host mpmhh" +
                 " where mpmhh.id = :hostId";
         TypedQuery<MatchingPost> query = em.createQuery(jpql, MatchingPost.class)
                 .setParameter("hostId", hostId);
