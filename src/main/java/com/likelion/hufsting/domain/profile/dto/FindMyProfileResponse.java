@@ -19,6 +19,7 @@ public class FindMyProfileResponse implements ResponseDto {
     private final Mbti mbti;
     private final String age;
     private final String content;
+    private final String profile;
 
     public FindMyProfileResponse(Member member, Profile profile){
         this.id = member.getId();
@@ -29,5 +30,6 @@ public class FindMyProfileResponse implements ResponseDto {
         this.mbti = profile.getMbti();
         this.age = profile.getAge();
         this.content = profile.getContent();
+        this.profile = member.getPhotoUrl();
     }
 }
