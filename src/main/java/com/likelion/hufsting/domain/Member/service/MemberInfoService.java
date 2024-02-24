@@ -48,7 +48,7 @@ public class MemberInfoService {
                     member.get().getProfile().getContent(),
                     isFollowingResponse);
         } else {
-            return null;
+            return new MemberInfoResponse();
         }
     }
 
