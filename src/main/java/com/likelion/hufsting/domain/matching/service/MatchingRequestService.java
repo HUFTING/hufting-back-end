@@ -196,6 +196,7 @@ public class MatchingRequestService {
         return FindComeMatchingReqResponse.builder()
                 .matchingRequestId(findMyMatchingRequest.getId())
                 .matchingRequestTitle(findMyMatchingRequest.getTitle())
+                .matchingAcceptance(findMyMatchingRequest.getMatchingAcceptance())
                 .participants(participantsData)
                 .hosts(hostsData)
                 .build();
