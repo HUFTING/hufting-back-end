@@ -221,23 +221,22 @@ public class MatchingRequestService {
         // 매칭글 상태 변경
         findMatchingPost.updateMatchingStatus();
         // 매칭 요청 상태 변경
+        Long alarmId = null;
         List<MatchingRequest> findMatchingRequests = findMatchingPost.getMatchingRequests();
         for(MatchingRequest matchingRequest : findMatchingRequests){
             if(matchingRequest.getId().equals(matchingRequestId)){
                 matchingRequest.acceptMatchingRequest();
                 // accept alarm generation
-                generationAcceptAlarm(findMatchingPost, matchingRequest);
+                alarmId = generationAcceptAlarm(findMatchingPost, matchingRequest);
             }else{
                 matchingRequest.rejectMatchingRequest();
             }
         }
-        // 내 알람 찾기
-        Alarm findMyAlarm = alarmQueryRepository.findMyAcceptAlarm(requestMember, findMatchingPost)
-                .orElseThrow(() -> new AlarmException(FIND_MY_ACCEPT_ALARM_ERR_MSG));
         // return value
         return AcceptMatchingRequestResponse.builder()
                 .matchingRequestId(matchingRequestId)
-                .alarmId(findMyAlarm.getId())
+                .alarmId(alarmId)
+                .matchingPostId(findMatchingPost.getId())
                 .build();
     }
 
@@ -273,7 +272,7 @@ public class MatchingRequestService {
         return matchingParticipants;
     }
 
-    private void generationAcceptAlarm(MatchingPost matchingPost, MatchingRequest matchingRequest){
+    private Long generationAcceptAlarm(MatchingPost matchingPost, MatchingRequest matchingRequest){
         // 매칭 호스트 멤버
         List<Member> matchingHosts = matchingPost.getMatchingHosts().stream()
                 .map(MatchingHost::getHost).toList();
@@ -284,6 +283,7 @@ public class MatchingRequestService {
         List<Member> needToChangeMembers = new ArrayList<>();
         needToChangeMembers.addAll(matchingHosts);
         needToChangeMembers.addAll(matchingParticipants);
+        Long alarmId = null;
         // 알림 생성
         for(Member needToChangeMember : needToChangeMembers){
             Alarm newAlarm = Alarm.builder()
@@ -292,6 +292,10 @@ public class MatchingRequestService {
                     .alarmType(AlarmType.ACCEPT)
                     .build();
             alarmRepository.save(newAlarm);
+            if(needToChangeMember.getId().equals(matchingPost.getAuthor().getId())){
+                alarmId = newAlarm.getId();
+            }
         }
+        return alarmId;
     }
 }

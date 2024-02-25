@@ -195,6 +195,13 @@ public class MatchingRequestApiController {
                     e.getMessage()
             );
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }catch (AuthException e){
+            log.error(e.getMessage());
+            ErrorResponse errorResponse = ErrorResponse.createSingleResponseErrorMessage(
+                    MATCHING_REQ_AUTHENTICATION_ERR_MSG_KEY,
+                    e.getMessage()
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
     }
     // 매칭 거부

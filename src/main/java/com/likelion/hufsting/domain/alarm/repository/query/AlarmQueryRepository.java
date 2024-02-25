@@ -2,6 +2,7 @@ package com.likelion.hufsting.domain.alarm.repository.query;
 
 import com.likelion.hufsting.domain.Member.domain.Member;
 import com.likelion.hufsting.domain.alarm.domain.Alarm;
+import com.likelion.hufsting.domain.alarm.domain.AlarmType;
 import com.likelion.hufsting.domain.matching.domain.MatchingPost;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -31,21 +32,26 @@ public class AlarmQueryRepository {
         return query.getResultList();
     }
 
-    public Optional<Alarm> findMyAcceptAlarm(Member owner, MatchingPost matchingPost){
-        Long ownerId = owner.getId();
-        Long matchingPostId = matchingPost.getId();
-        String jpql = "select a from Alarm a" +
-                " where a.owner = :ownerId" +
-                " and a.matchingPost = :matchingPostId";
-        TypedQuery<Alarm> query = em.createQuery(jpql, Alarm.class)
-                .setParameter("ownerId", ownerId)
-                .setParameter("matchingPostId", matchingPostId);
-        try{
-           Alarm alarm = query.getSingleResult();
-           return Optional.of(alarm);
-        }catch (NoResultException e){
-            log.error(e.getMessage());
-        }
-        return Optional.empty();
-    }
+//    public Optional<Alarm> findMyAcceptAlarm(Member owner, MatchingPost matchingPost){
+//        Long ownerId = owner.getId();
+//        Long matchingPostId = matchingPost.getId();
+//        String jpql = "select a from Alarm a" +
+//                " join a.owner ao" +
+//                " join a.matchingPost amp" +
+//                " where ao.id = :ownerId" +
+//                " and amp.id = :matchingPostId" +
+//                " and a.alarmType = :alarmType";
+//        TypedQuery<Alarm> query = em.createQuery(jpql, Alarm.class)
+//                .setParameter("ownerId", ownerId)
+//                .setParameter("matchingPostId", matchingPostId)
+//                .setParameter("alarmType", AlarmType.ACCEPT);
+//        try{
+//           Alarm alarm = query.getSingleResult();
+//           return Optional.of(alarm);
+//        }catch (Exception e){
+//            log.error(e.getMessage());
+//            System.out.println("?????!!!!!!!!!!여긴가");
+//        }
+//        return Optional.empty();
+//    }
 }

@@ -51,7 +51,6 @@ public class MatchingReqMethodValidator {
 
     // 나에게 온 매칭 요청 조회 시 유효성 검사 메서드
     public void validateCanAccessToComeReq(Long authorId, Long accessMemberId){
-        System.out.println("1번 들어옴!!!!!");
         if(!authorId.equals(accessMemberId)){
             throw new MatchingReqException(NOT_EQUAL_AUTHOR_AND_ACCESS_MEMBER_ID);
         }
