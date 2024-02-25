@@ -16,7 +16,7 @@ public class MatchingHost {
     @Column(name = "MATCHING_HOST_iD")
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 

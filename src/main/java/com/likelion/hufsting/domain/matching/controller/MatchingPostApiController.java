@@ -111,12 +111,11 @@ public class MatchingPostApiController {
                                                        Authentication authentication){
         log.info("Request to update matching post: {}", matchingPostId);
         try {
-            Long updateMatchingPostId = matchingPostService.updateMatchingPost(
+            UpdateMatchingPostResponse response = matchingPostService.updateMatchingPost(
                     matchingPostId,
                     authentication,
                     UpdateMatchingPostData.toUpdateMatchingPostData(dto)
             );
-            UpdateMatchingPostResponse response = new UpdateMatchingPostResponse(updateMatchingPostId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (IllegalArgumentException e){
             ErrorResponse response = ErrorResponse.createSingleResponseErrorMessage(

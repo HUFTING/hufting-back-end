@@ -127,7 +127,7 @@ public class MatchingPostService {
     }
     // 훕팅 글 수정
     @Transactional
-    public Long updateMatchingPost(Long matchingPostId, Authentication authentication, UpdateMatchingPostData dto){
+    public UpdateMatchingPostResponse updateMatchingPost(Long matchingPostId, Authentication authentication, UpdateMatchingPostData dto){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
         // 자신의 작성한 글인지 확인
@@ -153,7 +153,13 @@ public class MatchingPostService {
         matchingPost.updateMatchingPost(dto); // 변경 감지(Dirty checking)
         // 호스트 수정
         matchingPost.updateHost(createMatchingHosts(matchingPost, findParticipants));
-        return matchingPostId;
+        // host data 생성
+        List<UpdateMatchingPostHostData> matchingPostHostDatas = matchingPost.getMatchingHosts().stream()
+                .map(matchingHost -> UpdateMatchingPostHostData.toUpdateMatchingPostHostData(matchingHost.getHost())).toList();
+        return new UpdateMatchingPostResponse(
+                matchingPostId,
+                matchingPostHostDatas
+        );
     }
     // 훕팅 글 삭제
     @Transactional

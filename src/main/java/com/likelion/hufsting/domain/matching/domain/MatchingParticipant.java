@@ -14,7 +14,7 @@ public class MatchingParticipant {
     @Column(name = "MATCHING_PART_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "REQ_ID")
     private MatchingRequest matchingRequest;
 
