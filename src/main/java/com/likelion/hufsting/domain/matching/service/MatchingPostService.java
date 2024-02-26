@@ -158,6 +158,7 @@ public class MatchingPostService {
                 .map(matchingHost -> UpdateMatchingPostHostData.toUpdateMatchingPostHostData(matchingHost.getHost())).toList();
         return new UpdateMatchingPostResponse(
                 matchingPostId,
+                matchingPost.getOpenTalkLink(),
                 matchingPostHostDatas
         );
     }

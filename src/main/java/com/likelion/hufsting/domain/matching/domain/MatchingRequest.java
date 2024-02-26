@@ -1,6 +1,7 @@
 package com.likelion.hufsting.domain.matching.domain;
 
 import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.domain.alarm.domain.Alarm;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +39,10 @@ public class MatchingRequest {
 
     @Enumerated(EnumType.STRING)
     private MatchingAcceptance matchingAcceptance; // ACCEPTED, REJECTED, WAITING
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matchingRequest", orphanRemoval = true)
+    @Builder.Default
+    private List<Alarm> alarms = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

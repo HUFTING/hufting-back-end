@@ -11,5 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UpdateMatchingPostResponse implements ResponseDto {
     private final Long matchingPostId;
+    private final String openTalkLink;
     private final List<UpdateMatchingPostHostData> matchingHosts;
 }
