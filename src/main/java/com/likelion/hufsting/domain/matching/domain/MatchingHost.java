@@ -1,8 +1,12 @@
 package com.likelion.hufsting.domain.matching.domain;
 
-import com.likelion.hufsting.domain.profile.domain.Member;
+import com.likelion.hufsting.domain.Member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -12,11 +16,30 @@ public class MatchingHost {
     @Column(name = "MATCHING_HOST_iD")
     private Long id; // PK
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
     private MatchingPost matchingPost;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "HOST_Id")
     private Member host;
+
+    protected MatchingHost(){}
+    public MatchingHost(MatchingPost matchingPost, Member host) {
+        this.matchingPost = matchingPost;
+        this.host = host;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        MatchingHost that = (MatchingHost) object;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

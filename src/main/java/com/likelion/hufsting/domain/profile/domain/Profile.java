@@ -1,64 +1,65 @@
 package com.likelion.hufsting.domain.profile.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.likelion.hufsting.domain.Member.domain.Member;
+import com.likelion.hufsting.global.domain.Gender;
+import com.likelion.hufsting.domain.profile.dto.UpdateProfileData;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
+@Validated
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 식별자 자동 생성
-    @Column(name = "id", updatable = false)
+    @Column(name = "PROFILE_ID")
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "PROFILE_GENDER")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "gender", nullable = false)
-    private String gender;
-
-    @Column(name = "studentNumber", nullable = false)
+    @Column(name = "PROFILE_STUDENTNUMBER")
     private String studentNumber;
 
-    @Column(name = "major", nullable = false)
-    private String major;
+    @Column(name = "PROFILE_MBTI")
+    @Enumerated(EnumType.STRING)
+    private Mbti mbti;
 
-    @Column(name = "mbti", nullable = false)
-    private String mbti;
+    @Column(name = "PROFILE_AGE")
+    private String age;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "PROFILE_CONTENT")
     private String content;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
     @Builder
-    public Profile(String name, String gender, String studentNumber,
-                   String major, String mbti, String content) {
-        this.name = name;
+    public Profile(Gender gender, String studentNumber, Mbti mbti, String age, String content, Member member) {
         this.gender = gender;
         this.studentNumber = studentNumber;
-        this.major = major;
         this.mbti = mbti;
+        this.age = age;
         this.content = content;
+        this.member = member;
     }
 
-    public void update(String name, String gender, String studentNumber,
-                       String major, String mbti, String content) {
-        this.name = name;
-        this.gender = gender;
-        this.studentNumber = studentNumber;
-        this.major = major;
-        this.mbti = mbti;
-        this.content = content;
-
+    public void update(UpdateProfileData dto) {
+        this.gender = dto.getGender();
+        this.studentNumber = dto.getStudentNumber();
+        this.mbti = dto.getMbti();
+        this.age = dto.getAge();
+        this.content = dto.getContent();
     }
-
 }

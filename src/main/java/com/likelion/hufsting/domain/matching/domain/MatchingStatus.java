@@ -15,7 +15,7 @@ public enum MatchingStatus {
     private final String value;
 
     @JsonCreator
-    public MatchingStatus deserializerMatchingStatus(String value){
+    public static MatchingStatus deserializerMatchingStatus(String value){
         for(MatchingStatus matchingStatus : MatchingStatus.values()){
             if(matchingStatus.getValue().equals(value)){
                 return matchingStatus;
