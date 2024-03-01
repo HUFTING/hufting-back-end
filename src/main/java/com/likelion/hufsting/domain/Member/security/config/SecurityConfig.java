@@ -66,7 +66,7 @@ public class SecurityConfig {
         http.logout(configure -> {
             configure.logoutUrl("/api/v1/logout");
             configure.logoutSuccessHandler((request, response, authentication) -> {
-                response.sendRedirect("http://localhost:3000");
+                response.sendRedirect("https://www.hufting.com");
             });
             configure.deleteCookies("access_token");
         });
@@ -81,7 +81,7 @@ public class SecurityConfig {
         // config 객체 설정
         config.setAllowCredentials(true);
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedOrigins(List.of("https://www.hufting.com"));
         config.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "OPTIONS"));
         source.registerCorsConfiguration("/**", config);
         return source;
