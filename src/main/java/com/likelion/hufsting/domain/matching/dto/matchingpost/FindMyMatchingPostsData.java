@@ -16,6 +16,7 @@ public class FindMyMatchingPostsData {
     private int desiredNumPeople;
     private Gender gender;
     private String authorName;
+    private String openTalkLink;
     private LocalDateTime createdAt;
     private MatchingStatus matchingStatus;
 
@@ -27,6 +28,7 @@ public class FindMyMatchingPostsData {
         myMatchingPostData.setDesiredNumPeople(matchingPost.getDesiredNumPeople());
         myMatchingPostData.setGender(matchingPost.getGender());
         myMatchingPostData.setAuthorName(matchingPost.getAuthor().getName());
+        myMatchingPostData.setOpenTalkLink(matchingPost.getOpenTalkLink());
         myMatchingPostData.setCreatedAt(matchingPost.getCreatedAt());
         myMatchingPostData.setMatchingStatus(matchingPost.getMatchingStatus());
         return myMatchingPostData;
