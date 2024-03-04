@@ -219,7 +219,7 @@ public class MatchingPostService {
                 .title(findMatchingPost.getTitle())
                 .gender(findMatchingPost.getGender())
                 .desiredNumPeople(findMatchingPost.getDesiredNumPeople())
-                .openKakaoTalk(findMatchingPost.getOpenTalkLink())
+                .openTalkLink(findMatchingPost.getOpenTalkLink())
                 .matchingStatus(findMatchingPost.getMatchingStatus())
                 .matchingHosts(matchingHostsData)
                 .matchingRequestsCount(matchingRequestsData.size())

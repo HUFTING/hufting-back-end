@@ -17,7 +17,7 @@ public class FindMyMatchingPostResponse implements ResponseDto {
     private String title;
     private int desiredNumPeople;
     private Gender gender;
-    private String openKakaoTalk;
+    private String openTalkLink;
     private MatchingStatus matchingStatus;
     private List<FindMyMatchingPostInHostData> matchingHosts;
     // 매칭 요청 관련
