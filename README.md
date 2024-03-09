@@ -54,29 +54,22 @@ java -jar hufsting-0.0.1-SNAPSHOT.jar
 5. DB 서버는 GCP의 Cloud SQL을 이용하여 관리형 MySQL 서버를 구축하였다.
 
 ## 2.4. 🎨 Service Design
-<img width="880" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/763dd0cc-62d0-4df6-baec-51f959ec09f1">
+<img width="800" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/763dd0cc-62d0-4df6-baec-51f959ec09f1">
 
 # 3. Service Detail
 ## **👥 훕팅 목록 확인, 생성 및 참여가 가능합니다.**
-<p align='center'><img width="880" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/7bf47cac-e6f0-4fa7-8f62-cc65c6817ff0"></p>
-<p align='center'><img width="880" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/578dc0e9-4c6c-42ee-ad24-ca89d0a65720"></p>
-
 |Read|Create|Participate|
 |---|---|---|
-|<img width="389" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/15ae0e47-a4fc-41b0-82f4-19c60a7491c3">|<img width="381" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/0580285a-94e2-4e83-bb4a-6e895c259d94">|<img width="387" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/81c92696-61b0-42b3-a5f6-0745c3e047b7">|
+|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/15ae0e47-a4fc-41b0-82f4-19c60a7491c3">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/0580285a-94e2-4e83-bb4a-6e895c259d94">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/81c92696-61b0-42b3-a5f6-0745c3e047b7">|
 |훕팅 목록 조회|훕팅 생성|훕팅 참가|
 
-## **🔐 구글 소셜 로그인을 통해 로그인이 가능합니다.(단, hufs.ac.kr 도메인만 가능)
-<p align='center'><img width="881" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/1be04934-775a-4bbf-b8a7-eba5d1bc7cef"></p>
+## **🔐 구글 소셜 로그인을 통해 로그인이 가능합니다.(단, hufs.ac.kr 도메인만 가능)**
+|Login|Invlaid Account|Profile|
+|---|---|---|
+|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/7513b0d2-1ed2-4ba1-ab9d-dce855556876">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/360587c7-4218-40c1-bb31-6e83d3367243">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/6272b51b-efad-4584-9d1c-f771689ce95c">|
+|훕팅 로그인 화면|학교 계정이 아닐 경우|프로필 설정|
 
-|Login|Invlaid Account|
-|---|---|
-|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/7513b0d2-1ed2-4ba1-ab9d-dce855556876">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/360587c7-4218-40c1-bb31-6e83d3367243">|
-|훕팅 로그인 화면|학교 계정이 아닐 경우|
-
-## **👨‍✈️ 내가 올린 훕팅글, 내가 요청한 훕팅 신청, 나에게 온 요청 모두 확인할 수 있습니다.
-<p align='center'><img width="877" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/18aad145-a2b3-40c0-b7d5-46e5d2870e02"></p>
-
+## **👨‍✈️ 내가 올린 훕팅글, 내가 요청한 훕팅 신청, 나에게 온 요청 모두 확인할 수 있습니다.**
 |Alarm|My Post|
 |---|---|
 |<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/c3db9735-c4c5-471b-b122-7f7c6a0d00f9">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/1fa6bbfc-9b09-4b56-a411-8e7fef0d33df">|
@@ -87,16 +80,17 @@ java -jar hufsting-0.0.1-SNAPSHOT.jar
 |---|---|
 |<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/c0b91900-edc3-4c65-adf6-1f83445b3c7d">|<img width="260" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/19f72d09-36bc-4272-80a6-4e0fe4c26711">|
 |내 훕팅 메이트|훕팅 메이트 추가|
+
 # 4. Tech stack
 
 ### Backend
 
-<img alt="Django" src ="https://img.shields.io/badge/Django-092E20.svg?&style=for-the-badge&logo=Django&logoColor=white"/> <img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
+<img src="https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Ubuntu-E95420?style=flat-square&logo=Ubuntu&logoColor=white"/>
 
 ### :computer: Contributor
 
-| 설희관|
-|:---:|
-| Team Lead, BE |
-|<img src="https://avatars.githubusercontent.com/u/67581495?v=4" height=100/>|
-|[@SeolHuiGwan9478](https://github.com/SeolHuiGwan9478)|
+|설희관|조성민|
+|:---:|:---:|
+|BE Lead, Server|BE|
+|<img src="https://avatars.githubusercontent.com/u/67581495?v=4" height=100/>|<img src="https://avatars.githubusercontent.com/u/101984130?v=4" height=100/>
+|[@SeolHuiGwan9478](https://github.com/SeolHuiGwan9478)|[@sungmin306](https://github.com/sungmin306)|
