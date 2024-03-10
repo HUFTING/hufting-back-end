@@ -20,6 +20,7 @@ java -jar hufsting-0.0.1-SNAPSHOT.jar
 
 # 2. OverView
 ## 2.1. Project Preview
+<p align='center'><img width="788" alt="image" src="https://github.com/HUFTING/hufting-back-end/assets/67581495/36e6a23f-6998-482b-ad85-2678f771f43d"></p>
 <p align='center'><img src='https://github.com/HUFTING/hufting-back-end/assets/67581495/a5375a54-5ecf-4ace-aef0-ea777917bc99'/></p>
 
 ## 2.2. Project Architecture
