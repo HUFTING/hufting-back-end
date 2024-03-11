@@ -92,6 +92,6 @@ java -jar hufsting-0.0.1-SNAPSHOT.jar
 
 |설희관|조성민|
 |:---:|:---:|
-|BE Lead, Server|BE|
+|BE Lead, Server|BE Dev|
 |<img src="https://avatars.githubusercontent.com/u/67581495?v=4" height=100/>|<img src="https://avatars.githubusercontent.com/u/101984130?v=4" height=100/>
 |[@SeolHuiGwan9478](https://github.com/SeolHuiGwan9478)|[@sungmin306](https://github.com/sungmin306)|
